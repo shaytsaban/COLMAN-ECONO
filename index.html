@@ -22,6 +22,7 @@
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft, modern shadow */
             --success-color: #28a745;
             --info-color: #17a2b8;
+            --fx-color: #ff6b35; /* New color for FX button */
         }
 
         /* Basic Reset */
@@ -243,6 +244,11 @@
             box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
         }
 
+        .resource-button.fx {
+            background: linear-gradient(135deg, var(--fx-color) 0%, #e55b2d 100%);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
         .resource-button:hover {
             transform: translateY(-3px);
         }
@@ -253,6 +259,10 @@
 
         .resource-button.assignments:hover {
             box-shadow: 0 8px 20px rgba(23, 162, 184, 0.4);
+        }
+
+        .resource-button.fx:hover {
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
         }
 
         .resource-button svg {
@@ -393,6 +403,12 @@
                             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                         </svg>
                         Course Notes
+                    </a>
+                    <a class="resource-button fx" href="https://mypac-my.sharepoint.com/:x:/g/personal/shay_tsaban_pac_org_il/IQAYcvO2L-YkTI3NuH-XF2DmAWts7FNWIhjHZma9r2cn7sE?e=erxi9J" target="_blank" rel="noopener noreferrer">
+                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Course Notes - FX
                     </a>
                     <a class="resource-button assignments" href="https://mypac-my.sharepoint.com/:w:/g/personal/shay_tsaban_pac_org_il/ES3U2wEzfwtMn5nlIAgMGJABA2gcny7g_oC9nXOtIwaBCQ?e=3skPRj" target="_blank" rel="noopener noreferrer">
                         <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
