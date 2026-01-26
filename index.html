@@ -1,733 +1,798 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Economics for Accountants - 3rd and Final Chapter!</title>
-    
+    <title>Economics for Accountants - Final Chapter</title>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
 
     <style>
-        /* CSS Variables for easy theme management */
+        /* 
+         * MODERN DESIGN SYSTEM 
+         * Premium aesthetics, glassmorphism, and vibrant interactions.
+         */
+
         :root {
-            --primary-color: #0d47a1; /* A deep, professional blue */
-            --secondary-color: #1565c0; /* A slightly lighter blue for accents */
-            --light-bg: #f5f7fa;      /* A very light grey for the page background */
-            --card-bg: #ffffff;         /* White for content cards */
-            --text-color: #333;       /* Dark grey for readable text */
-            --text-light: #555;     /* Lighter text for descriptions */
-            --border-color: #e0e0e0;   /* Subtle border color */
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Soft, modern shadow */
-            --success-color: #28a745;
-            --info-color: #17a2b8;
-            --fx-color: #ff6b35; /* New color for FX button */
-            --warning-color: #ffc107;
+            /* Palette */
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #0f172a;
+            --accent: #f59e0b;
+            /* Amber for highlights */
+            --success: #10b981;
+            --info: #06b6d4;
+            --danger: #ef4444;
+
+            /* Backgrounds */
+            --bg-body: #f1f5f9;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --bg-glass-strong: rgba(255, 255, 255, 0.95);
+
+            /* Shadows & Borders */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --border-glass: 1px solid rgba(255, 255, 255, 0.5);
+
+            /* Typography */
+            --font-heading: 'Outfit', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
 
-        /* Basic Reset */
-        *, *::before, *::after {
+        /* RESET & BASE */
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        /* Body Styling */
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-            background-color: var(--light-bg);
-            color: var(--text-color);
-            line-height: 1.7;
-            font-weight: 300;
+            font-family: var(--font-body);
+            background: var(--bg-body);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 0.15) 0px, transparent 50%);
+            color: #334155;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+            padding-bottom: 4rem;
         }
 
-        /* Header Bar with animated gradient */
-        .course-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            background-size: 200% 200%;
-            animation: gradientShift 8s ease infinite;
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: var(--font-heading);
+            color: var(--secondary);
+            line-height: 1.2;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+        }
+
+        /* HEADER / HERO */
+        .hero {
             position: relative;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 6rem 1rem 8rem 1rem;
+            /* Extra padding bottom for overlap */
+            text-align: center;
             overflow: hidden;
+            margin-bottom: -4rem;
+            /* Overlap effect */
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .course-header::before {
+        .hero::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .course-header h1 {
-            font-family: 'Lato', sans-serif;
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-        .course-header p {
-            font-size: 1.2em;
-            font-weight: 300;
-            opacity: 0.9;
-            position: relative;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.2), transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.1), transparent 40%);
             z-index: 1;
         }
 
-        /* Main Content Container */
-        .container {
-            max-width: 960px;
-            margin: -50px auto 40px auto; /* Pulls container up into header's shadow */
-            padding: 20px;
+        .hero-content {
             position: relative;
             z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeInDown 0.8s ease-out;
         }
 
-        /* Base Card Styling with hover effect */
-        .content-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
-            overflow: hidden; /* To contain border-radius */
-            transition: all 0.3s ease;
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, #ffffff, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: white;
+            /* fallback */
         }
 
-        .content-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
+        .hero p {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            font-weight: 300;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: var(--border-glass);
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 2.5rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
 
         .card-header {
-            padding: 25px 30px;
-            border-bottom: 1px solid var(--border-color);
-            background-color: #fafbfd;
-            position: relative;
-        }
-
-        .card-header::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transition: width 0.3s ease;
-        }
-
-        .content-card:hover .card-header::after {
-            width: 100%;
+            padding: 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
         .card-header h2 {
-            color: var(--primary-color);
-            font-family: 'Lato', sans-serif;
-            font-size: 1.8em;
-            font-weight: 700;
+            font-size: 1.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .card-body {
-            padding: 30px;
+            padding: 2rem;
         }
 
-        /* Instructor Info Card */
-        .instructor-info {
-            font-size: 1.1em;
+        /* PROFILED INSTRUCTOR */
+        .instructor-block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            font-size: 1rem;
+            color: #475569;
         }
-        .instructor-info strong {
-            font-weight: 700;
-            color: var(--text-color);
+
+        .instructor-block strong {
+            color: var(--secondary);
+            font-weight: 600;
         }
-        .instructor-info a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 700;
-            transition: color 0.3s ease;
+
+        .instructor-link {
+            color: var(--primary);
+            font-weight: 500;
             position: relative;
+            display: inline-block;
         }
-        .instructor-info a::after {
+
+        .instructor-link::after {
             content: '';
             position: absolute;
+            width: 100%;
+            height: 2px;
             bottom: -2px;
             left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary-color);
-            transition: width 0.3s ease;
-        }
-        .instructor-info a:hover::after {
-            width: 100%;
+            background-color: var(--primary);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
         }
 
-        /* Course Description */
-        .card-body p {
-            font-size: 1.1em;
-            color: var(--text-light);
-            margin-bottom: 15px;
+        .instructor-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
         }
 
-        /* Notes and Assignments Button Section */
-        .resources-section {
-            text-align: center;
-        }
-        .resources-section p {
-            margin-bottom: 25px;
-            font-size: 1.15em;
-            color: var(--text-light);
-        }
-
-        .button-group {
+        /* RESOURCES GRID */
+        .resources-wrapper {
             display: flex;
-            gap: 20px;
-            justify-content: center;
             flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1rem;
         }
 
-        .resource-button {
+        .btn-resource {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            color: white;
-            padding: 16px 35px;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.15em;
-            font-weight: 700;
-            transition: all 0.3s ease;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
-            min-width: 250px;
+            flex: 1 1 250px;
+            /* Flex responsiveness */
+            max-width: 400px;
+            justify-content: center;
         }
 
-        .resource-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.2);
-            transition: left 0.5s ease;
+        /* Button Variants */
+        .btn-notes {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
         }
 
-        .resource-button:hover::before {
-            left: 100%;
+        .btn-fx {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.3);
         }
 
-        .resource-button.notes {
-            background: linear-gradient(135deg, var(--success-color) 0%, #218838 100%);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        .btn-assignments {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.3);
         }
 
-        .resource-button.assignments {
-            background: linear-gradient(135deg, var(--info-color) 0%, #138496 100%);
-            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+        /* New Reversal Button Style */
+        .btn-reversal {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .resource-button.fx {
-            background: linear-gradient(135deg, var(--fx-color) 0%, #e55b2d 100%);
-            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        .btn-resource:hover {
+            transform: translateY(-4px) scale(1.02);
+            filter: brightness(1.1);
         }
 
-        .resource-button:hover {
-            transform: translateY(-3px);
-        }
-
-        .resource-button.notes:hover {
-            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
-        }
-
-        .resource-button.assignments:hover {
-            box-shadow: 0 8px 20px rgba(23, 162, 184, 0.4);
-        }
-
-        .resource-button.fx:hover {
-            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
-        }
-
-        .resource-button svg {
-            margin-right: 10px;
+        .btn-resource svg {
             width: 24px;
             height: 24px;
+            flex-shrink: 0;
         }
 
-        /* Lecture Section */
-        .lecture-title {
-            font-size: 1.2em;
-            font-weight: 700;
-            color: var(--text-color);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
+        /* VIDEO GRID LAYOUT */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
         }
 
-        .lecture-title::before {
-            content: '▶';
-            color: var(--secondary-color);
-            margin-right: 10px;
-            font-size: 0.8em;
-        }
-
-        /* Responsive Video Embed */
-        .video-embed {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
+        .video-item {
+            background: white;
+            border-radius: 16px;
             overflow: hidden;
-            max-width: 100%;
-            border-radius: 8px; /* Rounded corners for the video */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
-        .video-embed:hover {
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        .video-item:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: #cbd5e1;
         }
 
-        .video-embed iframe {
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+            /* 16:9 */
+            height: 0;
+            background: #000;
+        }
+
+        .video-wrapper iframe {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border: 0;
         }
 
-        /* Divider between videos */
-        .video-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
-            margin: 30px 0;
+        .video-meta {
+            padding: 1.25rem;
+            background: #fff;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .course-header h1 {
-                font-size: 2em;
-            }
-            .container {
-                margin-top: -30px;
-            }
-            .card-header h2 {
-                font-size: 1.5em;
-            }
-            .card-body {
-                padding: 20px;
-            }
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
-            .resource-button {
-                width: 100%;
-                max-width: 300px;
-            }
+        .video-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+            line-height: 1.4;
         }
 
-        /* Loading animation for page load */
-        @keyframes fadeIn {
+        .video-date {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeInDown {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .content-card {
-            animation: fadeIn 0.6s ease-out;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .content-card:nth-child(1) { animation-delay: 0.1s; }
-        .content-card:nth-child(2) { animation-delay: 0.2s; }
-        .content-card:nth-child(3) { animation-delay: 0.3s; }
-        .content-card:nth-child(4) { animation-delay: 0.4s; }
-        
-        /* New warning color for FX lecture */
-        .lecture-title.fx {
-            color: var(--fx-color);
+        .card {
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
         }
-        
-        .lecture-title.fx::before {
-            color: var(--fx-color);
+
+        .card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .card-header h2 {
+                font-size: 1.4rem;
+            }
+
+            .btn-resource {
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <header class="course-header">
-        <h1>Economics for Accountants</h1>
-        <p>3rd and Final Chapter!</p>
+    <!-- HERO HEADER -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Economics for Accountants</h1>
+            <p>3rd and Final Chapter &mdash; Mastering Macroeconomics</p>
+        </div>
     </header>
 
+    <!-- CONTENT -->
     <main class="container">
 
-        <section class="content-card">
+        <!-- WELCOME CARD -->
+        <section class="card">
             <div class="card-header">
-                <h2>Welcome to the Course 🎓</h2>
+                <h2>👋 Welcome to the Course</h2>
             </div>
-
             <div class="card-body">
-                <p>Welcome to the final, crucial chapter of <strong>Economics for Accountants</strong>! This course focuses on integrating advanced <strong>macroeconomic concepts</strong> (such as GNP, fiscal/monetary policy, and economic indicators) with their direct application in <strong>financial analysis and accounting decision-making</strong>.</p>
-                <hr style="border: 0; height: 1px; background: var(--border-color); margin: 25px 0;">
-                <div class="instructor-info">
+                <p style="font-size: 1.15rem; color: #4b5563;">
+                    Welcome to the final, crucial chapter of <strong>Economics for Accountants</strong>!
+                    This course focuses on integrating advanced <strong>macroeconomic concepts</strong>
+                    (such as GNP, fiscal/monetary policy, and economic indicators) with their direct application
+                    in <strong>financial analysis and accounting decision-making</strong>.
+                </p>
+                <div class="instructor-block">
                     <p><strong>Instructor:</strong> Dr. Shay Tsaban, Ph.D.</p>
-                    <p><strong>Contact:</strong> <a href="mailto:shay.tsaban@gmail.com">shay.tsaban@gmail.com</a></p>
+                    <p><strong>Contact:</strong> <a href="mailto:shay.tsaban@gmail.com"
+                            class="instructor-link">shay.tsaban@gmail.com</a></p>
                 </div>
             </div>
-            
         </section>
 
-        <section class="content-card">
+        <!-- RESOURCES CARD -->
+        <section class="card">
             <div class="card-header">
-                <h2>Course Resources 📚</h2>
+                <h2>📚 Course Resources</h2>
             </div>
-            <div class="card-body resources-section">
-                <p>Access all your course materials in one place. These comprehensive resources include lecture notes, practice problems, and assignments.</p>
-                <div class="button-group">
-                    <a class="resource-button notes" href="https://mypac-my.sharepoint.com/:w:/g/personal/shay_tsaban_pac_org_il/EYzUXpBH5y5MoxTaxhdekTcBVjI_54gxIMNzZCKj9mUjkA?e=OVXlQA" target="_blank" rel="noopener noreferrer">
-                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            <div class="card-body">
+                <p style="margin-bottom: 2rem; color: #64748b; text-align: center;">
+                    Access all year materials including notes, spreadsheets, and exercises.
+                </p>
+
+                <div class="resources-wrapper">
+                    <a class="btn-resource btn-notes"
+                        href="https://mypac-my.sharepoint.com/:w:/g/personal/shay_tsaban_pac_org_il/EYzUXpBH5y5MoxTaxhdekTcBVjI_54gxIMNzZCKj9mUjkA?e=OVXlQA"
+                        target="_blank" rel="noopener noreferrer">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
                         </svg>
                         Course Notes
                     </a>
-                    <a class="resource-button fx" href="https://mypac-my.sharepoint.com/:x:/g/personal/shay_tsaban_pac_org_il/IQAh18kq-DokTLHTgFUd8fwAAQrQ0SMcfq7VXhFmYR_qfgw?e=Nz7zM2" target="_blank" rel="noopener noreferrer">
-                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+
+                    <!-- NEW BUTTON REQUESTED -->
+                    <a class="btn-resource btn-reversal"
+                        href="https://mypac-my.sharepoint.com/:w:/g/personal/shay_tsaban_pac_org_il/IQAjaauKavA3TqclycNhe9ejAUtya1tvCFN3qQhG3O4-NSo?e=rvNxeJ"
+                        target="_blank" rel="noopener noreferrer">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19M11,17H13V7H11V17Z" />
+                        </svg>
+                        Lecture 13 Reversal Notes!
+                    </a>
+
+                    <a class="btn-resource btn-fx"
+                        href="https://mypac-my.sharepoint.com/:x:/g/personal/shay_tsaban_pac_org_il/IQAh18kq-DokTLHTgFUd8fwAAQrQ0SMcfq7VXhFmYR_qfgw?e=Nz7zM2"
+                        target="_blank" rel="noopener noreferrer">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M5,20H19V4H5M19,22H5C3.9,22 3,21.1 3,20V4C3,2.9 3.9,2 5,2H19C20.1,2 21,2.9 21,4V20C21,21.1 20.1,22 19,22Z" />
                         </svg>
                         Course Notes - FX
                     </a>
-                    <a class="resource-button assignments" href="https://mypac-my.sharepoint.com/:x:/g/personal/shay_tsaban_pac_org_il/IQCU2eDZIWHOT62NTImKbh7lATum1h-bSWpncHzDLdpugMI?e=pctWKy" rel="noopener noreferrer">
-                        <svg fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M9,17H7V10H9V17M13,17H11V7H13V17M17,17H15V13H17V17Z"/>
+
+                    <a class="btn-resource btn-assignments"
+                        href="https://mypac-my.sharepoint.com/:x:/g/personal/shay_tsaban_pac_org_il/IQCU2eDZIWHOT62NTImKbh7lATum1h-bSWpncHzDLdpugMI?e=pctWKy"
+                        rel="noopener noreferrer">
+                        <svg fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M9,17H7V10H9V17M13,17H11V7H13V17M17,17H15V13H17V17Z" />
                         </svg>
-                        Assignments & Exercises
+                        Assignments
                     </a>
                 </div>
             </div>
         </section>
 
-       <section class="content-card">
+        <!-- GROUP 01 VIDEOS -->
+        <section class="card">
             <div class="card-header">
-                <h2>Group 01 - 8:00 - Lecture Recordings 🎥</h2>
+                <h2>🎥 Group 01 - 8:00 Lectures</h2>
             </div>
             <div class="card-body">
-                <p class="lecture-title">Lecture 1 - Introduction - Basics of GNP, Part 1 - 3.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/tha1srN5_Ys" 
-                        title="Lecture 1 - Introduction - Basics of GNP, Part 1 - 3.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="video-divider"></div>
-                <p class="lecture-title">Lecture 2 - Calculating GNP (Y) - When Government is Involved - 10.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/98xkuTu7RFI" 
-                        title="Lecture 2 - Calculating GNP (Y) - When Government is Involved - 10.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
+                <div class="video-grid">
+                    <!-- Lecture 1 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/tha1srN5_Ys" title="Lecture 1" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 1 - Introduction - Basics of GNP, Part 1</div>
+                            <div class="video-date">3.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 2 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/98xkuTu7RFI" title="Lecture 2" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 2 - Calculating GNP (Y) - When Government is Involved</div>
+                            <div class="video-date">10.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 3 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/Qgwm8p1Lh4k" title="Lecture 3" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 3 - Nominal GDP, Real GDP, GDP Per Capita</div>
+                            <div class="video-date">17.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 4 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/2QV1qDbk7DA" title="Lecture 4" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 4 - Exercises &amp; Real Wage</div>
+                            <div class="video-date">24.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 5 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/0WOJ5nuMABo" title="Lecture 5" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 5 - Advanced Exercises</div>
+                            <div class="video-date">1.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 6 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/A7Dj5SKU-3c" title="Lecture 6" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 6 - Government Budget</div>
+                            <div class="video-date">8.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 7 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/no33kFBH5tY" title="Lecture 7" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 7 - Deficit Target &amp; Exp. Ceiling</div>
+                            <div class="video-date">15.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 8 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/McGuCRedB0U" title="Lecture 8" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 8 - Anti Cyclical Fiscal Policy</div>
+                            <div class="video-date">22.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 9 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/GHOQHEfWMyw" title="Lecture 9" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 9 - Monetary Policy</div>
+                            <div class="video-date">29.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 10 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/D6zkBOB4RlI" title="Lecture 10" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 10 - FX Market</div>
+                            <div class="video-date">5.1.2026</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 11 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/Bc0_tOOQ4-Y" title="Lecture 11" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 11 - FX Market - Part 2</div>
+                            <div class="video-date">12.1.2026</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 12 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/SEomShHgSsY" title="Lecture 12" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 12 - Job Market</div>
+                            <div class="video-date">19.1.2026</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <p class="lecture-title">Lecture 3 - Nominal GDP, Real GDP, GDP Per Capita - 17.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/Qgwm8p1Lh4k" 
-                        title="Lecture 3 - Nominal GDP, Real GDP, GDP Per Capita - 17.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-            </div>
-             <div class="card-body">
-                <p class="lecture-title">Lecture 4 - Nominal GDP, Real GDP, GDP Per Capita Exercises - & Real Wage - 24.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/2QV1qDbk7DA" 
-                        title="Lecture 4 - Nominal GDP, Real GDP, GDP Per Capita Exercises - & Real Wage - 24.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-             </div>
-
-            <div class="card-body">
-                <p class="lecture-title">Lecture 5 - Advanced Exercises related to Nominal GDP, Real GDP, GDP Per Capita Exercises - 1.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/0WOJ5nuMABo" 
-                        title="Lecture 5 - Advanced Exercises related to Nominal GDP, Real GDP, GDP Per Capita Exercises - 1.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-             </div>
-
-            <div class="card-body">
-                <p class="lecture-title">Lecture 6 - Government Budget - 8.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/A7Dj5SKU-3c" 
-                        title="Lecture 6 - Government Budget - 8.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-             </div>
-
-             <div class="card-body">
-                <p class="lecture-title">Lecture 7 - Deficit Traget and Expenditure Ceiling - 15.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/no33kFBH5tY" 
-                        title="Lecture 7 - Deficit Traget and Expenditure Ceiling - 15.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-             </div>
-
-             <div class="card-body">
-                <p class="lecture-title">Lecture 8 - Anti Cyclical Fiscal Policy - 22.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/McGuCRedB0U" 
-                        title="Lecture 8 - Anti Cyclical Fiscal Policy - 22.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-             </div>
-
-            <div class="card-body">
-                <p class="lecture-title">Lecture 9 - Monetary Policy - 29.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/GHOQHEfWMyw" 
-                        title="Lecture 9 - Monetary Policy - 29.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-             </div>
-             
-             <div class="card-body">
-                <p class="lecture-title">Lecture 10 - FX Market - 5.1.2026</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/D6zkBOB4RlI" 
-                        title="Lecture 10 - FX Market - 5.1.2026" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-             </div>
-  <p class="lecture-title">Lecture 11 - FX Market - Part 2 - 12.1.2026</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/Bc0_tOOQ4-Y" 
-                        title="Lecture 9 - Monetary Policy - 29.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-
-  <p class="lecture-title">Lecture 12 - Job Market - 19.1.2026</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/SEomShHgSsY" 
-                        title="Lecture 9 - Monetary Policy - 29.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
         </section>
-        
-        <section class="content-card">
+
+        <!-- GROUP 02 VIDEOS -->
+        <section class="card">
             <div class="card-header">
-                <h2>Group 02 - 11:00 - Lecture Recordings 📹</h2>
+                <h2>📹 Group 02 - 11:00 Lectures</h2>
             </div>
             <div class="card-body">
-                <p class="lecture-title">Lecture 1 - Introduction - Basics of GNP, Part 1 - 3.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/4vvRz1upTWQ" 
-                        title="Lecture 1 - Introduction - Basics of GNP, Part 1 - 3.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
+                <div class="video-grid">
+                    <!-- Lecture 1 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/4vvRz1upTWQ" title="Lecture 1" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 1 - Introduction</div>
+                            <div class="video-date">3.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 2 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/B_bs8bMK8hU" title="Lecture 2" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 2 - Calculating GNP</div>
+                            <div class="video-date">10.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 3 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/AtBwC25RMiQ" title="Lecture 3" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 3 - The REAL GDP</div>
+                            <div class="video-date">20.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 4 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/z5FfWp09B8Y" title="Lecture 4" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 4 - Exercises &amp; Real Wage</div>
+                            <div class="video-date">24.11.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 5 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/OLAIXuz8ad4" title="Lecture 5" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 5 - Advanced Exercises</div>
+                            <div class="video-date">1.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 6 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/ewvkzCkSoRk" title="Lecture 6" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 6 - Government Budget</div>
+                            <div class="video-date">8.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 7 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/Azv7NnEgf3Q" title="Lecture 7" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 7 - Expenditure Ceiling</div>
+                            <div class="video-date">15.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 8 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/vON-buVly_s" title="Lecture 8" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 8 - Anti Cyclical Fiscal Policy</div>
+                            <div class="video-date">22.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 9 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/V4uXNL8ERRg" title="Lecture 9" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 9 - Monetary Policy</div>
+                            <div class="video-date">29.12.2025</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 10 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/ATA4iguMuNo" title="Lecture 10" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 10 - FX Market - Part 1</div>
+                            <div class="video-date">5.1.2026</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 11 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/1DM926c6b8Q" title="Lecture 11" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 11 - FX Market - Part 2</div>
+                            <div class="video-date">12.1.2026</div>
+                        </div>
+                    </div>
+                    <!-- Lecture 12 -->
+                    <div class="video-item">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/bIU5CdAZewE" title="Lecture 12" frameborder="0"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="video-meta">
+                            <div class="video-title">Lecture 12 - Job Market</div>
+                            <div class="video-date">19.1.2026</div>
+                        </div>
+                    </div>
+
                 </div>
-
-                <div class="video-divider"></div>
-
-                <p class="lecture-title">Lecture 2 - Calculating GNP (Y) - When Government is Involved - 10.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/B_bs8bMK8hU" 
-                        title="Lecture 2 - Calculating GNP (Y) - When Government is Involved - 10.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                 <p class="lecture-title">Lecture 3 - The REAL GDP - Aspects in Actual Growth - 20.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/AtBwC25RMiQ" 
-                        title="Lecture 3 - The REAL GDP - Aspects in Actual Growth - 20.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                  <p class="lecture-title">Lecture 4 - Nominal GDP, Real GDP, GDP Per Capita Exercises - & Real Wage - 24.11.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/z5FfWp09B8Y" 
-                        title="Lecture 4 - Nominal GDP, Real GDP, GDP Per Capita Exercises - & Real Wage - 24.11.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                 <p class="lecture-title">Lecture 5 - Advanced Exercises related to Nominal GDP, Real GDP, GDP Per Capita Exercises - 1.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/OLAIXuz8ad4" 
-                        title="Lecture 5 - Advanced Exercises related to Nominal GDP, Real GDP, GDP Per Capita Exercises - 1.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                <p class="lecture-title">Lecture 6 - Government Budget - 8.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/ewvkzCkSoRk" 
-                        title="Lecture 6 - Government Budget - 8.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                <p class="lecture-title">Lecture 7 - Government Budget - Expenditure Ceiling - 15.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/Azv7NnEgf3Q" 
-                        title="Lecture 7 - Government Budget - Expenditure Ceiling - 15.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                <p class="lecture-title">Lecture 8 - Anti Cyclical Fiscal Policy - 22.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/vON-buVly_s" 
-                        title="Lecture 8 - Anti Cyclical Fiscal Policy - 22.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                <p class="lecture-title">Lecture 9 - Monetary Policy - 29.12.2025</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/V4uXNL8ERRg" 
-                        title="Lecture 9 - Monetary Policy - 29.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
- <p class="lecture-title">Lecture 10 - FX Market - Part 1 - 5.1.2026</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/ATA4iguMuNo" 
-                        title="Lecture 9 - Monetary Policy - 29.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                 <p class="lecture-title">Lecture 11 - FX Market - Part 2 - 12.1.2026</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/1DM926c6b8Q" 
-                        title="Lecture 9 - Monetary Policy - 29.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-                 <p class="lecture-title">Lecture 12 - Job Market - 19.1.2026</p>
-                <div class="video-embed">
-                    <iframe 
-                        src="https://www.youtube.com/embed/bIU5CdAZewE" 
-                        title="Lecture 9 - Monetary Policy - 29.12.2025" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
-
-
-             </div>
+            </div>
         </section>
 
     </main>
-
 </body>
+
 </html>
