@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>יסודות מושגי יסוד בכלכלה – תוצר</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFBFD;
+  --bg2: #F0F3F8;
+  --bg3: #E4E9F1;
+  --card: #FFFFFF;
+  --card-hover: #F7F9FC;
+  --accent: #0F7B6C;
+  --accent-light: #E8F5F2;
+  --accent-border: #B8DDD6;
+  --gold: #B8860B;
+  --gold-light: #FDF6E3;
+  --gold-border: #E8D5A0;
+  --coral: #C0392B;
+  --coral-light: #FDEDEC;
+  --coral-border: #F0B4AE;
+  --purple: #6C3483;
+  --purple-light: #F3EDF7;
+  --purple-border: #D2B4DE;
+  --blue: #2471A3;
+  --text: #1E2A3A;
+  --text2: #3D4F63;
+  --text3: #7A8DA0;
+  --border: #D6DCE5;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+  --radius: 14px;
+  --radius-sm: 10px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.95;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 17px;
+}
+::-webkit-scrollbar { width: 7px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+.hero {
+  position: relative;
+  padding: 70px 24px 55px;
+  text-align: center;
+  background: linear-gradient(170deg, #FFFFFF 0%, #EDF2F7 50%, #E0ECF5 100%);
+  border-bottom: 1px solid var(--border);
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 14px; font-weight: 600;
+  padding: 7px 20px; border-radius: 50px;
+  border: 1px solid var(--accent-border);
+  margin-bottom: 18px;
+}
+.hero h1 {
+  font-family: 'Rubik', sans-serif;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  font-weight: 700; color: var(--text); margin-bottom: 10px;
+}
+.hero h1 span { color: var(--accent); }
+.hero p { font-size: 18px; color: var(--text2); max-width: 660px; margin: 0 auto 28px; }
+.hero-stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; }
+.hero-stat { text-align: center; }
+.hero-stat .num { font-family: 'Rubik', sans-serif; font-size: 30px; font-weight: 700; color: var(--accent); }
+.hero-stat .lbl { font-size: 14px; color: var(--text3); }
+
+.nav-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(255,255,255,0.94);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px; overflow-x: auto;
+}
+.nav-bar::-webkit-scrollbar { height: 0; }
+.nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 4px; justify-content: center; }
+.nav-btn {
+  flex-shrink: 0; padding: 14px 18px;
+  font-family: 'Heebo', sans-serif; font-size: 14.5px; font-weight: 500;
+  color: var(--text3); background: none; border: none; cursor: pointer;
+  white-space: nowrap; border-bottom: 2.5px solid transparent; transition: all 0.25s;
+}
+.nav-btn:hover, .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.container { max-width: 860px; margin: 0 auto; padding: 44px 24px 100px; }
+
+.section { margin-bottom: 56px; animation: fadeUp 0.45s ease both; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+.section-header { text-align: center; margin-bottom: 30px; }
+.section-icon {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 10px;
+}
+.section-icon.green { background: var(--accent-light); border: 1px solid var(--accent-border); }
+.section-icon.gold { background: var(--gold-light); border: 1px solid var(--gold-border); }
+.section-icon.coral { background: var(--coral-light); border: 1px solid var(--coral-border); }
+.section-icon.purple { background: var(--purple-light); border: 1px solid var(--purple-border); }
+.section-title { font-family: 'Rubik', sans-serif; font-size: 26px; font-weight: 700; color: var(--text); }
+.section-subtitle { font-size: 15px; color: var(--text3); margin-top: 2px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 30px 32px; margin-bottom: 20px; box-shadow: var(--shadow); transition: box-shadow 0.3s;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card h3 { font-family: 'Rubik', sans-serif; font-size: 20px; font-weight: 600; color: var(--text); margin-bottom: 14px; text-align: center; }
+.card p, .card li { font-size: 16.5px; color: var(--text2); line-height: 2; }
+
+.key-point {
+  background: var(--accent-light); border-right: 4px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 18px 24px; margin: 18px 0;
+}
+.key-point .label { font-size: 13px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.key-point p { font-size: 16px; color: var(--text); }
+
+.tip-box {
+  background: var(--gold-light); border-right: 4px solid var(--gold);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 18px 24px; margin: 18px 0;
+}
+.tip-box .label { font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: 1px; margin-bottom: 5px; }
+.tip-box p { font-size: 15.5px; color: var(--text); }
+
+.warning-box {
+  background: var(--coral-light); border-right: 4px solid var(--coral);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 18px 24px; margin: 18px 0;
+}
+.warning-box .label { font-size: 13px; font-weight: 700; color: var(--coral); letter-spacing: 1px; margin-bottom: 5px; }
+.warning-box p { font-size: 15.5px; color: var(--text); }
+
+.formula {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 22px 28px; margin: 18px 0; text-align: center;
+  font-family: 'Rubik', sans-serif; font-size: 19px; font-weight: 600; color: var(--accent); direction: ltr;
+}
+.formula small { display: block; font-size: 14px; font-weight: 400; color: var(--text3); margin-top: 6px; direction: rtl; }
+
+.table-wrap {
+  overflow-x: auto; margin: 18px 0; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+thead th { background: var(--bg2); color: var(--accent); font-weight: 600; padding: 13px 18px; text-align: right; white-space: nowrap; font-size: 15px; }
+tbody td { padding: 12px 18px; border-top: 1px solid var(--border); color: var(--text2); font-size: 15.5px; }
+tbody tr:hover { background: var(--bg2); }
+.num-cell { text-align: center; font-family: 'Rubik', sans-serif; font-weight: 500; }
+.total-row { font-weight: 700; color: var(--accent) !important; background: var(--accent-light); }
+
+.playground {
+  background: #FFFFFF; border: 2px solid var(--accent-border); border-radius: var(--radius);
+  padding: 30px 32px; margin: 26px 0; box-shadow: var(--shadow);
+}
+.playground-title {
+  font-family: 'Rubik', sans-serif; font-size: 18px; font-weight: 600;
+  color: var(--accent); margin-bottom: 6px; text-align: center;
+}
+.playground-title::before { content: '🧪 '; }
+.playground > p { text-align: center; }
+.input-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 18px 0; }
+.input-field { display: flex; flex-direction: column; gap: 5px; }
+.input-field label { font-size: 14px; color: var(--text3); font-weight: 500; }
+.input-field input {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 8px;
+  padding: 11px 14px; color: var(--text); font-family: 'Heebo', sans-serif;
+  font-size: 16px; outline: none; transition: border-color 0.2s; text-align: center;
+}
+.input-field input:focus { border-color: var(--accent); background: #fff; }
+
+.calc-btn {
+  display: block; margin: 0 auto; background: var(--accent); color: #fff;
+  font-family: 'Heebo', sans-serif; font-size: 16px; font-weight: 700;
+  padding: 13px 32px; border: none; border-radius: 10px; cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.calc-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(15,123,108,0.25); }
+.calc-btn:active { transform: scale(0.98); }
+
+.result-box {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 20px 22px; margin-top: 18px; min-height: 54px;
+  font-size: 16px; color: var(--text2); white-space: pre-wrap; line-height: 2;
+}
+.result-box .highlight { color: var(--accent); font-weight: 700; }
+.result-box .gold-val { color: var(--gold); font-weight: 700; }
+
+.quiz-section {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 30px 32px; margin-bottom: 20px; box-shadow: var(--shadow);
+}
+.quiz-q { font-size: 17px; font-weight: 600; color: var(--text); margin-bottom: 18px; line-height: 1.8; text-align: center; }
+.quiz-q .q-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--accent); color: #fff;
+  border-radius: 8px; font-size: 14px; font-weight: 700; margin-left: 10px;
+}
+.quiz-options { display: flex; flex-direction: column; gap: 10px; }
+.quiz-opt {
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+  background: var(--bg2); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  cursor: pointer; transition: all 0.2s; font-size: 16px; color: var(--text2);
+}
+.quiz-opt:hover { background: var(--bg3); border-color: var(--text3); }
+.quiz-opt .circle {
+  width: 22px; height: 22px; border: 2px solid var(--text3); border-radius: 50%;
+  flex-shrink: 0; transition: all 0.2s; position: relative;
+}
+.quiz-opt.selected { border-color: var(--accent); background: var(--accent-light); color: var(--text); }
+.quiz-opt.selected .circle { border-color: var(--accent); background: var(--accent); }
+.quiz-opt.selected .circle::after {
+  content: '✓'; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%); color: #fff; font-size: 13px; font-weight: 700;
+}
+.quiz-opt.correct { border-color: var(--accent); background: var(--accent-light); }
+.quiz-opt.wrong { border-color: var(--coral); background: var(--coral-light); }
+
+.quiz-feedback {
+  margin-top: 16px; padding: 16px 20px; border-radius: var(--radius-sm);
+  font-size: 15px; display: none; line-height: 1.9;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb { background: var(--accent-light); color: var(--accent); border-right: 4px solid var(--accent); }
+.quiz-feedback.wrong-fb { background: var(--coral-light); color: var(--coral); border-right: 4px solid var(--coral); }
+
+.quiz-check-btn {
+  display: block; margin: 14px auto 0; background: var(--bg3); color: var(--text);
+  font-family: 'Heebo', sans-serif; font-size: 15px; font-weight: 600;
+  padding: 11px 28px; border: 1px solid var(--border); border-radius: 10px;
+  cursor: pointer; transition: all 0.2s;
+}
+.quiz-check-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.poll-box {
+  background: var(--card); border: 1px solid var(--purple-border); border-radius: var(--radius);
+  padding: 28px 32px; margin: 22px 0; box-shadow: var(--shadow);
+}
+.poll-box h4 { font-family: 'Rubik', sans-serif; font-size: 17px; color: var(--purple); margin-bottom: 6px; text-align: center; }
+.poll-box > p { text-align: center; }
+.poll-option { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; cursor: pointer; }
+.poll-option .bar-track {
+  flex: 1; height: 40px; background: var(--bg2); border-radius: 8px;
+  overflow: hidden; position: relative; border: 1px solid var(--border);
+}
+.poll-option .bar-fill {
+  height: 100%; background: linear-gradient(90deg, rgba(108,52,131,0.18), rgba(108,52,131,0.06));
+  border-radius: 8px; width: 0%; transition: width 0.6s ease;
+}
+.poll-option .bar-label {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font-size: 15px; color: var(--text2); z-index: 1;
+}
+.poll-option .bar-pct { font-family: 'Rubik', sans-serif; font-size: 14px; color: var(--purple); font-weight: 600; min-width: 44px; text-align: left; }
+.poll-voted .poll-option { cursor: default; }
+
+.summary-box {
+  background: var(--accent-light); border: 1px solid var(--accent-border);
+  border-radius: var(--radius); padding: 26px 28px; margin: 22px 0;
+}
+.summary-box h4 { font-family: 'Rubik', sans-serif; font-size: 17px; color: var(--accent); margin-bottom: 14px; text-align: center; }
+.summary-box h4::before { content: '📋 '; }
+.summary-box ul { list-style: none; padding: 0; }
+.summary-box li { padding: 7px 0; font-size: 15.5px; color: var(--text2); padding-right: 22px; position: relative; }
+.summary-box li::before { content: '✦'; position: absolute; right: 0; color: var(--accent); font-size: 11px; top: 11px; }
+
+.step-list { counter-reset: steps; }
+.step-item { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
+.step-num {
+  width: 34px; height: 34px; background: var(--accent); color: #fff; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Rubik', sans-serif; font-size: 15px; font-weight: 700; flex-shrink: 0;
+}
+.step-text { font-size: 16px; color: var(--text2); padding-top: 5px; line-height: 1.85; }
+
+.sep { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 44px 0; }
+
+.score-card {
+  text-align: center; background: var(--card); border: 2px solid var(--accent-border);
+  border-radius: var(--radius); padding: 44px 24px; margin: 30px 0; box-shadow: var(--shadow-md);
+}
+.score-num { font-family: 'Rubik', sans-serif; font-size: 56px; font-weight: 700; color: var(--accent); }
+.score-label { font-size: 17px; color: var(--text2); margin-top: 6px; }
+
+.progress-bar { position: fixed; top: 0; right: 0; width: 100%; height: 3px; z-index: 200; background: var(--bg2); }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--blue)); width: 0%; transition: width 0.15s; }
+
+@media (max-width: 600px) {
+  .hero { padding: 45px 16px 35px; }
+  .container { padding: 28px 16px 80px; }
+  .card, .playground, .quiz-section, .poll-box { padding: 22px 18px; }
+  .input-group { grid-template-columns: 1fr; }
+  .hero-stats { gap: 28px; }
+  .nav-inner { justify-content: flex-start; }
+}
+@media print {
+  .nav-bar, .progress-bar { display: none; }
+  body { font-size: 14px; }
+  .card { box-shadow: none; border: 1px solid #ccc; }
+}
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="hero">
+  <div class="hero-badge">📘 קורס: מושגי יסוד בכלכלה</div>
+  <h1>הרצאות 1–2: <span>תוצר</span></h1>
+  <p>סיכום אינטראקטיבי מלא – מושגי יסוד, חישובים, סקטור עסקי וציבורי, תקציב ממשלה, תרגול עצמי ומשובים</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">6</div><div class="lbl">נושאי ליבה</div></div>
+    <div class="hero-stat"><div class="num">3</div><div class="lbl">מגרשי משחק</div></div>
+    <div class="hero-stat"><div class="num">12</div><div class="lbl">שאלות רב-ברירה</div></div>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="scrollToSec('sec1')">מהו תוצר?</button>
+    <button class="nav-btn" onclick="scrollToSec('sec2')">ערך מוסף</button>
+    <button class="nav-btn" onclick="scrollToSec('sec3')">הכנסה נובעת</button>
+    <button class="nav-btn" onclick="scrollToSec('sec4')">סקטור ציבורי</button>
+    <button class="nav-btn" onclick="scrollToSec('sec5')">תקציב ממשלה</button>
+    <button class="nav-btn" onclick="scrollToSec('sec6')">סיכום כולל</button>
+    <button class="nav-btn" onclick="scrollToSec('quizSec')">🎯 תרגול</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- SEC 1 -->
+<div class="section" id="sec1">
+  <div class="section-header">
+    <div class="section-icon green">📊</div>
+    <div class="section-title">מהו תוצר?</div>
+    <div class="section-subtitle">GNP / GDP – הגדרה, מהות וחשיבות</div>
+  </div>
+  <div class="card">
+    <h3>הגדרה בסיסית</h3>
+    <p><strong>תוצר לאומי גולמי (תל"ג / GNP)</strong> משקף את הערך הכולל של כל הסחורות והשירותים שיוצרו במשק בתקופה נתונה (בדרך כלל שנה). נמדד במונחים כספיים (דולרים / ש"ח).</p>
+    <div class="key-point"><div class="label">עיקרון מרכזי</div><p>התוצר הוא המדד הכלכלי החשוב ביותר – הוא משקף כמה ערך כלכלי מפיק המשק. שיפורים מהותיים בתוצר קשורים לשיפור במדדים הכלכליים במדינה.</p></div>
+  </div>
+  <div class="card">
+    <h3>ההקבלה לעולם החשבונאי</h3>
+    <p>כשם שדוח רווח והפסד מודד ברמת חברה בודדת את הביצועים הכספיים שלה – כך התוצר בוחן את הביצועים הכספיים של <strong>כלל המשק</strong> על בסיס תקופתי.</p>
+    <p style="margin-top:10px;">וכשם שניתוח דוח רוו"ה מאפשר להסיק מסקנות על התפתחות חברה – כך שינויים בתוצר מאפשרים להבין את ההשלכה של אירועים כלכליים על התפתחות במשק.</p>
+  </div>
+  <div class="card">
+    <h3>מי מייצר את התוצר?</h3>
+    <p>התוצר לא נוצר "סתם" – הוא יוצא מפעילות של שני גורמים עיקריים:</p>
+    <div class="step-list" style="margin-top:14px;">
+      <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>הסקטור העסקי</strong> – פירמות (חברות) שרוכשות תשומות, מייצרות מוצרים ומוכרות אותם.</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>הסקטור הציבורי</strong> – הממשלה שמספקת שירותים ציבוריים (ביטחון, חינוך, בריאות וכו').</div></div>
+    </div>
+    <div class="formula">Y = תוצר סקטור עסקי + תוצר סקטור ציבורי<small>Y = סך התוצר במשק</small></div>
+  </div>
+  <div class="poll-box" id="poll1">
+    <h4>🎤 שאלת הפעלה – מה דעתך?</h4>
+    <p style="font-size:15px;color:var(--text2);margin-bottom:16px;">איזה מהמשפטים הבאים נכון ביותר?</p>
+    <div class="poll-option" onclick="votePoll('poll1',0)"><div class="bar-track"><span class="bar-fill"></span><span class="bar-label">התוצר מודד רק את כמות המוצרים</span></div><span class="bar-pct"></span></div>
+    <div class="poll-option" onclick="votePoll('poll1',1)"><div class="bar-track"><span class="bar-fill"></span><span class="bar-label">התוצר מודד את הערך הכספי של סחורות ושירותים</span></div><span class="bar-pct"></span></div>
+    <div class="poll-option" onclick="votePoll('poll1',2)"><div class="bar-track"><span class="bar-fill"></span><span class="bar-label">התוצר מודד רק את הרווח של חברות</span></div><span class="bar-pct"></span></div>
+  </div>
+  <div class="summary-box"><h4>סיכום – מהו תוצר?</h4><ul>
+    <li>תוצר = ערך כולל של סחורות ושירותים שנוצרו במשק בתקופה נתונה</li>
+    <li>נמדד במונחים כספיים ומהווה את המדד הכלכלי החשוב ביותר</li>
+    <li>מקביל לדוח רווח והפסד – ברמת המשק כולו</li>
+    <li>נובע מפעילות הסקטור העסקי (פירמות) והסקטור הציבורי (ממשלה)</li>
+  </ul></div>
+</div>
+<div class="sep"></div>
+
+<!-- SEC 2 -->
+<div class="section" id="sec2">
+  <div class="section-header">
+    <div class="section-icon gold">🏭</div>
+    <div class="section-title">ערך מוסף של פירמות</div>
+    <div class="section-subtitle">כיצד מודדים את התרומה של כל חברה לתוצר?</div>
+  </div>
+  <div class="card">
+    <h3>מהו ערך מוסף?</h3>
+    <p>פירמות רוכשות תשומות (חומרי גלם, שירותים) ומייצרות מוצרים ששווים <strong>יותר</strong> מהתשומות. ההפרש הזה הוא <strong>הערך המוסף</strong>.</p>
+    <div class="formula">ערך מוסף = מכירות − קניות מפירמות<small>ההשבחה שהחברה מוסיפה מעבר לעלות התשומות</small></div>
+    <div class="tip-box"><div class="label">💡 טיפ חשוב</div><p>שכר עבודה <strong>אינו</strong> מנוכה בחישוב ערך מוסף! שכר הוא חלק מההכנסה הנובעת – לא עלות שמפחיתה ערך מוסף. הסיבה: בכלכלה, שכר שהחברה משלמת מפרנס את הציבור – כלומר תורם למשק.</p></div>
+  </div>
+  <div class="card">
+    <h3>דוגמה מספרית – שתי פירמות</h3>
+    <p>פירמה א' מגדלת חיטה ומוכרת לפירמה ב' ב-50 מיליון ש"ח. פירמה ב' מייצרת מוצרי מאפה ומוכרת לציבור ב-200 מיליון ש"ח.</p>
+    <div class="table-wrap"><table><thead><tr><th></th><th>פירמה א'</th><th>פירמה ב'</th></tr></thead><tbody>
+      <tr><td>מכירות</td><td class="num-cell">50</td><td class="num-cell">200</td></tr>
+      <tr><td>קניות מפירמות</td><td class="num-cell">0</td><td class="num-cell">50</td></tr>
+      <tr class="total-row"><td>ערך מוסף</td><td class="num-cell">50</td><td class="num-cell">150</td></tr>
+    </tbody></table></div>
+    <p style="margin-top:12px;text-align:center;">סך ערך מוסף פירמות (= תוצר הסקטור העסקי): <strong style="color:var(--accent);">200</strong></p>
+  </div>
+  <div class="card">
+    <h3>ההבדל בין ערך מוסף לרווח</h3>
+    <p>ערך מוסף ≠ רווח נקי. הרווח מנכה שכר עבודה; הערך המוסף לא. הערך המוסף כולל גם את השכר, כי מנקודת המבט של <strong>המשק כולו</strong> – שכר העבודה הוא הכנסה שזורמת לציבור.</p>
+    <div class="table-wrap"><table><thead><tr><th></th><th>פירמה א'</th><th>פירמה ב'</th></tr></thead><tbody>
+      <tr><td>מכירות</td><td class="num-cell">300</td><td class="num-cell">1,000</td></tr>
+      <tr><td>קניות מפירמות</td><td class="num-cell">0</td><td class="num-cell">(300)</td></tr>
+      <tr><td>רווח גולמי</td><td class="num-cell">300</td><td class="num-cell">700</td></tr>
+      <tr><td>שכר – מכירה ושיווק</td><td class="num-cell">(50)</td><td class="num-cell">(200)</td></tr>
+      <tr><td>שכר – הנהלה</td><td class="num-cell">(150)</td><td class="num-cell">(100)</td></tr>
+      <tr><td>רווח נקי</td><td class="num-cell">100</td><td class="num-cell">400</td></tr>
+      <tr class="total-row"><td>ערך מוסף (מכירות − קניות)</td><td class="num-cell">300</td><td class="num-cell">700</td></tr>
+    </tbody></table></div>
+    <div class="warning-box"><div class="label">⚠️ טעות נפוצה</div><p>חישוב ערך מוסף דורש ניכוי קניות מפירמות <strong>בלבד</strong> – לא ניכוי שכר עבודה, לא ניכוי שכ"ד לפרטיים, ולא ניכוי מסים.</p></div>
+  </div>
+  <div class="playground" id="pg1">
+    <div class="playground-title">מחשבון ערך מוסף – נסו בעצמכם!</div>
+    <p style="font-size:14px;color:var(--text3);margin-bottom:14px;">הזינו נתונים של שתי פירמות וצפו בחישוב</p>
+    <div class="input-group">
+      <div class="input-field"><label>מכירות פירמה א'</label><input type="number" id="pg1_sA" value="300"></div>
+      <div class="input-field"><label>קניות מפירמות – א'</label><input type="number" id="pg1_pA" value="0"></div>
+      <div class="input-field"><label>מכירות פירמה ב'</label><input type="number" id="pg1_sB" value="1000"></div>
+      <div class="input-field"><label>קניות מפירמות – ב'</label><input type="number" id="pg1_pB" value="300"></div>
+    </div>
+    <button class="calc-btn" onclick="calcPG1()">חשב ערך מוסף ⟵</button>
+    <div class="result-box" id="pg1_result">לחצו "חשב" לראות תוצאות...</div>
+  </div>
+  <div class="summary-box"><h4>סיכום – ערך מוסף</h4><ul>
+    <li>ערך מוסף = מכירות − קניות מפירמות (תשומות מחברות אחרות)</li>
+    <li>שכר עבודה לא מנוכה – הוא חלק מהערך המוסף!</li>
+    <li>סך ערכים מוספים של כל הפירמות = תוצר הסקטור העסקי</li>
+    <li>ערך מוסף ≠ רווח נקי (ההבדל: שכר עבודה ותשלומים לפרטיים)</li>
+  </ul></div>
+</div>
+<div class="sep"></div>
+
+<!-- SEC 3 -->
+<div class="section" id="sec3">
+  <div class="section-header">
+    <div class="section-icon coral">💰</div>
+    <div class="section-title">הכנסה נובעת</div>
+    <div class="section-subtitle">למי זורם הערך המוסף? – גישת ההכנסה</div>
+  </div>
+  <div class="card">
+    <h3>הגדרה: הכנסה נובעת</h3>
+    <p>הכנסה נובעת = <strong>כל סכום כספי שהחברה מעבירה לאנשים במשק</strong>. היא שווה תמיד לערך המוסף, אך נמדדת מצד "המקבלים" ולא מצד "הייצור".</p>
+    <div class="formula">הכנסה נובעת = שכר עבודה + רווח נקי + תשלומים לפרטיים<small>= ערך מוסף (תמיד!)</small></div>
+  </div>
+  <div class="card">
+    <h3>דוגמה: חברת אבנר בע"מ (2018)</h3>
+    <div class="table-wrap"><table><thead><tr><th>סעיף</th><th>מיליוני ש"ח</th></tr></thead><tbody>
+      <tr><td>מכירות</td><td class="num-cell">100</td></tr>
+      <tr><td>קניות מפירמות (מוצרים, שירותים, חשמל)</td><td class="num-cell">(30)</td></tr>
+      <tr><td>שכר עבודה</td><td class="num-cell">(40)</td></tr>
+      <tr><td>שכר דירה לפרטיים</td><td class="num-cell">(10)</td></tr>
+      <tr><td>רווח נקי</td><td class="num-cell">20</td></tr>
+    </tbody></table></div>
+    <p style="margin-top:16px;text-align:center;"><strong>א. ערך מוסף</strong> = 100 − 30 = <strong style="color:var(--accent);">70</strong></p>
+    <p style="text-align:center;"><strong>ב. הכנסה נובעת:</strong></p>
+    <div class="table-wrap" style="margin-top:8px;"><table><thead><tr><th>מקבל ההכנסה</th><th>סכום</th></tr></thead><tbody>
+      <tr><td>שכירים (שכר עבודה)</td><td class="num-cell">40</td></tr>
+      <tr><td>פרטיים (שכר דירה) – <span style="color:var(--gold);">חדש!</span></td><td class="num-cell">10</td></tr>
+      <tr><td>בעלי מניות (רווח נקי)</td><td class="num-cell">20</td></tr>
+      <tr class="total-row"><td>סך הכנסה נובעת</td><td class="num-cell">70</td></tr>
+    </tbody></table></div>
+    <div class="key-point"><div class="label">חידוש</div><p>הכנסה נובעת כוללת לא רק שכר עבודה ורווח – אלא גם <strong>תשלומים אחרים לפרטיים</strong> כגון שכר דירה, תשלומי שירות לקבלני משנה (עוסקים פטורים) וכד'.</p></div>
+  </div>
+  <div class="card">
+    <h3>דוגמה מורחבת – נועה ותיוני</h3>
+    <div class="table-wrap"><table><thead><tr><th></th><th>נועה</th><th>תיוני</th></tr></thead><tbody>
+      <tr><td>מכירות</td><td class="num-cell">1,000</td><td class="num-cell">2,000</td></tr>
+      <tr><td>קנייה מפירמות</td><td class="num-cell">0</td><td class="num-cell">(600)</td></tr>
+      <tr><td>צריכת שירות מפרטיים</td><td class="num-cell">(200)</td><td class="num-cell">(50)</td></tr>
+      <tr><td>שכר עבודה</td><td class="num-cell">(100)</td><td class="num-cell">(150)</td></tr>
+      <tr><td>רווח</td><td class="num-cell">700</td><td class="num-cell">1,200</td></tr>
+    </tbody></table></div>
+    <div class="table-wrap" style="margin-top:16px;"><table>
+      <thead><tr><th></th><th colspan="2" style="text-align:center;">נועה</th><th colspan="2" style="text-align:center;">תיוני</th></tr>
+      <tr><th></th><th>ערך מוסף</th><th>הכנסה נובעת</th><th>ערך מוסף</th><th>הכנסה נובעת</th></tr></thead>
+      <tbody>
+        <tr><td>שורה 1</td><td class="num-cell">מכירות: 1,000</td><td class="num-cell">לפרטיים: 200</td><td class="num-cell">מכירות: 2,000</td><td class="num-cell">לפרטיים: 50</td></tr>
+        <tr><td>שורה 2</td><td class="num-cell">קניות: 0</td><td class="num-cell">שכר: 100</td><td class="num-cell">קניות: (600)</td><td class="num-cell">שכר: 150</td></tr>
+        <tr><td>שורה 3</td><td class="num-cell"></td><td class="num-cell">רווח: 700</td><td class="num-cell"></td><td class="num-cell">רווח: 1,200</td></tr>
+        <tr class="total-row"><td>סך</td><td class="num-cell">1,000</td><td class="num-cell">1,000</td><td class="num-cell">1,400</td><td class="num-cell">1,400</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="playground" id="pg2">
+    <div class="playground-title">מחשבון הכנסה נובעת – נסו בעצמכם!</div>
+    <div class="input-group">
+      <div class="input-field"><label>מכירות</label><input type="number" id="pg2_sales" value="100"></div>
+      <div class="input-field"><label>קניות מפירמות</label><input type="number" id="pg2_purch" value="30"></div>
+      <div class="input-field"><label>שכר עבודה</label><input type="number" id="pg2_wages" value="40"></div>
+      <div class="input-field"><label>תשלומים לפרטיים</label><input type="number" id="pg2_priv" value="10"></div>
+    </div>
+    <button class="calc-btn" onclick="calcPG2()">חשב ⟵</button>
+    <div class="result-box" id="pg2_result">לחצו "חשב" לראות תוצאות...</div>
+  </div>
+  <div class="summary-box"><h4>סיכום – הכנסה נובעת</h4><ul>
+    <li>הכנסה נובעת = סך התשלומים שהחברה מעבירה לאנשים במשק</li>
+    <li>כוללת: שכר עבודה + רווח נקי + תשלומים לפרטיים (שכ"ד, קבלני משנה וכד')</li>
+    <li>הכנסה נובעת = ערך מוסף (תמיד!)</li>
+    <li>שתי גישות למדידת תוצר: גישת הערך המוסף וגישת ההכנסה הנובעת</li>
+  </ul></div>
+</div>
+<div class="sep"></div>
+
+<!-- SEC 4 -->
+<div class="section" id="sec4">
+  <div class="section-header">
+    <div class="section-icon purple">🏛️</div>
+    <div class="section-title">הסקטור הציבורי (ממשלה)</div>
+    <div class="section-subtitle">כיצד נמדדת תרומת הממשלה לתוצר?</div>
+  </div>
+  <div class="card">
+    <h3>הבעיה: איך מודדים שווי שירותים ציבוריים?</h3>
+    <p>בסקטור העסקי, שווי התוצרת נקבע לפי מחיר מכירה בשוק חופשי. אבל כשהממשלה מספקת שירותים ציבוריים (חינוך, ביטחון, בריאות) – <strong>אין מחיר שוק</strong> שמבטא את שוויים.</p>
+    <div class="key-point"><div class="label">הפתרון</div><p>ערך מוסף הממשלה נאמד על בסיס <strong>תשלומי השכר</strong> של הסקטור הציבורי (= הוצאות ממשלה בניכוי קניות מפירמות).</p></div>
+    <div class="formula">תוצר ממשלה = הוצאות ממשלה − קניות מפירמות = תשלומי שכר ממשלתי</div>
+  </div>
+  <div class="card">
+    <h3>חישוב תוצר כולל – דוגמה מספרית</h3>
+    <p style="text-align:center;">במשק פועלות 2 פירמות + ממשלה. נתונים לשנת 2025:</p>
+    <div class="table-wrap"><table><thead><tr><th></th><th>פירמה א'</th><th>פירמה ב'</th></tr></thead><tbody>
+      <tr><td>מכירות</td><td class="num-cell">11</td><td class="num-cell">22</td></tr>
+      <tr><td>קניות מפירמות</td><td class="num-cell">0</td><td class="num-cell">(5)</td></tr>
+      <tr><td>שכר</td><td class="num-cell">(6)</td><td class="num-cell">(12)</td></tr>
+      <tr><td>רווח (לפני מס)</td><td class="num-cell">5</td><td class="num-cell">5</td></tr>
+      <tr class="total-row"><td>ערך מוסף</td><td class="num-cell">11</td><td class="num-cell">17</td></tr>
+    </tbody></table></div>
+    <p style="margin-top:14px;"><strong>נתוני ממשלה:</strong> הוצאות כוללות = 17, מתוכן קניות מפירמות = 8, היתרה = שכר = 9</p>
+    <div class="table-wrap" style="margin-top:14px;"><table><thead><tr><th>רכיב</th><th>סכום</th></tr></thead><tbody>
+      <tr><td>תוצר סקטור עסקי (11 + 17)</td><td class="num-cell">28</td></tr>
+      <tr><td>תוצר סקטור ציבורי (שכר ממשלתי)</td><td class="num-cell">9</td></tr>
+      <tr class="total-row"><td>סך התוצר במשק (Y)</td><td class="num-cell">37</td></tr>
+    </tbody></table></div>
+  </div>
+  <div class="poll-box" id="poll2">
+    <h4>🎤 שאלת הפעלה – חשבו רגע</h4>
+    <p style="font-size:15px;color:var(--text2);margin-bottom:16px;">מדוע מסים אינם נכללים בחישוב התוצר?</p>
+    <div class="poll-option" onclick="votePoll('poll2',0)"><div class="bar-track"><span class="bar-fill"></span><span class="bar-label">כי מסים הם רווח של הממשלה</span></div><span class="bar-pct"></span></div>
+    <div class="poll-option" onclick="votePoll('poll2',1)"><div class="bar-track"><span class="bar-fill"></span><span class="bar-label">כי מסים קשורים לחלוקת פירות המשק, לא לייצור</span></div><span class="bar-pct"></span></div>
+    <div class="poll-option" onclick="votePoll('poll2',2)"><div class="bar-track"><span class="bar-fill"></span><span class="bar-label">כי מסים כבר כלולים בערך המוסף</span></div><span class="bar-pct"></span></div>
+  </div>
+  <div class="summary-box"><h4>סיכום – סקטור ציבורי</h4><ul>
+    <li>לשירותי הממשלה אין מחיר שוק – הערך המוסף נאמד ע"פ תשלומי שכר</li>
+    <li>תוצר ממשלה = הוצאות ממשלה − קניות מפירמות = שכר ממשלתי</li>
+    <li>תוצר כולל = תוצר עסקי + תוצר ציבורי</li>
+    <li>מסים לא נכללים בתוצר – הם קשורים לחלוקת פירות המשק, לא לייצורם</li>
+  </ul></div>
+</div>
+<div class="sep"></div>
+
+<!-- SEC 5 -->
+<div class="section" id="sec5">
+  <div class="section-header">
+    <div class="section-icon gold">📋</div>
+    <div class="section-title">תקציב ממשלה, מסים וגירעון</div>
+    <div class="section-subtitle">הצד הפיסקלי – הכנסות, הוצאות וחוב ציבורי</div>
+  </div>
+  <div class="card">
+    <h3>מסים נטו (T)</h3>
+    <p>הכנסות הממשלה מגיעות בעיקר ממסים. אך יש לנכות <strong>תשלומי העברה</strong> (דמי אבטלה, קצבאות) – כיוון שאלו אינם מלווים בפעילות כלכלית.</p>
+    <div class="formula">T (מסים נטו) = מסי חברות + מס הכנסה − תשלומי העברה</div>
+  </div>
+  <div class="card">
+    <h3>גירעון תקציבי (BD)</h3>
+    <p>כאשר הוצאות הממשלה (G) גבוהות מהכנסותיה ממסים נטו (T) – נוצר <strong>גירעון תקציבי</strong>.</p>
+    <div class="formula">BD = G − T<small>גירעון = הוצאות ממשלה − מסים נטו</small></div>
+    <div class="tip-box"><div class="label">💡 מושג חשוב</div><p><strong>גירעון</strong> הוא ערך שנתי (תזרימי). <strong>חוב ציבורי</strong> הוא ערך מצטבר – סיכום הגירעונות הרב-שנתיים.</p></div>
+  </div>
+  <div class="card">
+    <h3>דוגמה מספרית</h3>
+    <div class="table-wrap"><table><thead><tr><th colspan="2" style="text-align:center;">מסים נטו (T)</th><th colspan="2" style="text-align:center;">הוצאות ממשלה (G)</th></tr></thead><tbody>
+      <tr><td>מס חברות (2 × 2)</td><td class="num-cell">4</td><td>הוצאות כוללות</td><td class="num-cell">17</td></tr>
+      <tr><td>מס הכנסה מפרטיים</td><td class="num-cell">10</td><td></td><td></td></tr>
+      <tr><td>בניכוי: דמי אבטלה</td><td class="num-cell">(2)</td><td></td><td></td></tr>
+      <tr class="total-row"><td>סה"כ T</td><td class="num-cell">12</td><td>סה"כ G</td><td class="num-cell">17</td></tr>
+    </tbody></table></div>
+    <p style="margin-top:12px;text-align:center;">גירעון תקציבי: G − T = 17 − 12 = <strong style="color:var(--coral);">5</strong></p>
+  </div>
+  <div class="card">
+    <h3>מבנה תקציב הממשלה</h3>
+    <div class="formula" style="font-size:17px;">הוצאות ממשלה (G) = הכנסות ממסים נטו (T) + גירעון תקציבי (BD)<small>מקורות = שימושים</small></div>
+  </div>
+  <div class="playground" id="pg3">
+    <div class="playground-title">מחשבון תקציב ממשלה</div>
+    <div class="input-group">
+      <div class="input-field"><label>מס חברות (סה"כ)</label><input type="number" id="pg3_corpTax" value="4"></div>
+      <div class="input-field"><label>מס הכנסה מפרטיים</label><input type="number" id="pg3_incTax" value="10"></div>
+      <div class="input-field"><label>תשלומי העברה</label><input type="number" id="pg3_transfer" value="2"></div>
+      <div class="input-field"><label>הוצאות ממשלה (G)</label><input type="number" id="pg3_G" value="17"></div>
+      <div class="input-field"><label>קניות מפירמות (מתוך G)</label><input type="number" id="pg3_govPurch" value="8"></div>
+    </div>
+    <button class="calc-btn" onclick="calcPG3()">חשב ⟵</button>
+    <div class="result-box" id="pg3_result">לחצו "חשב" לראות תוצאות...</div>
+  </div>
+  <div class="summary-box"><h4>סיכום – תקציב ממשלה</h4><ul>
+    <li>מסים נטו = מסים − תשלומי העברה (אבטלה, קצבאות)</li>
+    <li>גירעון = הוצאות ממשלה − מסים נטו (ערך שנתי)</li>
+    <li>חוב ציבורי = סיכום מצטבר של גירעונות שנתיים</li>
+    <li>מסים לא פוגעים בתוצר – הם כלי לחלוקת פירות, לא לייצורם</li>
+  </ul></div>
+</div>
+<div class="sep"></div>
+
+<!-- SEC 6 -->
+<div class="section" id="sec6">
+  <div class="section-header">
+    <div class="section-icon green">🎯</div>
+    <div class="section-title">סיכום כולל</div>
+    <div class="section-subtitle">כל הנוסחאות, העקרונות והכללים במקום אחד</div>
+  </div>
+  <div class="card">
+    <h3>נוסחאות מרכזיות</h3>
+    <div class="formula">ערך מוסף פירמה = מכירות − קניות מפירמות</div>
+    <div class="formula">תוצר סקטור עסקי = Σ ערכים מוספים של כל הפירמות</div>
+    <div class="formula">הכנסה נובעת = שכר + רווח נקי + תשלומים לפרטיים = ערך מוסף</div>
+    <div class="formula">תוצר ממשלה = הוצאות ממשלה − קניות מפירמות = שכר ממשלתי</div>
+    <div class="formula">Y (תוצר כולל) = תוצר עסקי + תוצר ציבורי</div>
+    <div class="formula">T (מסים נטו) = מסים − תשלומי העברה</div>
+    <div class="formula">BD (גירעון) = G − T</div>
+  </div>
+  <div class="card">
+    <h3>4 טענות שגויות נפוצות</h3>
+    <div class="step-list">
+      <div class="step-item"><div class="step-num" style="background:var(--coral);color:#fff;">✗</div><div class="step-text"><strong>"חישוב ערך מוסף דורש ניכוי שכר"</strong> – שגוי! מנכים רק קניות מפירמות.</div></div>
+      <div class="step-item"><div class="step-num" style="background:var(--coral);color:#fff;">✗</div><div class="step-text"><strong>"ערך מוסף = שכר עבודה"</strong> – שגוי! הכנסה נובעת כוללת גם רווח ותשלומים לפרטיים.</div></div>
+      <div class="step-item"><div class="step-num" style="background:var(--coral);color:#fff;">✗</div><div class="step-text"><strong>"ערך מוסף עסקי = כל התוצר"</strong> – שגוי! קיים גם תוצר ציבורי (ממשלה).</div></div>
+      <div class="step-item"><div class="step-num" style="background:var(--coral);color:#fff;">✗</div><div class="step-text"><strong>"ערך מוסף עסקי = מכירות החברה האחרונה בשרשרת"</strong> – שגוי! נכון רק אם אף חברה בשרשרת לא מוכרת גם לפרטיים.</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>תרשים זרימה – שלבי החישוב</h3>
+    <div class="step-list">
+      <div class="step-item"><div class="step-num">1</div><div class="step-text">חשב ערך מוסף לכל פירמה: מכירות − קניות מפירמות</div></div>
+      <div class="step-item"><div class="step-num">2</div><div class="step-text">סכם → תוצר סקטור עסקי</div></div>
+      <div class="step-item"><div class="step-num">3</div><div class="step-text">חשב תוצר ממשלה: הוצאות ממשלה − קניות מפירמות = שכר ממשלתי</div></div>
+      <div class="step-item"><div class="step-num">4</div><div class="step-text">סכם → Y = תוצר עסקי + תוצר ציבורי</div></div>
+      <div class="step-item"><div class="step-num">5</div><div class="step-text">לתקציב: חשב T (מסים נטו) ו-BD (גירעון = G − T)</div></div>
+    </div>
+  </div>
+</div>
+<div class="sep"></div>
+
+<!-- QUIZ -->
+<div class="section" id="quizSec">
+  <div class="section-header">
+    <div class="section-icon green">🎯</div>
+    <div class="section-title">תרגול עצמי – שאלות רב-ברירה</div>
+    <div class="section-subtitle">12 שאלות עם משוב מיידי</div>
+  </div>
+  <div id="quizContainer"></div>
+  <div class="score-card" id="scoreCard" style="display:none;">
+    <div class="score-num" id="scoreNum">0/12</div>
+    <div class="score-label">ציון סופי</div>
+    <button class="calc-btn" style="margin-top:20px;" onclick="resetQuiz()">נסה שוב ↻</button>
+  </div>
+  <div style="text-align:center;margin-top:24px;">
+    <button class="calc-btn" onclick="showScore()">הצג ציון סופי ⟵</button>
+  </div>
+</div>
+
+<div style="text-align:center;padding:40px 0 20px;color:var(--text3);font-size:14px;">
+  📘 מושגי יסוד בכלכלה – תוצר | סיכום הרצאות 1–2 | אביב רופל
+</div>
+
+</div>
+
+<script>
+window.addEventListener('scroll',()=>{const h=document.documentElement;document.getElementById('progressFill').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100+'%';});
+function scrollToSec(id){document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');}
+const pollData={poll1:{votes:[3,12,2],voted:false},poll2:{votes:[2,14,3],voted:false}};
+function votePoll(pid,idx){const pd=pollData[pid];if(pd.voted)return;pd.voted=true;pd.votes[idx]+=1;const t=pd.votes.reduce((a,b)=>a+b,0);const box=document.getElementById(pid);box.classList.add('poll-voted');box.querySelectorAll('.poll-option').forEach((o,i)=>{const p=Math.round((pd.votes[i]/t)*100);o.querySelector('.bar-fill').style.width=p+'%';o.querySelector('.bar-pct').textContent=p+'%';if(i===idx)o.querySelector('.bar-fill').style.background='linear-gradient(90deg,rgba(15,123,108,0.25),rgba(15,123,108,0.08))';});}
+function calcPG1(){const sA=+document.getElementById('pg1_sA').value,pA=+document.getElementById('pg1_pA').value,sB=+document.getElementById('pg1_sB').value,pB=+document.getElementById('pg1_pB').value,vaA=sA-pA,vaB=sB-pB;document.getElementById('pg1_result').innerHTML=`<span class="highlight">פירמה א':</span> מכירות ${sA} − קניות ${pA} = ערך מוסף <span class="highlight">${vaA}</span>\n<span class="highlight">פירמה ב':</span> מכירות ${sB} − קניות ${pB} = ערך מוסף <span class="highlight">${vaB}</span>\n\n<span class="gold-val">סך ערכים מוספים (= תוצר סקטור עסקי): ${vaA+vaB}</span>`;}
+function calcPG2(){const s=+document.getElementById('pg2_sales').value,p=+document.getElementById('pg2_purch').value,w=+document.getElementById('pg2_wages').value,pr=+document.getElementById('pg2_priv').value,va=s-p,profit=va-w-pr,inc=w+pr+profit;document.getElementById('pg2_result').innerHTML=`<span class="highlight">ערך מוסף:</span> ${s} − ${p} = <span class="highlight">${va}</span>\n\n<span class="highlight">הכנסה נובעת:</span>\n  שכר עבודה: ${w}\n  תשלומים לפרטיים: ${pr}\n  רווח נקי (שארית): ${profit}\n  ───────────────\n  <span class="gold-val">סך הכנסה נובעת: ${inc}</span>\n\n`+(va===inc?`✅ הכנסה נובעת = ערך מוסף (${va} = ${inc}) – מתאים!`:`⚠️ בדקו את הנתונים`);}
+function calcPG3(){const ct=+document.getElementById('pg3_corpTax').value,it=+document.getElementById('pg3_incTax').value,tr=+document.getElementById('pg3_transfer').value,G=+document.getElementById('pg3_G').value,gp=+document.getElementById('pg3_govPurch').value,T=ct+it-tr,BD=G-T,gv=G-gp;document.getElementById('pg3_result').innerHTML=`<span class="highlight">מסים נטו (T):</span> ${ct} + ${it} − ${tr} = <span class="highlight">${T}</span>\n\n<span class="highlight">גירעון תקציבי (BD):</span> G − T = ${G} − ${T} = <span class="${BD>0?'gold-val':'highlight'}">${BD}</span>`+(BD>0?' (גירעון)':BD<0?' (עודף)':' (מאוזן)')+`\n\n<span class="highlight">תוצר ממשלה:</span> ${G} − ${gp} (קניות מפירמות) = <span class="highlight">${gv}</span> (= שכר ממשלתי)`;}
+const quizzes=[
+{q:"ערך מוסף של פירמה מחושב כ:",opts:["מכירות − שכר עבודה","מכירות − קניות מפירמות","רווח נקי + שכר עבודה","מכירות − כל ההוצאות"],correct:1,fb:"ערך מוסף = מכירות − קניות מפירמות בלבד. שכר עבודה הוא חלק מההכנסה הנובעת ואינו מנוכה."},
+{q:"הכנסה נובעת של פירמה כוללת:",opts:["רווח נקי בלבד","שכר עבודה + רווח נקי בלבד","שכר עבודה + רווח נקי + תשלומים לפרטיים","מכירות − קניות"],correct:2,fb:"הכנסה נובעת כוללת את כל התשלומים לאנשים במשק: שכר, רווח, ותשלומים נוספים לפרטיים."},
+{q:"מהו היחס בין ערך מוסף להכנסה נובעת?",opts:["ערך מוסף תמיד גבוה מהכנסה נובעת","הם שווים תמיד","הכנסה נובעת תמיד גבוהה","אין קשר ביניהם"],correct:1,fb:"ערך מוסף = הכנסה נובעת – תמיד! שתי גישות שונות לאותה מדידה."},
+{q:"פירמה מכרה ב-500, קנתה מפירמות ב-200, שילמה שכר 150. מהו הערך המוסף?",opts:["150","300","500","350"],correct:1,fb:"ערך מוסף = 500 − 200 = 300. שכר עבודה לא מנוכה!"},
+{q:"תוצר הסקטור הציבורי נמדד על בסיס:",opts:["הכנסות המדינה ממסים","שווי השירותים בשוק החופשי","תשלומי שכר ממשלתיים","סך הוצאות הממשלה"],correct:2,fb:"כיוון שאין מחיר שוק לשירותים ציבוריים, תוצר הממשלה נאמד ע\"פ תשלומי השכר."},
+{q:"מסים נטו (T) מחושבים כ:",opts:["מס הכנסה + מס חברות","כל המסים − תשלומי העברה","מס חברות בלבד","הוצאות ממשלה − מסים"],correct:1,fb:"מסים נטו = כל המסים בניכוי תשלומי העברה (אבטלה, קצבאות)."},
+{q:"גירעון תקציבי נוצר כאשר:",opts:["T > G","G > T","G = T","התוצר יורד"],correct:1,fb:"גירעון = G − T. הוצאות הממשלה גבוהות מהכנסותיה ממסים נטו."},
+{q:"חברה מוכרת ב-100, קונה מפירמות 30, משלמת שכר 40, שכ\"ד לפרטיים 10, רווח 20. מהי ההכנסה הנובעת?",opts:["60","70","100","40"],correct:1,fb:"הכנסה נובעת = שכר (40) + שכ\"ד (10) + רווח (20) = 70. שווה לערך המוסף (100 − 30 = 70)."},
+{q:"האם ניכוי מס מפחית את התוצר?",opts:["כן, מס מפחית את הרווח ולכן את התוצר","לא, מס הוא אמצעי לחלוקת פירות ולא משפיע על ייצור התוצר","כן, כי מס מנוכה מהערך המוסף","תלוי בגובה המס"],correct:1,fb:"מסים אינם פוגעים בתוצר. הם כלי לחלוקת פירות המשק – לא לייצורם."},
+{q:"במשק עם 2 פירמות: א' מוכרת 11, קונה 0. ב' מוכרת 22, קונה 5. ממשלה: הוצאות 17, קניות מפירמות 8. מהו Y?",opts:["28","33","37","50"],correct:2,fb:"תוצר עסקי: (11−0)+(22−5)=28. תוצר ממשלה: 17−8=9. Y=28+9=37."},
+{q:"\"ערך מוסף של הסקטור העסקי שווה תמיד לשווי מכירת החברה האחרונה בשרשרת\" – הטענה:",opts:["נכונה תמיד","נכונה רק אם אף חברה בשרשרת לא מוכרת גם לפרטיים","שגויה לחלוטין","נכונה רק בסקטור הציבורי"],correct:1,fb:"הטענה שגויה באופן כללי. נכונה רק אם חברות שאינן \"האחרונה\" מוכרות אך ורק לסקטור העסקי."},
+{q:"חוב ציבורי הוא:",opts:["הגירעון השנתי","סכום מצטבר של גירעונות שנתיים","הוצאות הממשלה","מסים נטו"],correct:1,fb:"גירעון הוא ערך שנתי. חוב ציבורי הוא הערך המצטבר – סיכום הגירעונות הרב-שנתיים."}
+];
+const qC=document.getElementById('quizContainer');
+quizzes.forEach((qz,qi)=>{const d=document.createElement('div');d.className='quiz-section';d.id='quiz_'+qi;d.innerHTML=`<div class="quiz-q"><span class="q-num">${qi+1}</span>${qz.q}</div><div class="quiz-options">${qz.opts.map((o,oi)=>`<div class="quiz-opt" onclick="selectOpt(${qi},${oi})" id="qo_${qi}_${oi}"><span class="circle"></span><span>${o}</span></div>`).join('')}</div><button class="quiz-check-btn" onclick="checkQuiz(${qi})">בדוק תשובה</button><div class="quiz-feedback" id="qfb_${qi}"></div>`;qC.appendChild(d);});
+const uA=new Array(quizzes.length).fill(-1),ans=new Array(quizzes.length).fill(false);
+function selectOpt(qi,oi){if(ans[qi])return;uA[qi]=oi;document.getElementById('quiz_'+qi).querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('selected'));document.getElementById('qo_'+qi+'_'+oi).classList.add('selected');}
+function checkQuiz(qi){if(uA[qi]===-1||ans[qi])return;ans[qi]=true;const qz=quizzes[qi],fb=document.getElementById('qfb_'+qi),ok=uA[qi]===qz.correct;document.getElementById('qo_'+qi+'_'+qz.correct).classList.add('correct');if(!ok)document.getElementById('qo_'+qi+'_'+uA[qi]).classList.add('wrong');fb.className='quiz-feedback show '+(ok?'correct-fb':'wrong-fb');fb.innerHTML=(ok?'✅ נכון! ':'❌ לא נכון. ')+qz.fb;}
+function showScore(){quizzes.forEach((_,i)=>{if(!ans[i]&&uA[i]!==-1)checkQuiz(i);});const c=quizzes.reduce((s,qz,i)=>s+(uA[i]===qz.correct?1:0),0);document.getElementById('scoreNum').textContent=c+'/'+quizzes.length;document.getElementById('scoreCard').style.display='block';document.getElementById('scoreCard').scrollIntoView({behavior:'smooth'});}
+function resetQuiz(){uA.fill(-1);ans.fill(false);quizzes.forEach((_,i)=>{document.getElementById('quiz_'+i).querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('selected','correct','wrong'));const f=document.getElementById('qfb_'+i);f.className='quiz-feedback';f.innerHTML='';});document.getElementById('scoreCard').style.display='none';document.getElementById('quizSec').scrollIntoView({behavior:'smooth'});}
+</script>
+</body>
+</html>
