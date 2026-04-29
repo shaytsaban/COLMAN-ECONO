@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מאקרו כלכלה: תוצר ריאלי, נומינלי וצמיחה</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --primary-purple: #4c1d95;
+            --light-blue: #eff6ff;
+            --light-purple: #f3e8ff;
+            --accent-color: #3b82f6;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Glassmorphism Header */
+        .hero {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            color: var(--white);
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Content Cards */
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-color), var(--primary-purple));
+        }
+
+        h2 {
+            color: var(--primary-purple);
+            font-size: 2rem;
+            margin-top: 0;
+            border-bottom: 2px solid var(--light-purple);
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-top: 30px;
+        }
+
+        /* Highlight Boxes */
+        .concept-box {
+            background: var(--light-blue);
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .concept-box h4 {
+            color: var(--primary-blue);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border-right: 4px solid var(--warning);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+        
+        .think-box {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        /* Variables Legend */
+        .variables-legend {
+            background: var(--white);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        
+        .variables-legend ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .variables-legend li {
+            margin-bottom: 8px;
+        }
+        
+        .variables-legend span.math-var {
+            font-weight: bold;
+            color: var(--primary-purple);
+            display: inline-block;
+            width: 30px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: var(--primary-purple);
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Math Display */
+        .math-display {
+            font-size: 1.2rem;
+            background: var(--light-purple);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        /* Flowchart */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .step {
+            background: var(--white);
+            border: 2px solid var(--accent-color);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+        }
+
+        .step-num {
+            background: var(--accent-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-left: 20px;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        /* Quiz & Solutions Section */
+        .quiz-question {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #cbd5e1;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            background: var(--white);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .options li:hover {
+            background: var(--light-blue);
+            border-color: var(--accent-color);
+        }
+
+        .btn-solution {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-solution:hover {
+            background: var(--primary-blue);
+        }
+
+        .solution-content {
+            display: none;
+            background: var(--light-purple);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-right: 4px solid var(--primary-purple);
+        }
+
+        .solution-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .card { padding: 20px; }
+            .math-display { font-size: 1rem; }
+            .step { flex-direction: column; align-items: center; text-align: center; }
+            .step-num { margin-left: 0; margin-bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>כלכלת המאקרו: מאפס למאה</h1>
+        <p>מבוא לתוצר לאומי, צמיחה ריאלית, נומינלית, אינפלציה ומה שביניהם.</p>
+        <p style="font-size: 0.9rem; opacity: 0.8; margin-top: 10px;">מניחים שאין לכם ידע קודם? מצוין. הגעתם למקום הנכון. קחו דף, עט, ונתחיל לחשוב.</p>
+    </header>
+
+    <!-- Section 1: The Basics -->
+    <section class="card">
+        <h2>חלק 1: מבוא והגדרות בסיסיות (בגובה העיניים)</h2>
+        
+        <p>כשאנחנו רוצים לדעת אם מצבה של מדינה "טוב יותר" משנה שעברה, אנחנו בודקים את ה<strong>תוצר</strong> שלה. תוצר הוא פשוט: <em>השווי הכספי של כל המוצרים והשירותים שיוצרו במשק בשנה מסוימת</em>. אבל פה מתחילה הבעיה:</p>
+
+        <div class="concept-box">
+            <h4>🤔 הבעיה: האשליה של הכסף (תוצר נומינלי)</h4>
+            <p>נניח שבשנת 2020 מדינה ייצרה 100 פיצות, וכל פיצה עלתה 10 שקלים. התוצר הכולל: 1,000 ש"ח.<br>
+            בשנת 2021, המדינה עדיין ייצרה <strong>בדיוק 100 פיצות</strong>, אבל בגלל התייקרויות מחירים (אינפלציה), כל פיצה עלתה 20 שקלים. התוצר הכולל: 2,000 ש"ח.</p>
+            <p><strong>מסקנה שגויה:</strong> התוצר הוכפל! המדינה עשירה פי 2!<br>
+            <strong>המציאות:</strong> אף אחד לא אוכל יותר פיצה. רמת החיים לא השתפרה מילימטר. רק המחירים עלו.</p>
+        </div>
+
+        <p>כדי לפתור את האשליה הזו, כלכלנים חילקו את המושג "תוצר" לשניים:</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+            <div style="background: #f8fafc; padding: 20px; border-radius: 10px; border: 1px solid #e2e8f0;">
+                <h3 style="color: #0f172a; margin-top: 0;">1. תוצר נומינלי (Nominal GDP)</h3>
+                <p>התוצר מחושב במחירים <strong>של אותה שנה (מחירים שוטפים)</strong>.</p>
+                <p>הוא מושפע משני דברים שקורים בו זמנית: <br>
+                1. שינוי בכמות הייצור.<br>
+                2. שינוי ברמות המחירים (אינפלציה).</p>
+                <p><em>סכנה: עלול להציג צמיחה מזויפת.</em></p>
+            </div>
+            
+            <div style="background: var(--light-blue); padding: 20px; border-radius: 10px; border: 1px solid #bfdbfe;">
+                <h3 style="color: var(--primary-blue); margin-top: 0;">2. תוצר ריאלי (Real GDP)</h3>
+                <p>התוצר מחושב במחירים של <strong>שנת בסיס קבועה</strong>.</p>
+                <p>הוא מנטרל את השפעת עליית המחירים ומתמקד בדבר אחד בלבד: <br>
+                <strong>האם ייצרנו יותר כמויות פיזיות?</strong></p>
+                <p><em>זה המדד האמיתי לצמיחה כלכלית ולעלייה ברמת החיים.</em></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Flowchart & Logic -->
+    <section class="card">
+        <h2>חלק 2: תרשים זרימה - ארגז הכלים המתמטי שלנו</h2>
+        <p>כדי לפתור כל שאלה בנושא, אנחנו נשתמש ב-3 נוסחאות קבועות. הנה הלוגיקה וסדר העבודה שלכם. <strong>שימו לב להגדרות המשתנים!</strong></p>
+
+        <div class="flowchart">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div>
+                    <strong>חישוב שיעור צמיחה (הנוסחה הבסיסית ביותר)</strong><br>
+                    כדי לדעת בכמה אחוזים משהו גדל (בין אם זה תוצר, אוכלוסייה, או שכר), לוקחים את הערך החדש, מחלקים בערך הישן, ומחסרים 1.
+                    <div class="math-display">
+                        \[ \text{Growth Rate} = \frac{\text{New Value}}{\text{Old Value}} - 1 \]
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">2</div>
+                <div>
+                    <strong>משוואת פִישֶר (Fisher Equation) - הקסם שמקשר בין הכל</strong><br>
+                    זו הנוסחה החשובה ביותר בקורס. היא מקשרת בין הערכים הנומינליים (בכסף), הריאליים (בכמות), והאינפלציה.
+                    <div class="math-display">
+                        \[ (1+i) = (1+r) \times (1+p) \]
+                    </div>
+                    <div class="variables-legend">
+                        <strong>מקרא משתנים:</strong>
+                        <ul>
+                            <li><span class="math-var">\(i\)</span> = <strong>שיעור צמיחה נומינלי</strong> (השינוי הכספי/השוטף באחוזים)</li>
+                            <li><span class="math-var">\(r\)</span> = <strong>שיעור צמיחה ריאלי</strong> (השינוי האמיתי בכמות המוצרים/כוח קנייה באחוזים)</li>
+                            <li><span class="math-var">\(p\)</span> = <strong>שיעור האינפלציה</strong> (עליית רמת המחירים הכללית באחוזים)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-num">3</div>
+                <div>
+                    <strong>התאמה לגודל האוכלוסייה - צמיחה לנפש (Per Capita)</strong><br>
+                    אם התוצר גדל, אך האוכלוסייה גדלה באותו קצב - מצבנו לא השתפר. נוסחה זו מחלקת את הצמיחה "על פני" האוכלוסייה.
+                    <div class="math-display">
+                        \[ \text{RGDPPC} = \frac{1+r}{1+n} - 1 \]
+                    </div>
+                    <div class="variables-legend">
+                        <strong>מקרא משתנים:</strong>
+                        <ul>
+                            <li><span class="math-var">RGDPPC</span> = Real GDP Per Capita (שיעור הצמיחה <strong>הריאלית לנפש</strong>)</li>
+                            <li><span class="math-var">\(r\)</span> = שיעור הצמיחה הריאלית <strong>הכוללת במשק</strong> (כמו בנוסחת פישר)</li>
+                            <li><span class="math-var">\(n\)</span> = שיעור הגידול <strong>באוכלוסייה</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Step by Step Example -->
+    <section class="card">
+        <h2>חלק 3: בנייה הדרגתית - ממשק "תפוח-בננה"</h2>
+        <p>במדינת "בננה-רפובליק" מייצרים רק שני מוצרים: תפוחים ובננות. להלן הנתונים לשנים 2022 ו-2023:</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>שנה</th>
+                    <th>כמות תפוחים (יח')</th>
+                    <th>מחיר תפוח ($)</th>
+                    <th>כמות בננות (יח')</th>
+                    <th>מחיר בננה ($)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2022 (שנת בסיס)</td>
+                    <td>1,000</td>
+                    <td>5</td>
+                    <td>500</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td>2023</td>
+                    <td>1,200</td>
+                    <td>7</td>
+                    <td>600</td>
+                    <td>14</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>שלב א': מהו שיעור הצמיחה בתוצר הנומינלי (\(i\))?</h3>
+        <div class="think-box">
+            <p><strong>רמז לחשיבה:</strong> התוצר הנומינלי מחושב תמיד לפי מחירים <strong>שוטפים</strong>. חשבו כמה שווה כל התוצרת בשנת 2022 במחירי 2022, וכמה היא שווה בשנת 2023 במחירי 2023. לאחר מכן, מצאו את אחוז הגידול.</p>
+            <button class="btn-solution" onclick="toggleSolution('ex1-step1', this)">הצג שלב א' 💡</button>
+        </div>
+        
+        <div id="ex1-step1" class="solution-content">
+            <p><strong>תוצר נומינלי 2022:</strong> כמות 2022 כפול מחירי 2022</p>
+            <div class="math-display">
+                \[ Nominal \ GDP_{2022} = (1000 \times 5) + (500 \times 10) = 5000 + 5000 = 10,000\$ \]
+            </div>
+            
+            <p><strong>תוצר נומינלי 2023:</strong> כמות 2023 כפול מחירי 2023</p>
+            <div class="math-display">
+                \[ Nominal \ GDP_{2023} = (1200 \times 7) + (600 \times 14) = 8400 + 8400 = 16,800\$ \]
+            </div>
+
+            <p><strong>שיעור הצמיחה הנומינלית (\(i\)):</strong> (ערך חדש חלקי ערך ישן) פחות 1</p>
+            <div class="math-display">
+                \[ i = \frac{16,800}{10,000} - 1 = 1.68 - 1 = 0.68 \Rightarrow 68\% \]
+            </div>
+            <p><strong>מסקנה:</strong> התוצר הנומינלי צמח ב-68%. נשמע מדהים, אה? בואו נבדוק ממה זה באמת מורכב.</p>
+        </div>
+
+        <h3>שלב ב': מהו שיעור הצמיחה בתוצר הריאלי (\(r\))?</h3>
+        <div class="think-box">
+            <p><strong>רמז לחשיבה:</strong> כדי למדוד צמיחה <em>ריאלית</em>, אנחנו מנטרלים את שינוי המחירים. לכן, חשבו את שווי הכמויות של 2023, אבל הפעם - השתמשו <strong>במחירים הישנים (שנת הבסיס 2022)</strong>. כך נראה רק את גידול הכמות.</p>
+            <button class="btn-solution" onclick="toggleSolution('ex1-step2', this)">הצג שלב ב' 💡</button>
+        </div>
+
+        <div id="ex1-step2" class="solution-content">
+            <p><strong>תוצר ריאלי 2022:</strong> זהה לנומינלי של שנת הבסיס. (10,000$)</p>
+            
+            <p><strong>תוצר ריאלי 2023 (במחירי 2022):</strong> כמויות של 2023 מוכפלות <strong>במחירים של 2022</strong>!</p>
+            <div class="math-display">
+                \[ Real \ GDP_{2023} = (1200 \times \mathbf{5}) + (600 \times \mathbf{10}) = 6000 + 6000 = 12,000\$ \]
+            </div>
+
+            <p><strong>שיעור הצמיחה הריאלית (\(r\)):</strong></p>
+            <div class="math-display">
+                \[ r = \frac{12,000}{10,000} - 1 = 1.20 - 1 = 0.20 \Rightarrow 20\% \]
+            </div>
+            <p><strong>מסקנה:</strong> הצמיחה הפיזית האמיתית (יותר תפוחים ובננות לאכול) היא רק 20%. שאר ה-68% היו אשליה אופטית של אינפלציה.</p>
+        </div>
+
+        <h3>שלב ג': חילוץ שיעור האינפלציה (\(p\))</h3>
+        <div class="think-box">
+            <p><strong>רמז לחשיבה:</strong> יש לכם את הצמיחה הנומינלית (\(i=68\%\)) ואת הריאלית (\(r=20\%\)). איזו נוסחה מקשרת ביניהם? הציבו בה וחלצו את האינפלציה (\(p\)).</p>
+            <button class="btn-solution" onclick="toggleSolution('ex1-step3', this)">הצג שלב ג' 💡</button>
+        </div>
+
+        <div id="ex1-step3" class="solution-content">
+            <p>נציב במשוואת פישר:</p>
+            <div class="math-display">
+                \[ (1+i) = (1+r) \times (1+p) \]
+                \[ (1 + 0.68) = (1 + 0.20) \times (1+p) \]
+                \[ 1.68 = 1.20 \times (1+p) \]
+            </div>
+            <p>נחלץ את האינפלציה:</p>
+            <div class="math-display">
+                \[ 1+p = \frac{1.68}{1.20} = 1.40 \]
+                \[ p = 1.40 - 1 = 0.40 \Rightarrow 40\% \]
+            </div>
+            <p><strong>מסקנה:</strong> רמת המחירים במשק עלתה ב-40% בממוצע.</p>
+        </div>
+    </section>
+
+    <!-- Section 4: Example 2 - Nominal vs Real Wage -->
+    <section class="card">
+        <h2>חלק 4: דוגמה נוספת - שכר נומינלי לעומת שכר ריאלי</h2>
+        <p>משוואת פישר לא עובדת רק על "תוצר של מדינה", אלא גם על המשכורת האישית שלנו בבנק!</p>
+        
+        <p><strong>הסיפור של שירלי:</strong><br>
+        בשנת 2023 שירלי הרוויחה 12,000 ש"ח בחודש.<br>
+        בתחילת 2024 היא דרשה וקיבלה העלאה, וכעת שכרה (בנטו) הוא 12,840 ש"ח.<br>
+        באותה תקופה, ידוע שהאינפלציה במשק עמדה על 5%.</p>
+
+        <p><strong>השאלה:</strong> שירלי חוגגת שקיבלה העלאה יפה. אבל האם *כוח הקנייה* האמיתי שלה גדל? ואם כן, בכמה אחוזים באמת?</p>
+
+        <div class="think-box">
+            <p><strong>רמז:</strong><br>
+            1. חשבו קודם את העלייה בשכר <strong>הנומינלי</strong> (\(i\)) - בכמה גדל הסכום בחשבון הבנק.<br>
+            2. הציבו במשוואת פישר יחד עם האינפלציה הנתונה (\(p=5\%\)) כדי למצוא את העלייה <strong>בריאלית</strong> (\(r\)).</p>
+            <button class="btn-solution" onclick="toggleSolution('ex2-sol', this)">הצג פתרון מלא 💡</button>
+        </div>
+
+        <div id="ex2-sol" class="solution-content">
+            <p><strong>שלב 1: חישוב צמיחה נומינלית בשכר (\(i\))</strong></p>
+            <div class="math-display">
+                \[ i = \frac{12,840}{12,000} - 1 = 1.07 - 1 = 0.07 \Rightarrow 7\% \]
+            </div>
+            <p>השכר הכספי של שירלי עלה ב-7%.</p>
+
+            <p><strong>שלב 2: חילוץ השכר הריאלי ממשוואת פישר (\(r\))</strong></p>
+            <div class="variables-legend">
+                <ul>
+                    <li><span class="math-var">\(i\)</span> = 7% (0.07)</li>
+                    <li><span class="math-var">\(p\)</span> = 5% (0.05)</li>
+                    <li><span class="math-var">\(r\)</span> = ?</li>
+                </ul>
+            </div>
+            <div class="math-display">
+                \[ (1+i) = (1+r) \times (1+p) \]
+                \[ 1.07 = (1+r) \times 1.05 \]
+                \[ 1+r = \frac{1.07}{1.05} \approx 1.019 \]
+                \[ r \approx 0.019 \Rightarrow 1.9\% \]
+            </div>
+            <p><strong>מסקנה:</strong> אמנם המספר בבנק גדל ב-7%, אבל בגלל שהכל מסביב התייקר ב-5%, שירלי יכולה לקנות בפועל רק <strong>1.9% יותר</strong> מוצרים ממה שקנתה קודם. זו העלייה בשכר הריאלי שלה.</p>
+        </div>
+    </section>
+
+    <!-- Section 5: Advanced Practice (Per Capita) -->
+    <section class="card">
+        <h2>חלק 5: שילוב אוכלוסייה (תוצר לנפש)</h2>
+        <p>נחזור לכלכלת "בננה-רפובליק" מהדוגמה הראשונה: גילינו שהתוצר הריאלי צמח ב-<strong>20% (\(r\))</strong>.<br>
+        הנשיא מתגאה שרמת החיים של האזרחים זינקה. אולם, ידוע שבמהלך אותה שנה <strong>האוכלוסייה גדלה ב-15% (\(n\))</strong>.</p>
+        
+        <p><strong>שאלה:</strong> מהו שיעור הצמיחה בתוצר הריאלי <strong>לנפש</strong>? האם רמת החיים לאזרח באמת זינקה ב-20%?</p>
+
+        <div class="think-box">
+            <p><strong>רמז:</strong> הציבו את צמיחת העוגה (\(r\)) וצמיחת מספר הפיות (\(n\)) בנוסחת התוצר לנפש.</p>
+            <button class="btn-solution" onclick="toggleSolution('ex3-sol', this)">הצג פתרון 💡</button>
+        </div>
+
+        <div id="ex3-sol" class="solution-content">
+            <p>נשתמש בנוסחת ההתאמה לנפש:</p>
+            <div class="variables-legend">
+                <ul>
+                    <li><span class="math-var">\(r\)</span> = 20% (0.20) - העלייה הכוללת בכמויות</li>
+                    <li><span class="math-var">\(n\)</span> = 15% (0.15) - העלייה באוכלוסייה</li>
+                </ul>
+            </div>
+            <div class="math-display">
+                \[ Real \ GDPPC \ Growth = \frac{1+r}{1+n} - 1 \]
+                \[ \text{RGDPPC} = \frac{1 + 0.20}{1 + 0.15} - 1 = \frac{1.20}{1.15} - 1 \approx 1.043 - 1 = 0.043 \Rightarrow 4.3\% \]
+            </div>
+            <p><strong>המסקנה העגומה לנשיא:</strong> כלכלת המדינה ייצרה 20% יותר פירות, אבל בגלל שהיו כל כך הרבה יותר פיות להאכיל, ה"אזרח הממוצע" קיבל רק <strong>4.3% יותר</strong> תפוחים ממה שקיבל בשנה שעברה.</p>
+        </div>
+    </section>
+
+    <!-- Section 6: Working Backwards -->
+    <section class="card">
+        <h2>חלק 6: לעבוד הפוך (חילוץ נתונים מתוך תוצר לנפש)</h2>
+        <p>פעמים רבות בבחינות נותנים לנו את הנתון הסופי (התוצר לנפש), ואנחנו צריכים לחזור אחורה.</p>
+        
+        <p><strong>דוגמה:</strong><br>
+        במדינה מסוימת פורסם כי התוצר <strong>הנומינלי לנפש</strong> (NGDPPC) גדל השנה ב-15%.<br>
+        כמו כן, ידוע שהאוכלוסייה גדלה ב-3% (\(n\)).<br>
+        <strong>שאלה: מה היה שיעור הצמיחה הנומינלית הכללי במשק (\(i\))?</strong></p>
+
+        <div class="think-box">
+            <p><strong>רמז:</strong> הנוסחה לתוצר לנפש עובדת אותו דבר גם על ערכים נומינליים. כלומר: \( \text{NGDPPC} = \frac{1+i}{1+n} - 1 \). הציבו את הידוע וחלצו את הלא-ידוע (\(i\)).</p>
+            <button class="btn-solution" onclick="toggleSolution('ex4-sol', this)">הצג פתרון 💡</button>
+        </div>
+
+        <div id="ex4-sol" class="solution-content">
+            <div class="variables-legend">
+                <ul>
+                    <li><span class="math-var">NGDPPC</span> = 15% (0.15) - צמיחה נומינלית <strong>לנפש</strong></li>
+                    <li><span class="math-var">\(n\)</span> = 3% (0.03) - צמיחת אוכלוסייה</li>
+                    <li><span class="math-var">\(i\)</span> = ? - צמיחה נומינלית כוללת</li>
+                </ul>
+            </div>
+            <p>הצבה ופתרון אלגברי:</p>
+            <div class="math-display">
+                \[ 0.15 = \frac{1+i}{1 + 0.03} - 1 \]
+                \[ 0.15 + 1 = \frac{1+i}{1.03} \]
+                \[ 1.15 = \frac{1+i}{1.03} \]
+                \[ 1.15 \times 1.03 = 1+i \]
+                \[ 1.1845 = 1+i \]
+                \[ i = 0.1845 \Rightarrow 18.45\% \]
+            </div>
+            <p><strong>תשובה:</strong> הצמיחה הנומינלית הכוללת (גודל העוגה הכלכלית בכסף) הייתה 18.45%.</p>
+        </div>
+    </section>
+
+    <!-- Section 7: Quiz -->
+    <section class="card">
+        <h2>בחן את עצמך (תרגול רב-ברירה מסכם)</h2>
+        <p>זה הזמן ליישם. קראו היטב כל שאלה (הן הופכות למאתגרות יותר בהדרגה), בחרו תשובה, ואז לחצו לבדוק את דרך הפעולה.</p>
+
+        <!-- Question 1 -->
+        <div class="quiz-question">
+            <h3>שאלה 1: חילוץ נתונים ממשוואת פישר</h3>
+            <p>במשק "קיווי" נמדדה צמיחה נומינלית בתוצר של 12.2% (\(i\)). ידוע שבמהלך השנה נמדדה אינפלציה של 6% (\(p\)). מהי הצמיחה הריאלית האמיתית של המשק (\(r\))?</p>
+            <ul class="options">
+                <li>א. 6.2%</li>
+                <li>ב. 18.2%</li>
+                <li>ג. 5.85%</li>
+                <li>ד. 6.00%</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol1', this)">הצג פתרון מלא 👁️</button>
+            
+            <div id="sol1" class="solution-content">
+                <strong>תשובה נכונה: ג' (5.85%)</strong>
+                <p><strong>דרך פתרון:</strong> נשתמש במשוואת פישר.</p>
+                <div class="math-display">
+                    \[ (1+i) = (1+r) \times (1+p) \]
+                    \[ 1.122 = (1+r) \times 1.06 \]
+                    \[ 1+r = \frac{1.122}{1.06} \approx 1.0585 \]
+                    \[ r = 1.0585 - 1 = 0.0585 \Rightarrow 5.85\% \]
+                </div>
+                <p><em>שימו לב:</em> תשובה א' (6.2%) היא "מלכודת פראיירים" של חיסור פשוט (12.2 - 6). בכלכלה תמיד משתמשים ביחסים (חלוקה) ולא בחיסור ישיר!</p>
+            </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="quiz-question">
+            <h3>שאלה 2: ניתוח שכר (שכר נומינלי מול שכר ריאלי)</h3>
+            <p>שכרו של דני שודרג מ-10,000 ש"ח ל-10,500 ש"ח. באותה תקופה, מדד המחירים לצרכן (האינפלציה) עלה ב-8%. איזו מהטענות הבאות היא הנכונה ביותר לגבי מצבו הכלכלי של דני?</p>
+            <ul class="options">
+                <li>א. השכר הריאלי שלו עלה, כי הוא מקבל יותר כסף בבנק.</li>
+                <li>ב. השכר הריאלי שלו ירד בכ-2.78%, כוח הקנייה שלו נפגע.</li>
+                <li>ג. השכר הריאלי שלו ירד ב-3% בדיוק.</li>
+                <li>ד. מצבו הכלכלי לא השתנה.</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol2', this)">הצג פתרון מלא 👁️</button>
+            
+            <div id="sol2" class="solution-content">
+                <strong>תשובה נכונה: ב' (השכר הריאלי ירד בכ-2.78%)</strong>
+                <p><strong>דרך פתרון:</strong></p>
+                <p>1. חישוב גידול השכר הנומינלי (\(i\)):<br>
+                \[ i = \frac{10,500}{10,000} - 1 = 1.05 - 1 = 5\% \]</p>
+                
+                <p>2. נתון אינפלציה (\(p\)) = 8%.</p>
+                
+                <p>3. חילוץ שכר ריאלי (\(r\)) ממשוואת פישר:<br>
+                \[ (1+i) = (1+r) \times (1+p) \]
+                \[ 1.05 = (1+r) \times 1.08 \]
+                \[ 1+r = \frac{1.05}{1.08} \approx 0.9722 \]
+                \[ r = 0.9722 - 1 = -0.0278 \Rightarrow -2.78\% \]</p>
+                <p>מכיוון שהאינפלציה הייתה גבוהה יותר מהעלאת השכר שלו, כוח הקנייה האמיתי של דני ירד.</p>
+            </div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="quiz-question">
+            <h3>שאלה 3: צמיחה והאוכלוסייה</h3>
+            <p>אם התוצר הריאלי של מדינה גדל ב-10%, והאוכלוסייה גדלה באותה שנה גם היא בדיוק ב-10%, מה קרה לתוצר הריאלי לנפש?</p>
+            <ul class="options">
+                <li>א. גדל ב-10%.</li>
+                <li>ב. גדל ב-20%.</li>
+                <li>ג. נותר ללא שינוי (0% שינוי).</li>
+                <li>ד. ירד.</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol3', this)">הצג פתרון מלא 👁️</button>
+            
+            <div id="sol3" class="solution-content">
+                <strong>תשובה נכונה: ג' (נותר ללא שינוי)</strong>
+                <p><strong>דרך פתרון:</strong> הגיון פשוט - העוגה גדלה ב-10%, אבל כמות האנשים שאוכלים מהעוגה גדלה גם היא ב-10%. החתיכה של כל אדם נשארה באותו גודל.</p>
+                <p>מתמטית:</p>
+                <div class="math-display">
+                    \[ RGDPPC = \frac{1+r}{1+n} - 1 \]
+                    \[ RGDPPC = \frac{1.10}{1.10} - 1 = 1 - 1 = 0 \Rightarrow 0\% \]
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="quiz-question">
+            <h3>שאלה 4: הבנת שנת בסיס (תיאורטי)</h3>
+            <p>כאשר בוחנים את כלכלת משק בשנת הבסיס עצמה (למשל, שנת 2020 היא שנת הבסיס, ואנו מחשבים את התוצר של 2020). איזה מהמשפטים הבאים נכון תמיד?</p>
+            <ul class="options">
+                <li>א. התוצר הנומינלי גדול יותר מהתוצר הריאלי.</li>
+                <li>ב. התוצר הריאלי שווה בדיוק לתוצר הנומינלי.</li>
+                <li>ג. שיעור האינפלציה הוא תמיד אפס.</li>
+                <li>ד. התוצר הריאלי לנפש שווה לתוצר הנומינלי.</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol4', this)">הצג פתרון מלא 👁️</button>
+            
+            <div id="sol4" class="solution-content">
+                <strong>תשובה נכונה: ב' (התוצר הריאלי שווה לתוצר הנומינלי)</strong>
+                <p><strong>הסבר:</strong> תוצר נומינלי הוא כמות שוטפת כפול מחיר שוטף. תוצר ריאלי הוא כמות שוטפת כפול <strong>מחיר שנת הבסיס</strong>.<br>
+                מכיוון שבשנת הבסיס עצמה המחיר השוטף <strong>הוא</strong> המחיר של שנת הבסיס - החישוב הוא מתמטית זהה. ולכן הערכים חייבים להיות שווים.</p>
+            </div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="quiz-question">
+            <h3>שאלה 5: חילוץ אינפלציה</h3>
+            <p>במשק "רימון" התוצר הנומינלי גדל השנה ב-25%. כלכלני הממשלה חישבו ומצאו כי הצמיחה הריאלית האמיתית עמדה על 10% בלבד. מה היה שיעור האינפלציה השנה?</p>
+            <ul class="options">
+                <li>א. 15.0%</li>
+                <li>ב. 13.6%</li>
+                <li>ג. 35.0%</li>
+                <li>ד. 11.5%</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol5', this)">הצג פתרון מלא 👁️</button>
+            
+            <div id="sol5" class="solution-content">
+                <strong>תשובה נכונה: ב' (כ-13.6%)</strong>
+                <p><strong>דרך פתרון:</strong> יש לנו \(i = 25\%\) ו-\(r = 10\%\). נשתמש במשוואת פישר לחלץ את \(p\).</p>
+                <div class="math-display">
+                    \[ (1+i) = (1+r) \times (1+p) \]
+                    \[ 1.25 = 1.10 \times (1+p) \]
+                    \[ 1+p = \frac{1.25}{1.10} \approx 1.1363 \]
+                    \[ p = 1.1363 - 1 = 0.1363 \Rightarrow 13.63\% \]
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 6 -->
+        <div class="quiz-question">
+            <h3>שאלה 6: מתוצר לנפש לתוצר כולל</h3>
+            <p>הלשכה המרכזית לסטטיסטיקה פרסמה שני נתונים: השנה נרשמה צמיחה ריאלית <strong>לנפש</strong> (RGDPPC) של 8%. כמו כן, האוכלוסייה (n) גדלה ב-2%. מה הייתה הצמיחה הריאלית <strong>הכוללת</strong> של המשק (r)?</p>
+            <ul class="options">
+                <li>א. 10.0%</li>
+                <li>ב. 6.0%</li>
+                <li>ג. 10.16%</li>
+                <li>ד. 5.88%</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol6', this)">הצג פתרון מלא 👁️</button>
+            
+            <div id="sol6" class="solution-content">
+                <strong>תשובה נכונה: ג' (10.16%)</strong>
+                <p><strong>דרך פתרון:</strong> כאן נתון לנו התוצר לנפש (8%) והאוכלוסייה (2%), ועלינו לחזור אחורה ולמצוא את התוצר הכולל (\(r\)). נשתמש בנוסחת התוצר לנפש ונבודד את \(r\):</p>
+                <div class="math-display">
+                    \[ RGDPPC = \frac{1+r}{1+n} - 1 \]
+                    \[ 0.08 = \frac{1+r}{1.02} - 1 \]
+                    \[ 1.08 = \frac{1+r}{1.02} \]
+                    \[ 1.08 \times 1.02 = 1+r \]
+                    \[ 1.1016 = 1+r \]
+                    \[ r = 0.1016 \Rightarrow 10.16\% \]
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+    // פונקציה משודרגת - מסתירה/מציגה פתרון ומשנה את טקסט הכפתור בהתאמה
+    function toggleSolution(id, btnElement) {
+        var element = document.getElementById(id);
+        if (element.classList.contains('active')) {
+            element.classList.remove('active');
+            // אם הטקסט המקורי מכיל "פתרון" נחזיר "הצג פתרון", אחרת "הצג שלב"
+            if(btnElement.innerText.includes("שלב")) {
+                btnElement.innerText = btnElement.innerText.replace("הסתר", "הצג").replace("🙈", "💡");
+            } else {
+                btnElement.innerText = "הצג פתרון מלא 👁️";
+            }
+        } else {
+            element.classList.add('active');
+            if(btnElement.innerText.includes("שלב")) {
+                btnElement.innerText = btnElement.innerText.replace("הצג", "הסתר").replace("💡", "🙈");
+            } else {
+                btnElement.innerText = "הסתר פתרון 🙈";
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
