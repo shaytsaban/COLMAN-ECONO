@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מאקרו כלכלה: תקציב הממשלה - חדר מצב מתקדם</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-dark: #020617;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --panel-border: rgba(148, 163, 184, 0.2);
+            --primary-glow: #38bdf8;
+            --purple-glow: #c084fc;
+            --danger-glow: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #0ea5e9;
+            --accent-purple: #8b5cf6;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.1) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Glassmorphism Panels */
+        .panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-blue), var(--accent-purple));
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin: 0 0 15px 0;
+            font-weight: 800;
+            background: linear-gradient(to right, #38bdf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
+        }
+
+        h2 {
+            color: var(--primary-glow);
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h3 {
+            color: var(--purple-glow);
+            font-size: 1.6rem;
+            margin-top: 35px;
+        }
+
+        /* The Dashboard Flowchart (CSS Grid based) */
+        .flowchart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            padding: 20px 0;
+            position: relative;
+        }
+
+        .flow-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .flow-node {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 16px;
+            padding: 20px 25px;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .flow-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
+            border-color: var(--primary-glow);
+        }
+
+        .flow-node.highlight-purple { border-color: rgba(192, 132, 252, 0.4); box-shadow: 0 0 20px rgba(139, 92, 246, 0.1); }
+        .flow-node.highlight-purple:hover { border-color: var(--purple-glow); box-shadow: 0 0 30px rgba(139, 92, 246, 0.3); }
+        
+        .flow-node.highlight-danger { border-color: rgba(248, 113, 113, 0.4); box-shadow: 0 0 20px rgba(244, 63, 94, 0.1); }
+        .flow-node.highlight-danger:hover { border-color: var(--danger-glow); box-shadow: 0 0 30px rgba(244, 63, 94, 0.3); }
+
+        .node-symbol {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-glow);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .highlight-purple .node-symbol { color: var(--purple-glow); }
+        .highlight-danger .node-symbol { color: var(--danger-glow); }
+
+        .flow-arrow {
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.4; transform: scale(0.9); }
+        }
+
+        /* The Chaos Section (הבלגן) */
+        .chaos-box {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(153, 27, 27, 0.2));
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .chaos-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border-right: 3px dashed rgba(248, 113, 113, 0.5);
+            padding-right: 20px;
+            margin-top: 20px;
+        }
+
+        .chaos-step {
+            position: relative;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .chaos-step::before {
+            content: '⚠️';
+            position: absolute;
+            right: -32px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--bg-dark);
+            border-radius: 50%;
+            padding: 2px;
+        }
+
+        /* Variables Legend */
+        .variables-legend {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+        
+        .variables-legend div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .variables-legend span.math-var {
+            font-weight: 800;
+            color: var(--primary-glow);
+            background: rgba(56, 189, 248, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            min-width: 35px;
+            text-align: center;
+        }
+
+        /* Boxes & Tables */
+        .think-box {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px dashed var(--accent-purple);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--panel-border);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--panel-border);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        th {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--purple-glow);
+            font-weight: 600;
+            border-bottom: 2px solid var(--accent-purple);
+        }
+
+        /* Math Display */
+        .math-display {
+            font-size: 1.3rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            overflow-x: auto;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 4px 6px rgba(0,0,0,0.3);
+            color: #e2e8f0;
+        }
+
+        /* Buttons & Solutions */
+        .btn-solution {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-top: 15px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .btn-solution:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .solution-content {
+            display: none;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-right: 4px solid var(--primary-glow);
+            border-left: 1px solid var(--panel-border);
+            border-top: 1px solid var(--panel-border);
+            border-bottom: 1px solid var(--panel-border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .solution-content.active {
+            display: block;
+            animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Quiz */
+        .quiz-question {
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid var(--panel-border);
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .options li {
+            background: rgba(255, 255, 255, 0.03);
+            margin: 12px 0;
+            padding: 18px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .options li:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .panel { padding: 25px; }
+            .flow-row { flex-direction: column; gap: 10px; }
+            .flow-arrow { transform: rotate(90deg); margin: 10px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <!-- Hero Section -->
+    <header class="panel hero">
+        <h1>תקציב הממשלה: חדר מצב מתקדם</h1>
+        <p>מערכת הניווט המלאה לניהול קופת המדינה: חובות, גירעונות, ואפקט הפרפר של הכלכלה.</p>
+        <p style="font-size: 1rem; color: var(--text-muted); margin-top: 15px;">הפעילו מנועים. ברוכים הבאים למאקרו-כלכלה מודרנית.</p>
+    </header>
+
+    <!-- Section 1: The Basics (Dashboard Legend) -->
+    <section class="panel">
+        <h2><span style="font-size: 1.5rem">📊</span> לוח מחוונים: הגדרות מערכת</h2>
+        <p>לפני שניגש למספרים, עלינו להכיר את הרכיבים המרכזיים בלוח הבקרה של משרד האוצר:</p>
+
+        <div class="variables-legend">
+            <div><span class="math-var">Y</span> <span><strong>תוצר (GDP):</strong> סך הפעילות הכלכלית. מנוע הצמיחה.</span></div>
+            <div><span class="math-var">t</span> <span><strong>נטל המס:</strong> איזה אחוז מהתוצר הממשלה גובה (%).</span></div>
+            <div><span class="math-var">T</span> <span><strong>מסים (Tax):</strong> סך הכסף הפיזי שנכנס לקופת המדינה.</span></div>
+            <div><span class="math-var">G</span> <span><strong>הוצאות (Gov):</strong> התקציב שהממשלה שופכת לביטחון, בריאות וכו'.</span></div>
+            <div><span class="math-var">BD</span> <span><strong>גירעון (Deficit):</strong> הפער <em>השנתי</em> בין ההוצאות להכנסות. המינוס החודשי.</span></div>
+            <div><span class="math-var">D</span> <span><strong>חוב (Debt):</strong> המינוס <em>המצטבר</em>. הר השקלים שאנחנו חייבים.</span></div>
+        </div>
+    </section>
+
+    <!-- Section 2: Flowchart Pipeline -->
+    <section class="panel">
+        <h2><span style="font-size: 1.5rem">⚙️</span> תרשים זרימה: הצנרת של הקופה הציבורית</h2>
+        <p>כך נראית הלוגיקה המערכתית מאחורי כל שאלת תקציב. כל נתון זורם לנתון הבא בתור:</p>
+
+        <div class="flowchart-container">
+            <!-- Row 1: Y -> T -->
+            <div class="flow-row">
+                <div class="flow-node">
+                    <span class="node-symbol">Y</span>
+                    <strong>תוצר המשק</strong>
+                </div>
+                <div class="flow-arrow">✖️ <br> <span style="font-size: 0.9rem">כפול שיעור מס (t)</span> <br> ➡️</div>
+                <div class="flow-node highlight-purple">
+                    <span class="node-symbol">T</span>
+                    <strong>הכנסות ממסים</strong><br>
+                    <small>\(T = t \times Y\)</small>
+                </div>
+            </div>
+
+            <div class="flow-arrow" style="text-align: center;">⬇️</div>
+
+            <!-- Row 2: G & T -> BD -->
+            <div class="flow-row">
+                <div class="flow-node highlight-purple">
+                    <span class="node-symbol">G</span>
+                    <strong>הוצאות ממשלה</strong><br>
+                    <small>(נקבעות מראש)</small>
+                </div>
+                <div class="flow-arrow">➖ <br> <span style="font-size: 0.9rem">פחות מסים (T)</span> <br> ➡️</div>
+                <div class="flow-node highlight-danger">
+                    <span class="node-symbol">BD</span>
+                    <strong>גירעון שנתי</strong><br>
+                    <small>\(BD = G - T\)</small>
+                </div>
+            </div>
+
+            <div class="flow-arrow" style="text-align: center;">⬇️</div>
+
+            <!-- Row 3: BD & D0 -> D1 -->
+            <div class="flow-row">
+                <div class="flow-node highlight-danger">
+                    <span class="node-symbol">D₀</span>
+                    <strong>חוב משנה קודמת</strong>
+                </div>
+                <div class="flow-arrow">➕ <br> <span style="font-size: 0.9rem">ועוד הגירעון השנה (BD)</span> <br> ➡️</div>
+                <div class="flow-node highlight-danger">
+                    <span class="node-symbol">D₁</span>
+                    <strong>החוב העדכני החדש</strong><br>
+                    <small>\(D_1 = D_0 + BD\)</small>
+                </div>
+            </div>
+
+            <div class="flow-arrow" style="text-align: center;">⬇️</div>
+
+            <!-- Row 4: Final Ratio -->
+            <div class="flow-row">
+                <div class="flow-node highlight-danger">
+                    <span class="node-symbol">D₁ / Y</span>
+                    <strong>יחס חוב-תוצר</strong><br>
+                    <small>מדד הסיכון של המדינה</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: THE MESS (הבלגן) -->
+    <section class="panel">
+        <h2><span style="font-size: 1.5rem">🌪️</span> כשדברים מסתבכים: ה"בלגן" של הכלכלה</h2>
+        <p>עד עכשיו ראינו את הצנרת. אבל מה קורה כשמכה במשק משבר פתאומי? (מלחמה, מגיפה, קריסת הייטק). כאן אנחנו נכנסים למה שנקרא <strong>אפקט הפרפר הכלכלי</strong> או "מעגל הקסמים השלילי". ברגע שנתון אחד קורס - כל הלוח נצבע באדום.</p>
+
+        <div class="chaos-box">
+            <h3 style="margin-top: 0; color: #fecaca;">תרחיש אימה: מיתון מפתיע (התוצר Y יורד ב-15%)</h3>
+            <div class="chaos-timeline">
+                <div class="chaos-step">
+                    <strong>1. הכנסות המדינה קורסות:</strong> הציבור מרוויח פחות, ולכן האוצר מצליח לגבות פחות מסים. הנתון <span class="math-var" style="color:var(--danger-glow)">T ↓</span> צונח דרמטית.
+                </div>
+                <div class="chaos-step">
+                    <strong>2. הממשלה תקועה עם התחייבויות:</strong> הוצאות הממשלה (<span class="math-var" style="color:var(--accent-blue)">G</span>) כבר נקבעו בחוק ואי אפשר לבטל משכורות לרופאים או צבא. ההוצאות נשארות גבוהות.
+                </div>
+                <div class="chaos-step">
+                    <strong>3. הגירעון מזנק:</strong> ההפרש בין ההוצאות (<span class="math-var" style="color:var(--accent-blue)">G</span>) לבין ההכנסות שקרסו (<span class="math-var" style="color:var(--danger-glow)">T</span>) יוצר בור ענק. <span class="math-var" style="color:var(--danger-glow)">BD ↑</span> מזנק מעלה (זהו "המייצב האוטומטי" שמופעל - הממשלה לוקחת על עצמה את המינוס במקום האזרחים).
+                </div>
+                <div class="chaos-step">
+                    <strong>4. החוב מתנפח:</strong> הגירעון הענק הופך להלוואות שהמדינה חייבת לקחת. סך החוב <span class="math-var" style="color:var(--danger-glow)">D₁ ↑</span> קופץ.
+                </div>
+                <div class="chaos-step">
+                    <strong>5. רמת הסיכון בשמיים:</strong> מכיוון שהחוב (<span class="math-var">D</span>) עלה, והתוצר (<span class="math-var">Y</span>) ירד - יחס ה"חוב-תוצר" המייצג את סיכון האשראי של המדינה מזנק בחדות. חברות דירוג אשראי מורידות דירוג למדינה.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Calculations & Examples -->
+    <section class="panel">
+        <h2><span style="font-size: 1.5rem">💻</span> סימולציה: תעלומת החוב שעולה אבל "יורד"</h2>
+        <p>נכניס נתונים למערכת של משק "שוקולד":</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>שנה</th>
+                    <th>תוצר (\(Y\))</th>
+                    <th>חוב לתחילת השנה (\(D_0\))</th>
+                    <th>גירעון שנוצר השנה (\(BD\))</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2022</td>
+                    <td>10,000</td>
+                    <td>6,000</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>2023</td>
+                    <td>12,000</td>
+                    <td>?</td>
+                    <td>400</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>שלב א': סטטוס סיכון לשנת 2022</h3>
+        <div class="math-display">
+            \[ \frac{D_{2022}}{Y_{2022}} = \frac{6,000}{10,000} = 0.60 \Rightarrow 60\% \]
+        </div>
+        <p>בסוף 2022, יחס החוב-תוצר עמד על 60%.</p>
+
+        <h3>שלב ב': הרצת נתונים לשנת 2023</h3>
+        <div class="think-box">
+            <p><strong>פקודת מפעיל:</strong><br>
+            1. חשב תחילה את החוב העדכני <strong>בסוף 2023</strong> (\(D_{2023}\)). (חוב חדש = חוב ישן + גירעון).<br>
+            2. הצב במונה ובמכנה החדשים לחילוץ יחס החוב-תוצר החדש.</p>
+            <button class="btn-solution" onclick="toggleSolution('ex1-sol', this)">הפעל חישוב מערכת ⚡</button>
+        </div>
+
+        <div id="ex1-sol" class="solution-content">
+            <p><strong>1. חישוב החוב העדכני:</strong></p>
+            <div class="math-display">
+                \[ D_{2023} = D_{2022} + BD_{2023} \]
+                \[ D_{2023} = 6,000 + 400 = \mathbf{6,400} \]
+            </div>
+
+            <p><strong>2. חישוב יחס חוב-תוצר החדש:</strong></p>
+            <div class="math-display">
+                \[ \frac{D_{2023}}{Y_{2023}} = \frac{6,400}{12,000} \approx 0.533 \Rightarrow \mathbf{53.3\%} \]
+            </div>
+            
+            <div class="chaos-box" style="background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); margin-top: 20px;">
+                <h4 style="color: #34d399; margin-top: 0;">💡 אנטי-בלגן: פתרון התעלומה</h4>
+                <p>שימו לב מה קרה! המינוס של המדינה (החוב הפיזי) <strong>עלה</strong> (מ-6,000 ל-6,400). ובכל זאת, מדד הסיכון של המדינה (יחס חוב-תוצר) <strong>ירד</strong> מ-60% ל-53.3%.</p>
+                <p><strong>המסקנה:</strong> צמיחה כלכלית (הזנקת התוצר) היא "התרופה" לחובות. כשהמשק גדל מהר יותר ממה שלוקחים הלוואות, נטל החוב על המדינה קטן.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Reverse Engineering (Advanced) -->
+    <section class="panel">
+        <h2><span style="font-size: 1.5rem">🔐</span> הנדסה לאחור (פיצוח נעלמים מורכבים)</h2>
+        <p>לפעמים המערכת נותנת לנו רק את התוצאה הסופית, ועלינו לשחזר את נקודת ההתחלה.</p>
+        
+        <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; border-right: 4px solid var(--purple-glow);">
+            <p><strong>נתוני קלט מקוטעים לשנת 2025:</strong></p>
+            <ul>
+                <li>חוב לתחילת השנה (\(D_0\)): <strong>100,000</strong></li>
+                <li>הוצאות הממשלה הקשיחות (\(G\)): <strong>30,000</strong></li>
+                <li>נטל המס בחוק (\(t\)): <strong>25%</strong></li>
+                <li>בסוף 2025 סופק נתון סופי: <strong>יחס חוב-תוצר = 65%</strong>.</li>
+            </ul>
+            <p><strong>משימה: חשב מה היה התוצר (\(Y\)) בשנת 2025.</strong></p>
+        </div>
+
+        <div class="think-box">
+            <p><strong>רמז אסטרטגי:</strong><br>
+            הצב את התוצר כנעלם \(X\). בנה את משוואת הגירעון והחוב באמצעות \(X\), והצב הכל אל תוך משוואת יחס חוב-תוצר.</p>
+            <button class="btn-solution" onclick="toggleSolution('ex3-sol', this)">חלץ נתונים אלגבריים 🔓</button>
+        </div>
+
+        <div id="ex3-sol" class="solution-content">
+            <p>נגדיר את התוצר כנעלם: \( Y = X \)</p>
+            
+            <p><strong>1. הכנסות ממסים (\(T\)):</strong></p>
+            <div class="math-display">\[ T = 0.25X \]</div>
+            
+            <p><strong>2. הגירעון השנה (\(BD\)):</strong></p>
+            <div class="math-display">\[ BD = G - T = 30,000 - 0.25X \]</div>
+            
+            <p><strong>3. החוב העדכני (\(D_1\)):</strong> (\(D_0 + BD\))</p>
+            <div class="math-display">\[ D_1 = 100,000 + (30,000 - 0.25X) = 130,000 - 0.25X \]</div>
+            
+            <p><strong>4. משוואת העל (יחס חוב-תוצר שווה ל-0.65):</strong></p>
+            <div class="math-display">
+                \[ \frac{130,000 - 0.25X}{X} = 0.65 \]
+            </div>
+            
+            <p><strong>5. פתרון:</strong> נכפיל ב-X, נעביר אגפים ונחלץ:</p>
+            <div class="math-display">
+                \[ 130,000 - 0.25X = 0.65X \]
+                \[ 130,000 = 0.90X \]
+                \[ X = \frac{130,000}{0.90} \approx \mathbf{144,444} \]
+            </div>
+            <p><strong>התוצר אותר בהצלחה: כ-144,444 שקלים.</strong></p>
+        </div>
+    </section>
+
+    <!-- Section 6: Final Assessment -->
+    <section class="panel">
+        <h2><span style="font-size: 1.5rem">🎯</span> סימולציית מסוף (בחן את עצמך)</h2>
+        <p>הקלק על התרחיש הסביר ביותר להפעלת שגרת הפתרון המלא.</p>
+
+        <!-- Question 1 -->
+        <div class="quiz-question">
+            <h3 style="margin-top: 0;">תקרית 1: מיתון והמייצב האוטומטי</h3>
+            <p>שר האוצר תכנן להוציא 5,000 ש"ח (\(G\)) על בסיס תחזית תוצר של 20,000 ש"ח (נטל מס של 20%). לפתע פרץ "הבלגן" (מיתון מפתיע) והתוצר צנח ל-15,000 ש"ח בלבד. מה תהיה התוצאה התקציבית <strong>בפועל</strong>?</p>
+            <ul class="options">
+                <li>א. הגירעון יישאר 1,000 ש"ח כפי שתוכנן, כי התקציב אושר מראש.</li>
+                <li>ב. הגירעון יזנק ל-2,000 ש"ח (הממשלה סופגת את המכה).</li>
+                <li>ג. הממשלה תסיים בעודף תקציבי של 2,000 ש"ח.</li>
+                <li>ד. הוצאות הממשלה יקוצצו אוטומטית ל-3,000 ש"ח כדי לשמור על האיזון.</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol1', this)">סרוק תוצאות 👁️</button>
+            
+            <div id="sol1" class="solution-content">
+                <strong>תשובה נכונה: ב' (הגירעון יזנק ל-2,000)</strong>
+                <p><strong>הסבר אלגוריתמי:</strong><br>
+                1. הוצאות ממשלה נעולות בחוק: \( G = 5,000 \).<br>
+                2. מסים מעודכנים לפי התוצר שקרס: \( T = 0.20 \times 15,000 = 3,000 \).<br>
+                3. גירעון מעודכן: \( BD = G - T = 5,000 - 3,000 = 2,000 \).<br>
+                ה"בלגן" גרם למייצב האוטומטי לפעול: האזרחים משלמים פחות מס, והממשלה נכנסת לגירעון עמוק יותר כדי לחפות על כך.</p>
+            </div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="quiz-question">
+            <h3 style="margin-top: 0;">תקרית 2: תעלומת יחס חוב-תוצר</h3>
+            <p>במהלך השנה הממשלה רשמה גירעון חסר תקדים (\(BD > 0\)). למרות זאת, הכלכלן הראשי מדווח בסוף השנה כי יחס החוב-תוצר של המדינה דווקא <strong>השתפר (ירד)</strong>. כיצד הדבר ייתכן?</p>
+            <ul class="options">
+                <li>א. בלתי אפשרי. הכלכלן טעה בחישוב.</li>
+                <li>ב. הממשלה כנראה העלתה את המסים.</li>
+                <li>ג. התוצר הכלכלי זינק (צמח) בשיעור חד ומהיר יותר מאשר קצב גידול החוב.</li>
+                <li>ד. החוב המצטבר (\(D_0\)) התאפס.</li>
+            </ul>
+            <button class="btn-solution" onclick="toggleSolution('sol2', this)">סרוק תוצאות 👁️</button>
+            
+            <div id="sol2" class="solution-content">
+                <strong>תשובה נכונה: ג'</strong>
+                <p><strong>הסבר הלוגיקה:</strong> יחס חוב-תוצר הוא שבר (\(D/Y\)). גם כשיש גירעון (והמונה \(D\) גדל), אם המכנה (התוצר \(Y\)) צומח בשיעור משמעותי יותר ומהיר יותר - השבר הכולל קטן. זו ההוכחה שצמיחה כלכלית מהירה מנטרלת את השפעות הגירעון.</p>
+            </div>
+        </div>
+
+    </section>
+
+</div>
+
+<script>
+    // פונקציה מסוגננת להצגה והסתרה של פתרונות, תוך שינוי טקסט וסגנון
+    function toggleSolution(id, btnElement) {
+        var element = document.getElementById(id);
+        if (element.classList.contains('active')) {
+            element.classList.remove('active');
+            
+            if(btnElement.innerText.includes("הפעל") || btnElement.innerText.includes("חלץ") || btnElement.innerText.includes("סרוק")) {
+                btnElement.innerHTML = btnElement.innerHTML.replace("הסתר", btnElement.dataset.originalText || "הצג").replace("🙈", btnElement.dataset.originalIcon || "⚡");
+            } else {
+                btnElement.innerHTML = "הצג תוצאה 👁️";
+            }
+        } else {
+            // Store original text
+            btnElement.dataset.originalText = btnElement.innerText.split(' ')[0];
+            btnElement.dataset.originalIcon = btnElement.innerText.split(' ').pop();
+            
+            element.classList.add('active');
+            btnElement.innerHTML = "הסתר נתונים 🙈";
+        }
+    }
+</script>
+
+</body>
+</html>
