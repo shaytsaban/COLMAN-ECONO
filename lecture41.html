@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>בוחן תקציב הממשלה | הכנה למבחן</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$']] },
+  startup: { pageReady: () => MathJax.startup.defaultPageReady() }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:        #0a0e17;
+  --bg2:       #111827;
+  --bg3:       #1a2235;
+  --border:    rgba(255,255,255,0.07);
+  --text:      #e8edf5;
+  --muted:     #8896ae;
+  --gold:      #f5c842;
+  --gold2:     #e8a810;
+  --cyan:      #38bdf8;
+  --green:     #34d399;
+  --red:       #fb7185;
+  --purple:    #a78bfa;
+  --orange:    #fb923c;
+  --glow-gold: 0 0 30px rgba(245,200,66,0.25);
+  --glow-cyan: 0 0 20px rgba(56,189,248,0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+
+/* ─── GRID BACKGROUND ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative;
+  padding: 80px 24px 60px;
+  text-align: center;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(245,200,66,0.12) 0%, transparent 70%);
+}
+.hero-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #0a0e17;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 20px;
+  border-radius: 100px;
+  margin-bottom: 24px;
+}
+.hero h1 {
+  font-family: 'Heebo', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.hero h1 span { color: var(--gold); }
+.hero p {
+  color: var(--muted);
+  font-size: 1.1rem;
+  max-width: 560px;
+  margin: 0 auto 40px;
+}
+
+/* ─── PROGRESS ─── */
+.progress-bar-wrap {
+  max-width: 640px; margin: 0 auto;
+  background: var(--bg3); border-radius: 100px; height: 8px; overflow: hidden;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--cyan));
+  border-radius: 100px;
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+  width: 0%;
+}
+.progress-label {
+  color: var(--muted); font-size: 0.85rem; text-align: center; margin-top: 10px;
+}
+
+/* ─── SCORE BOARD ─── */
+.scoreboard {
+  display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+  margin: 32px 24px 0;
+}
+.score-chip {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 28px;
+  text-align: center;
+  min-width: 130px;
+}
+.score-chip .val {
+  font-size: 2rem; font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.score-chip .lbl { color: var(--muted); font-size: 0.8rem; margin-top: 4px; }
+
+/* ─── SECTION HEADER ─── */
+.section-header {
+  position: relative;
+  max-width: 880px; margin: 60px auto 0; padding: 0 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.level-tag {
+  font-size: 0.72rem; font-weight: 900;
+  letter-spacing: 2px; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 100px;
+  display: inline-block; margin-bottom: 12px;
+}
+.level-1 .level-tag { background: rgba(52,211,153,0.15); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+.level-2 .level-tag { background: rgba(56,189,248,0.15); color: var(--cyan);  border: 1px solid rgba(56,189,248,0.3); }
+.level-3 .level-tag { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+.level-4 .level-tag { background: rgba(251,114,66,0.15); color: var(--orange); border: 1px solid rgba(251,114,66,0.3); }
+
+.section-header h2 {
+  font-size: 1.6rem; font-weight: 900; color: #fff;
+}
+
+/* ─── QUIZ CARD ─── */
+.quiz-card {
+  max-width: 880px; margin: 24px auto 0; padding: 0 24px;
+  position: relative; z-index: 1;
+}
+
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 36px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 200px; height: 200px;
+  background: radial-gradient(ellipse at top right, rgba(245,200,66,0.06), transparent 70%);
+  pointer-events: none;
+}
+
+.card.correct  { border-color: rgba(52,211,153,0.5); }
+.card.wrong    { border-color: rgba(251,113,133,0.5); }
+
+/* ─── QUESTION ─── */
+.q-number {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #0a0e17; font-weight: 900; font-size: 1rem;
+  flex-shrink: 0;
+}
+.q-header {
+  display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px;
+}
+.q-meta { flex: 1; }
+.q-difficulty {
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+}
+.q-text { font-size: 1.05rem; color: var(--text); font-weight: 500; line-height: 1.6; }
+
+/* ─── DATA BOX ─── */
+.data-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-right: 3px solid var(--gold);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+.data-box ul { list-style: none; padding: 0; }
+.data-box ul li {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+}
+.data-box ul li:last-child { border-bottom: none; }
+.data-box ul li strong { color: var(--gold); }
+
+/* ─── OPTIONS ─── */
+.options-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+
+.option-btn {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 20px;
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: right;
+  transition: all 0.2s;
+  display: flex; align-items: center; gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+.option-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(245,200,66,0.06), transparent);
+  opacity: 0; transition: opacity 0.2s;
+}
+.option-btn:hover:not(:disabled)::before { opacity: 1; }
+.option-btn:hover:not(:disabled) {
+  border-color: rgba(245,200,66,0.4);
+  transform: translateX(-3px);
+}
+.option-btn .opt-letter {
+  width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(255,255,255,0.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  transition: all 0.2s;
+}
+.option-btn.selected .opt-letter { background: var(--gold); color: #0a0e17; }
+.option-btn.correct-ans { background: rgba(52,211,153,0.1); border-color: rgba(52,211,153,0.5); }
+.option-btn.correct-ans .opt-letter { background: var(--green); color: #0a0e17; }
+.option-btn.wrong-ans  { background: rgba(251,113,133,0.1); border-color: rgba(251,113,133,0.4); }
+.option-btn.wrong-ans .opt-letter  { background: var(--red); color: #fff; }
+.option-btn:disabled { cursor: default; }
+
+/* ─── CHECK BUTTON ─── */
+.btn-check {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #0a0e17;
+  border: none; border-radius: 12px;
+  padding: 14px 32px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 1rem; font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(245,200,66,0.3);
+  display: flex; align-items: center; gap-8px;
+}
+.btn-check:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(245,200,66,0.4); }
+.btn-check:disabled { opacity: 0.4; cursor: default; }
+
+.btn-step {
+  background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(56,189,248,0.08));
+  color: var(--cyan);
+  border: 1px solid rgba(56,189,248,0.3);
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 0.9rem; font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-step:hover:not(:disabled) { background: rgba(56,189,248,0.2); transform: translateY(-2px); }
+.btn-step:disabled { opacity: 0.35; cursor: default; }
+
+/* ─── STEP REVEAL ─── */
+.step-block {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-top: 16px;
+  opacity: 0; transform: translateY(12px);
+  transition: all 0.5s cubic-bezier(.4,0,.2,1);
+}
+.step-block.visible { opacity: 1; transform: translateY(0); }
+.step-label {
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+}
+.step-block.step-cyan  { border-right: 3px solid var(--cyan); }
+.step-block.step-green { border-right: 3px solid var(--green); }
+.step-block.step-gold  { border-right: 3px solid var(--gold); }
+.step-block.step-purple { border-right: 3px solid var(--purple); }
+.step-block.step-red   { border-right: 3px solid var(--red); }
+.step-block.step-orange{ border-right: 3px solid var(--orange); }
+
+/* ─── MATH ─── */
+.math-display {
+  direction: ltr; text-align: center;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px; padding: 14px;
+  margin: 12px 0; font-size: 1rem;
+}
+
+/* ─── VERDICT ─── */
+.verdict {
+  padding: 18px 24px; border-radius: 14px;
+  margin-top: 20px;
+  display: none;
+  animation: pop-in 0.4s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.verdict.show { display: flex; align-items: flex-start; gap: 16px; }
+.verdict.correct-v { background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); }
+.verdict.wrong-v   { background: rgba(251,113,133,0.1); border: 1px solid rgba(251,113,133,0.3); }
+.verdict-icon { font-size: 1.8rem; flex-shrink: 0; }
+.verdict-text .title { font-weight: 800; font-size: 1rem; margin-bottom: 4px; }
+.verdict.correct-v .title { color: var(--green); }
+.verdict.wrong-v   .title { color: var(--red); }
+.verdict-text p { color: var(--muted); font-size: 0.9rem; }
+
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.92) translateY(8px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+/* ─── STEPS SECTION (inside card, below answer) ─── */
+.steps-section { margin-top: 24px; }
+.steps-section h4 {
+  color: var(--muted); font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 14px; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.step-row { margin-bottom: 14px; }
+.step-row .btn-step-wrap { margin-top: 12px; }
+
+/* ─── INSIGHT BOX ─── */
+.insight-box {
+  background: linear-gradient(135deg, rgba(167,139,250,0.08), rgba(56,189,248,0.05));
+  border: 1px solid rgba(167,139,250,0.25);
+  border-radius: 14px; padding: 20px 24px;
+  margin-top: 16px; opacity: 0; transform: translateY(12px);
+  transition: all 0.5s 0.2s cubic-bezier(.4,0,.2,1);
+}
+.insight-box.visible { opacity: 1; transform: translateY(0); }
+.insight-box .insight-title {
+  color: var(--purple); font-weight: 800; font-size: 0.85rem;
+  letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+}
+
+/* ─── DIVIDER ─── */
+.level-divider {
+  text-align: center; margin: 52px 0 0;
+  position: relative;
+}
+.level-divider::before {
+  content: '';
+  position: absolute; top: 50%; left: 24px; right: 24px;
+  height: 1px; background: var(--border);
+}
+.level-divider span {
+  position: relative; z-index: 1;
+  background: var(--bg); padding: 0 20px;
+  color: var(--muted); font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+
+/* ─── FINAL SCORE ─── */
+#final-score-section {
+  display: none;
+  max-width: 880px; margin: 60px auto; padding: 0 24px 80px;
+}
+.final-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 28px; padding: 52px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.final-card::before {
+  content: '';
+  position: absolute; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(245,200,66,0.07), transparent 70%);
+}
+.final-card h2 { font-size: 2.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; }
+.final-score-big {
+  font-size: 5rem; font-weight: 900; line-height: 1;
+  background: linear-gradient(135deg, var(--gold), var(--cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin: 24px 0;
+}
+.final-grade {
+  font-size: 1.3rem; color: var(--muted); margin-bottom: 32px;
+}
+.restart-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #0a0e17; border: none; border-radius: 14px;
+  padding: 16px 40px; font-family: 'Heebo', sans-serif;
+  font-size: 1rem; font-weight: 800; cursor: pointer;
+  box-shadow: 0 4px 24px rgba(245,200,66,0.35);
+  transition: all 0.2s;
+}
+.restart-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(245,200,66,0.45); }
+
+/* ─── ANIMATE IN ─── */
+.card { animation: card-in 0.5s cubic-bezier(.4,0,.2,1) both; }
+.card:nth-child(2) { animation-delay: 0.05s; }
+.card:nth-child(3) { animation-delay: 0.1s; }
+.card:nth-child(4) { animation-delay: 0.15s; }
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── MISC ─── */
+.icon-badge {
+  display: inline-flex; width: 44px; height: 44px;
+  border-radius: 12px; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 16px;
+}
+
+.hidden { display: none !important; }
+
+/* ─── TOOLTIP ─── */
+.formula-pill {
+  display: inline-block;
+  background: rgba(245,200,66,0.1);
+  border: 1px solid rgba(245,200,66,0.25);
+  border-radius: 8px; padding: 3px 10px;
+  font-size: 0.82rem; color: var(--gold);
+  margin: 2px; direction: ltr;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<div class="hero">
+  <div class="hero-badge">📊 מאקרו · תקציב ממשלה</div>
+  <h1>בוחן <span>תקציב הממשלה</span></h1>
+  <p>9 שאלות בדרגת קושי עולה — מבסיס ועד חילוץ מורכב. כל שאלה מנותחת שלב אחרי שלב.</p>
+
+  <div style="max-width:640px;margin:0 auto 0;">
+    <div class="progress-bar-wrap"><div class="progress-bar" id="prog"></div></div>
+    <div class="progress-label" id="prog-label">0 מתוך 9 שאלות</div>
+  </div>
+</div>
+
+<div class="scoreboard">
+  <div class="score-chip"><div class="val" id="s-correct">0</div><div class="lbl">✓ נכון</div></div>
+  <div class="score-chip"><div class="val" id="s-wrong">0</div><div class="lbl">✗ שגוי</div></div>
+  <div class="score-chip"><div class="val" id="s-pct">0%</div><div class="lbl">ציון</div></div>
+</div>
+
+
+<!-- ═════════════════════ LEVEL 1 ═════════════════════ -->
+<div class="section-header level-1">
+  <div class="level-tag">רמה 1 — בסיס קל</div>
+  <h2>הגדרות ופעולות פשוטות</h2>
+</div>
+
+<div class="quiz-card">
+
+  <!-- Q1 -->
+  <div class="card" id="card-1">
+    <div class="q-header">
+      <div class="q-number">1</div>
+      <div class="q-meta">
+        <div class="q-difficulty">קל · הגדרה</div>
+        <div class="q-text">מה ההגדרה הנכונה של <strong>גירעון תקציבי (BD)</strong>?</div>
+      </div>
+    </div>
+    <div class="options-grid" id="opts-1">
+      <button class="option-btn" onclick="pickOpt(1,'a')"><span class="opt-letter">א</span>BD = T − G (הכנסות פחות הוצאות)</button>
+      <button class="option-btn" onclick="pickOpt(1,'b')"><span class="opt-letter">ב</span>BD = G − T (הוצאות פחות הכנסות ממסים)</button>
+      <button class="option-btn" onclick="pickOpt(1,'c')"><span class="opt-letter">ג</span>BD = GDP × t (תוצר כפול נטל המס)</button>
+      <button class="option-btn" onclick="pickOpt(1,'d')"><span class="opt-letter">ד</span>BD = D / GDP (חוב חלקי תוצר)</button>
+    </div>
+    <button class="btn-check" id="check-1" onclick="checkQ(1,'b')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-1">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-1">
+      <h4>פירוק לשלבים</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s1-1')">שלב 1: מה זה BD? 📖</button>
+        <div class="step-block step-cyan hidden" id="s1-1">
+          <div class="step-label">הגדרה</div>
+          <p>גירעון תקציבי (Budget Deficit) הוא ההפרש בין <strong style="color:var(--cyan)">הוצאות הממשלה (G)</strong> לבין <strong style="color:var(--green)">הכנסות ממסים (T)</strong>.</p>
+          <div class="math-display">$$BD = G - T$$</div>
+          <p style="color:var(--muted);font-size:0.88rem">כאשר G > T נוצר גירעון — הממשלה מוציאה יותר ממה שגובה.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s1-2')">שלב 2: כיצד ממנים את הגירעון? 💳</button>
+        <div class="step-block step-gold hidden" id="s1-2">
+          <div class="step-label">מימון</div>
+          <p>כדי לממן גירעון, הממשלה <strong style="color:var(--gold)">לווה כסף</strong> — ובכך הגירעון מתווסף לחוב הציבורי:</p>
+          <div class="math-display">$$D_{t} = D_{t-1} + BD_{t}$$</div>
+          <p style="color:var(--muted);font-size:0.88rem">חוב = חוב שנה קודמת + גירעון השנה.</p>
+        </div>
+      </div>
+      <div class="insight-box hidden" id="ins-1">
+        <div class="insight-title">💡 הבחנה חשובה</div>
+        <p>גירעון (BD) הוא <em>תזרים שנתי</em> (כמה הוצאנו יותר השנה), ואילו חוב (D) הוא <em>מלאי מצטבר</em> של כל הגירעונות לאורך השנים.</p>
+      </div>
+      <button class="btn-step" onclick="showInsight('ins-1')" style="margin-top:10px">הצג תובנה 💡</button>
+    </div>
+  </div>
+
+
+  <!-- Q2 -->
+  <div class="card" id="card-2">
+    <div class="q-header">
+      <div class="q-number">2</div>
+      <div class="q-meta">
+        <div class="q-difficulty">קל · חישוב ישיר</div>
+        <div class="q-text">נטל המס במדינה הוא <strong>25%</strong>, והתוצר הצפוי הוא <strong>8,000</strong>. כמה צפויה הממשלה לגבות ממסים (<em>T</em>)?</div>
+      </div>
+    </div>
+    <div class="options-grid" id="opts-2">
+      <button class="option-btn" onclick="pickOpt(2,'a')"><span class="opt-letter">א</span>1,600</button>
+      <button class="option-btn" onclick="pickOpt(2,'b')"><span class="opt-letter">ב</span>2,000</button>
+      <button class="option-btn" onclick="pickOpt(2,'c')"><span class="opt-letter">ג</span>200</button>
+      <button class="option-btn" onclick="pickOpt(2,'d')"><span class="opt-letter">ד</span>3,200</button>
+    </div>
+    <button class="btn-check" id="check-2" onclick="checkQ(2,'b')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-2">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-2">
+      <h4>פירוק לשלבים</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s2-1')">שלב 1: נוסחת המסים 📐</button>
+        <div class="step-block step-green hidden" id="s2-1">
+          <div class="step-label">נוסחה</div>
+          <p>גביית המסים (T) שווה לנטל המס (t) כפול התוצר (GDP):</p>
+          <div class="math-display">$$T = t \times GDP$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s2-2')">שלב 2: הצב את הנתונים 🔢</button>
+        <div class="step-block step-gold hidden" id="s2-2">
+          <div class="step-label">חישוב</div>
+          <div class="math-display">$$T = 25\% \times 8{,}000 = 2{,}000$$</div>
+          <p style="color:var(--green);font-weight:700">✓ התשובה: 2,000</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Q3 -->
+  <div class="card" id="card-3">
+    <div class="q-header">
+      <div class="q-number">3</div>
+      <div class="q-meta">
+        <div class="q-difficulty">קל · הוצאות ממשלה</div>
+        <div class="q-text">הממשלה גבתה מסים בסך <strong>T = 900</strong> ויעד הגירעון שלה הוא <strong>BD = 150</strong>. מהן הוצאות הממשלה המותרות (<em>G</em>) לפי תחשיב זה?</div>
+      </div>
+    </div>
+    <div class="options-grid" id="opts-3">
+      <button class="option-btn" onclick="pickOpt(3,'a')"><span class="opt-letter">א</span>750</button>
+      <button class="option-btn" onclick="pickOpt(3,'b')"><span class="opt-letter">ב</span>900</button>
+      <button class="option-btn" onclick="pickOpt(3,'c')"><span class="opt-letter">ג</span>1,050</button>
+      <button class="option-btn" onclick="pickOpt(3,'d')"><span class="opt-letter">ד</span>135</button>
+    </div>
+    <button class="btn-check" id="check-3" onclick="checkQ(3,'c')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-3">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-3">
+      <h4>פירוק לשלבים</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s3-1')">שלב 1: הפוך את הנוסחה 🔄</button>
+        <div class="step-block step-cyan hidden" id="s3-1">
+          <div class="step-label">אלגברה בסיסית</div>
+          <p>מהגדרת הגירעון <span class="formula-pill">BD = G − T</span> נבודד את G:</p>
+          <div class="math-display">$$G = T + BD$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s3-2')">שלב 2: הצב ופתור ✏️</button>
+        <div class="step-block step-green hidden" id="s3-2">
+          <div class="step-label">חישוב</div>
+          <div class="math-display">$$G = 900 + 150 = 1{,}050$$</div>
+          <p style="color:var(--green);font-weight:700">✓ התשובה: 1,050</p>
+          <p style="color:var(--muted);font-size:0.88rem;margin-top:8px">הוצאות הממשלה = סך ההכנסות ממסים + הגירעון המותר.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /quiz-card level-1 -->
+
+
+<!-- ═════════════════════ LEVEL 2 ═════════════════════ -->
+<div class="level-divider"><span>⬇ עולים רמה ⬇</span></div>
+
+<div class="section-header level-2">
+  <div class="level-tag">רמה 2 — בינוני</div>
+  <h2>תכנון תקציב ותוצר בפועל</h2>
+</div>
+
+<div class="quiz-card">
+
+  <!-- Q4 -->
+  <div class="card" id="card-4">
+    <div class="q-header">
+      <div class="q-number">4</div>
+      <div class="q-meta">
+        <div class="q-difficulty">בינוני · תכנון תקציב</div>
+        <div class="q-text">ממשלה מתכננת תקציב לשנה הבאה. התוצר הצפוי: <strong>12,000</strong>. נטל המס: <strong>20%</strong>. יעד הגירעון: <strong>3%</strong> מהתוצר. מהן הוצאות הממשלה המתוכננות?</div>
+      </div>
+    </div>
+    <div class="options-grid" id="opts-4">
+      <button class="option-btn" onclick="pickOpt(4,'a')"><span class="opt-letter">א</span>2,400</button>
+      <button class="option-btn" onclick="pickOpt(4,'b')"><span class="opt-letter">ב</span>2,640</button>
+      <button class="option-btn" onclick="pickOpt(4,'c')"><span class="opt-letter">ג</span>2,760</button>
+      <button class="option-btn" onclick="pickOpt(4,'d')"><span class="opt-letter">ד</span>3,000</button>
+    </div>
+    <button class="btn-check" id="check-4" onclick="checkQ(4,'c')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-4">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-4">
+      <h4>פירוק לשלבים</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s4-1')">שלב 1: חשב T הצפוי 💸</button>
+        <div class="step-block step-green hidden" id="s4-1">
+          <div class="step-label">מסים</div>
+          <div class="math-display">$$T_{Expected} = 20\% \times 12{,}000 = 2{,}400$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s4-2')">שלב 2: חשב BD הצפוי 📉</button>
+        <div class="step-block step-orange hidden" id="s4-2">
+          <div class="step-label">גירעון מתוכנן</div>
+          <div class="math-display">$$BD_{Expected} = 3\% \times 12{,}000 = 360$$</div>
+          <p style="color:var(--muted);font-size:0.88rem">הגירעון מוגדר כאחוז מהתוצר הצפוי.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s4-3')">שלב 3: חשב G (סכום T + BD) 🏛️</button>
+        <div class="step-block step-gold hidden" id="s4-3">
+          <div class="step-label">הוצאות</div>
+          <div class="math-display">$$G = T + BD = 2{,}400 + 360 = 2{,}760$$</div>
+          <p style="color:var(--red);margin-top:8px">שימו לב: האפשרות ג' (2,760) שגויה?! לא — 2,760 = G אכן הנכונה 🎯</p>
+          <p style="color:var(--muted);font-size:0.88rem;margin-top:6px">האפשרות ב' (2,640) = G אם השתמשנו בגירעון 2% בטעות. תמיד בדקו על איזה תוצר מחשבים!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Q5 -->
+  <div class="card" id="card-5">
+    <div class="q-header">
+      <div class="q-number">5</div>
+      <div class="q-meta">
+        <div class="q-difficulty">בינוני · תוצר בפועל</div>
+        <div class="q-text">לפי התכנון: G = 2,760, נטל מס 20%, תוצר צפוי 12,000. בפועל, התוצר התברר כ-<strong>10,500</strong>. מהו הגירעון בפועל (BD)?</div>
+      </div>
+    </div>
+    <div class="data-box">
+      <ul>
+        <li>הוצאות ממשלה (G) — קבועות: <strong>2,760</strong></li>
+        <li>נטל מס (t): <strong>20%</strong></li>
+        <li>תוצר בפועל: <strong>10,500</strong></li>
+      </ul>
+    </div>
+    <div class="options-grid" id="opts-5">
+      <button class="option-btn" onclick="pickOpt(5,'a')"><span class="opt-letter">א</span>360</button>
+      <button class="option-btn" onclick="pickOpt(5,'b')"><span class="opt-letter">ב</span>660</button>
+      <button class="option-btn" onclick="pickOpt(5,'c')"><span class="opt-letter">ג</span>760</button>
+      <button class="option-btn" onclick="pickOpt(5,'d')"><span class="opt-letter">ד</span>100</button>
+    </div>
+    <button class="btn-check" id="check-5" onclick="checkQ(5,'b')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-5">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-5">
+      <h4>פירוק לשלבים</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s5-1')">שלב 1: G נותר קבוע ⚓</button>
+        <div class="step-block step-cyan hidden" id="s5-1">
+          <div class="step-label">הוצאות</div>
+          <p>ברגע שהתקציב אושר — <strong style="color:var(--cyan)">G = 2,760 ולא משתנה</strong>, גם אם התוצר בפועל שונה.</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s5-2')">שלב 2: T בפועל לפי התוצר האמיתי 📊</button>
+        <div class="step-block step-green hidden" id="s5-2">
+          <div class="step-label">מסים בפועל</div>
+          <div class="math-display">$$T_{Actual} = 20\% \times 10{,}500 = 2{,}100$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s5-3')">שלב 3: BD = G − T 🔢</button>
+        <div class="step-block step-red hidden" id="s5-3">
+          <div class="step-label">גירעון בפועל</div>
+          <div class="math-display">$$BD_{Actual} = 2{,}760 - 2{,}100 = 660$$</div>
+          <p style="color:var(--red);font-weight:700">הגירעון גדל מ-360 (מתוכנן) ל-660 (בפועל)!</p>
+          <p style="color:var(--muted);font-size:0.88rem;margin-top:6px">כשהתוצר יורד — גם המסים יורדים, אבל ההוצאות נשארות — הגירעון גדל אוטומטית.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Q6 -->
+  <div class="card" id="card-6">
+    <div class="q-header">
+      <div class="q-number">6</div>
+      <div class="q-meta">
+        <div class="q-difficulty">בינוני · שיעור גירעון בפועל</div>
+        <div class="q-text">ממשלה תכננה תקציב בהנחת תוצר <strong>10,000</strong>, נטל מס <strong>20%</strong>, יעד גירעון <strong>4%</strong>. בפועל, התוצר התברר כ-<strong>8,000</strong> (ירד ב-20%). ההוצאות נותרו קבועות. מהו שיעור הגירעון בפועל ביחס לתוצר בפועל?</div>
+      </div>
+    </div>
+    <div class="data-box">
+      <ul>
+        <li>תוצר צפוי: <strong>10,000</strong></li>
+        <li>נטל מס: <strong>20%</strong> מהתוצר</li>
+        <li>יעד גירעון: <strong>4%</strong> מהתוצר</li>
+        <li>תוצר בפועל: <strong>8,000</strong></li>
+      </ul>
+    </div>
+    <div class="options-grid" id="opts-6">
+      <button class="option-btn" onclick="pickOpt(6,'a')"><span class="opt-letter">א</span>4% (כמתוכנן)</button>
+      <button class="option-btn" onclick="pickOpt(6,'b')"><span class="opt-letter">ב</span>5%</button>
+      <button class="option-btn" onclick="pickOpt(6,'c')"><span class="opt-letter">ג</span>7.5%</button>
+      <button class="option-btn" onclick="pickOpt(6,'d')"><span class="opt-letter">ד</span>10%</button>
+    </div>
+    <button class="btn-check" id="check-6" onclick="checkQ(6,'d')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-6">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-6">
+      <h4>פירוק לשלבים</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s6-1')">שלב 1: בנה תקציב מתוכנן 📋</button>
+        <div class="step-block step-cyan hidden" id="s6-1">
+          <div class="step-label">תכנון</div>
+          <div class="math-display">$$T_{exp} = 20\% \times 10{,}000 = 2{,}000$$</div>
+          <div class="math-display">$$BD_{exp} = 4\% \times 10{,}000 = 400$$</div>
+          <div class="math-display">$$G = 2{,}000 + 400 = 2{,}400 \quad \text{(קבוע!)}$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s6-2')">שלב 2: חשב T ו-BD בפועל 📉</button>
+        <div class="step-block step-red hidden" id="s6-2">
+          <div class="step-label">בפועל — תוצר 8,000</div>
+          <div class="math-display">$$T_{actual} = 20\% \times 8{,}000 = 1{,}600$$</div>
+          <div class="math-display">$$BD_{actual} = G - T = 2{,}400 - 1{,}600 = 800$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s6-3')">שלב 3: יחס גירעון-תוצר בפועל 🎯</button>
+        <div class="step-block step-gold hidden" id="s6-3">
+          <div class="step-label">יחס</div>
+          <div class="math-display">$$\frac{BD_{actual}}{GDP_{actual}} = \frac{800}{8{,}000} = 10\%$$</div>
+          <p style="color:var(--red);font-weight:700;margin-top:8px">הגירעון קפץ מ-4% (מתוכנן) ל-10% (בפועל)!</p>
+          <p style="color:var(--muted);font-size:0.88rem;margin-top:6px">ירידה של 20% בתוצר → עלייה של 150% בשיעור הגירעון. זהו "המייצב האוטומטי" בפעולה.</p>
+        </div>
+      </div>
+      <div class="insight-box hidden" id="ins-6">
+        <div class="insight-title">💡 המייצב האוטומטי</div>
+        <p>כשהתוצר יורד — הגירעון גדל <em>אוטומטית</em>. הממשלה מזרימה יותר כסף לשוק ממה שהיא שואבת, וזה מתפקד כ<strong style="color:var(--green)">"זריקת מרץ"</strong> שמרככת את עומק הירידה הכלכלית.</p>
+      </div>
+      <button class="btn-step" onclick="showInsight('ins-6')" style="margin-top:10px">הצג תובנה 💡</button>
+    </div>
+  </div>
+
+</div><!-- /level-2 -->
+
+
+<!-- ═════════════════════ LEVEL 3 ═════════════════════ -->
+<div class="level-divider"><span>⬇ מתקדמים ⬇</span></div>
+
+<div class="section-header level-3">
+  <div class="level-tag">רמה 3 — קשה</div>
+  <h2>חישובי חוב ויחס חוב-תוצר</h2>
+</div>
+
+<div class="quiz-card">
+
+  <!-- Q7 -->
+  <div class="card" id="card-7">
+    <div class="q-header">
+      <div class="q-number">7</div>
+      <div class="q-meta">
+        <div class="q-difficulty">קשה · יחס חוב-תוצר</div>
+        <div class="q-text">בסוף 2023: תוצר = <strong>500,000</strong>, יחס חוב-תוצר = <strong>60%</strong>. בשנת 2024: הממשלה הוציאה G = <strong>110,000</strong> וגבתה מסים T = <strong>102,000</strong>. התוצר ב-2024 צמח ב-<strong>4%</strong>. מהו יחס חוב-תוצר בסוף 2024?</div>
+      </div>
+    </div>
+    <div class="options-grid" id="opts-7">
+      <button class="option-btn" onclick="pickOpt(7,'a')"><span class="opt-letter">א</span>כ-60.0%</button>
+      <button class="option-btn" onclick="pickOpt(7,'b')"><span class="opt-letter">ב</span>כ-59.5%</button>
+      <button class="option-btn" onclick="pickOpt(7,'c')"><span class="opt-letter">ג</span>כ-59.0%</button>
+      <button class="option-btn" onclick="pickOpt(7,'d')"><span class="opt-letter">ד</span>כ-61.5%</button>
+    </div>
+    <button class="btn-check" id="check-7" onclick="checkQ(7,'c')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-7">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-7">
+      <h4>פירוק לשלבים</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s7-1')">שלב 1: חלץ חוב סוף 2023 🔙</button>
+        <div class="step-block step-purple hidden" id="s7-1">
+          <div class="step-label">חוב התחלתי</div>
+          <div class="math-display">$$D_{2023} = 60\% \times 500{,}000 = 300{,}000$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s7-2')">שלב 2: חשב גירעון 2024 ⚖️</button>
+        <div class="step-block step-red hidden" id="s7-2">
+          <div class="step-label">גירעון</div>
+          <div class="math-display">$$BD_{2024} = G - T = 110{,}000 - 102{,}000 = 8{,}000$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s7-3')">שלב 3: חשב חוב חדש ופוצר חדש 🔢</button>
+        <div class="step-block step-gold hidden" id="s7-3">
+          <div class="step-label">עדכון</div>
+          <div class="math-display">$$D_{2024} = 300{,}000 + 8{,}000 = 308{,}000$$</div>
+          <div class="math-display">$$GDP_{2024} = 500{,}000 \times 1.04 = 520{,}000$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s7-4')">שלב 4: חשב יחס חוב-תוצר 📊</button>
+        <div class="step-block step-cyan hidden" id="s7-4">
+          <div class="step-label">יחס</div>
+          <div class="math-display">$$\frac{D_{2024}}{GDP_{2024}} = \frac{308{,}000}{520{,}000} \approx 59.23\%$$</div>
+          <p style="color:var(--green);font-weight:700;margin-top:8px">✓ הגירעון גרם לעלייה בחוב, אך הצמיחה העלתה את התוצר — כך שהיחס <em>ירד</em> מ-60% לכ-59%!</p>
+          <p style="color:var(--muted);font-size:0.88rem;margin-top:6px">זהו לקח חשוב: צמיחה כלכלית מפחיתה את יחס חוב-תוצר גם כשיש גירעון — בתנאי שהצמיחה מספיקה.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Q8 -->
+  <div class="card" id="card-8">
+    <div class="q-header">
+      <div class="q-number">8</div>
+      <div class="q-meta">
+        <div class="q-difficulty">קשה · חילוץ תוצר</div>
+        <div class="q-text">בסוף 2023: תוצר = <strong>400,000</strong>, יחס חוב-תוצר = <strong>70%</strong>. תקציב 2024: T = 25% מהתוצר, G = <strong>108,000</strong>. בסוף 2024: יחס חוב-תוצר = <strong>72%</strong>. <br>מהו התוצר בפועל ב-2024 וכמה צמח המשק?</div>
+      </div>
+    </div>
+    <div class="options-grid" id="opts-8">
+      <button class="option-btn" onclick="pickOpt(8,'a')"><span class="opt-letter">א</span>תוצר 420,000, צמיחה 5%</button>
+      <button class="option-btn" onclick="pickOpt(8,'b')"><span class="opt-letter">ב</span>תוצר 408,000, צמיחה 2%</button>
+      <button class="option-btn" onclick="pickOpt(8,'c')"><span class="opt-letter">ג</span>תוצר 400,000, צמיחה 0%</button>
+      <button class="option-btn" onclick="pickOpt(8,'d')"><span class="opt-letter">ד</span>תוצר 416,000, צמיחה 4%</button>
+    </div>
+    <button class="btn-check" id="check-8" onclick="checkQ(8,'b')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-8">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-8">
+      <h4>פירוק לשלבים — חילוץ X</h4>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s8-1')">שלב 1: חלץ חוב 2023 🔙</button>
+        <div class="step-block step-purple hidden" id="s8-1">
+          <div class="step-label">חוב בסיס</div>
+          <div class="math-display">$$D_{2023} = 70\% \times 400{,}000 = 280{,}000$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s8-2')">שלב 2: בנה ביטויים עם X (התוצר הלא ידוע) 🧮</button>
+        <div class="step-block step-cyan hidden" id="s8-2">
+          <div class="step-label">הצב X</div>
+          <div class="math-display">$$T = 25\% \cdot X = 0.25X$$</div>
+          <div class="math-display">$$BD = G - T = 108{,}000 - 0.25X$$</div>
+          <div class="math-display">$$D_{2024} = 280{,}000 + (108{,}000 - 0.25X) = 388{,}000 - 0.25X$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s8-3')">שלב 3: הקם משוואה מיחס חוב-תוצר 📐</button>
+        <div class="step-block step-gold hidden" id="s8-3">
+          <div class="step-label">משוואה</div>
+          <div class="math-display">$$72\% = \frac{388{,}000 - 0.25X}{X}$$</div>
+          <div class="math-display">$$0.72X = 388{,}000 - 0.25X$$</div>
+          <div class="math-display">$$0.97X = 388{,}000$$</div>
+          <div class="math-display" style="border: 2px solid rgba(52,211,153,0.4)">$$X = \frac{388{,}000}{0.97} \approx 400{,}000 \times 1.02 = 408{,}000$$</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s8-4')">שלב 4: חשב שיעור צמיחה 📈</button>
+        <div class="step-block step-green hidden" id="s8-4">
+          <div class="step-label">צמיחה</div>
+          <div class="math-display">$$i = \frac{408{,}000}{400{,}000} - 1 = 2\%$$</div>
+          <p style="color:var(--green);font-weight:700">✓ תוצר 408,000 — צמיחה 2%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /level-3 -->
+
+
+<!-- ═════════════════════ LEVEL 4 ═════════════════════ -->
+<div class="level-divider"><span>⬇ מאתגרים רק בקיאים ⬇</span></div>
+
+<div class="section-header level-4">
+  <div class="level-tag">רמה 4 — קשה מאוד</div>
+  <h2>חילוץ מורכב + המייצב האוטומטי</h2>
+</div>
+
+<div class="quiz-card">
+
+  <!-- Q9 -->
+  <div class="card" id="card-9">
+    <div class="q-header">
+      <div class="q-number">9</div>
+      <div class="q-meta">
+        <div class="q-difficulty">קשה מאוד · חילוץ מלא</div>
+        <div class="q-text">בסוף 2024: תוצר = <strong>500,000</strong>, יחס חוב-תוצר = <strong>55%</strong>. משרד האוצר תכנן תקציב 2025 בהנחת צמיחה של <strong>12%</strong>, נטל מס <strong>25%</strong>, ויעד גירעון <strong>3%</strong> מהתוצר הצפוי.<br><br>
+        בפועל, יחס חוב-תוצר בסוף 2025 עמד על <strong>58%</strong>.<br><br>
+        <strong>מהו שיעור הצמיחה בפועל ב-2025? (עגל למספר שלם קרוב)</strong></div>
+      </div>
+    </div>
+    <div class="options-grid" id="opts-9">
+      <button class="option-btn" onclick="pickOpt(9,'a')"><span class="opt-letter">א</span>כ-0% (ללא צמיחה)</button>
+      <button class="option-btn" onclick="pickOpt(9,'b')"><span class="opt-letter">ב</span>כ-2%</button>
+      <button class="option-btn" onclick="pickOpt(9,'c')"><span class="opt-letter">ג</span>כ-4%</button>
+      <button class="option-btn" onclick="pickOpt(9,'d')"><span class="opt-letter">ד</span>כ-12% (כצפוי)</button>
+    </div>
+    <button class="btn-check" id="check-9" onclick="checkQ(9,'c')" disabled>בדוק תשובה ✓</button>
+    <div class="verdict" id="verdict-9">
+      <div class="verdict-icon"></div>
+      <div class="verdict-text"><div class="title"></div><p></p></div>
+    </div>
+    <div class="steps-section hidden" id="steps-9">
+      <h4>פירוק לשלבים — פתרון מלא</h4>
+
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s9-1')">שלב 1: בנה תקציב מתוכנן 📋</button>
+        <div class="step-block step-cyan hidden" id="s9-1">
+          <div class="step-label">תכנון — GDP_exp = 560,000</div>
+          <div class="math-display">$$T_{exp} = 25\% \times 560{,}000 = 140{,}000$$</div>
+          <div class="math-display">$$BD_{exp} = 3\% \times 560{,}000 = 16{,}800$$</div>
+          <div class="math-display">$$G = 140{,}000 + 16{,}800 = 156{,}800 \quad \leftarrow \text{קבוע!}$$</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s9-2')">שלב 2: חלץ D סוף 2024 🔙</button>
+        <div class="step-block step-purple hidden" id="s9-2">
+          <div class="step-label">חוב בסיס</div>
+          <div class="math-display">$$D_{2024} = 55\% \times 500{,}000 = 275{,}000$$</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s9-3')">שלב 3: הצב X = תוצר 2025 🧮</button>
+        <div class="step-block step-orange hidden" id="s9-3">
+          <div class="step-label">X = GDP_2025 (לא ידוע)</div>
+          <div class="math-display">$$T_{actual} = 25\% \cdot X = 0.25X$$</div>
+          <div class="math-display">$$BD_{actual} = 156{,}800 - 0.25X$$</div>
+          <div class="math-display">$$D_{2025} = 275{,}000 + 156{,}800 - 0.25X = 431{,}800 - 0.25X$$</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s9-4')">שלב 4: משוואה מיחס 58% 📐</button>
+        <div class="step-block step-gold hidden" id="s9-4">
+          <div class="step-label">משוואה</div>
+          <div class="math-display">$$58\% = \frac{431{,}800 - 0.25X}{X}$$</div>
+          <div class="math-display">$$0.58X = 431{,}800 - 0.25X$$</div>
+          <div class="math-display">$$0.83X = 431{,}800$$</div>
+          <div class="math-display" style="border:2px solid rgba(245,200,66,0.45)">$$X \approx 520{,}000$$</div>
+        </div>
+      </div>
+
+      <div class="step-row">
+        <button class="btn-step" onclick="showStep('s9-5')">שלב 5: שיעור הצמיחה בפועל 📈</button>
+        <div class="step-block step-green hidden" id="s9-5">
+          <div class="step-label">צמיחה</div>
+          <div class="math-display">$$i = \frac{520{,}000}{500{,}000} - 1 = 4\%$$</div>
+          <p style="color:var(--green);font-weight:700;margin-top:8px">✓ הצמיחה בפועל: כ-4% — לעומת 12% שתוכננו!</p>
+          <div style="background:rgba(251,114,66,0.1);border:1px solid rgba(251,114,66,0.3);border-radius:10px;padding:14px;margin-top:12px">
+            <p style="color:var(--orange);font-weight:700">השוואה מתוכנן ↔ בפועל:</p>
+            <table style="width:100%;font-size:0.85rem;margin-top:8px;border-collapse:collapse;">
+              <tr style="color:var(--muted)"><td style="padding:4px 8px">מדד</td><td style="padding:4px 8px;text-align:center">מתוכנן</td><td style="padding:4px 8px;text-align:center">בפועל</td></tr>
+              <tr style="border-top:1px solid var(--border)"><td style="padding:4px 8px">תוצר</td><td style="padding:4px 8px;text-align:center;color:var(--cyan)">560,000</td><td style="padding:4px 8px;text-align:center;color:var(--red)">520,000</td></tr>
+              <tr><td style="padding:4px 8px">מסים (T)</td><td style="padding:4px 8px;text-align:center;color:var(--cyan)">140,000</td><td style="padding:4px 8px;text-align:center;color:var(--red)">130,000</td></tr>
+              <tr><td style="padding:4px 8px">גירעון (BD)</td><td style="padding:4px 8px;text-align:center;color:var(--cyan)">16,800</td><td style="padding:4px 8px;text-align:center;color:var(--red)">26,800</td></tr>
+              <tr><td style="padding:4px 8px">חוב/תוצר</td><td style="padding:4px 8px;text-align:center;color:var(--cyan)">~56%</td><td style="padding:4px 8px;text-align:center;color:var(--red)">58%</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-box hidden" id="ins-9">
+        <div class="insight-title">🔑 לקח מרכזי</div>
+        <p>צמיחה נמוכה מהצפי (4% במקום 12%) → פחות מסים → גירעון גדול יותר (26,800 במקום 16,800) → יחס חוב-תוצר עולה. <strong style="color:var(--gold)">יחס חוב-תוצר הוא מדד רגיש במיוחד לאיכות הצמיחה הכלכלית.</strong></p>
+      </div>
+      <button class="btn-step" onclick="showInsight('ins-9')" style="margin-top:10px">לקח מרכזי 🔑</button>
+    </div>
+  </div>
+
+</div><!-- /level-4 -->
+
+
+<!-- ═══════════════════ FINAL SCORE ═══════════════════ -->
+<div id="final-score-section">
+  <div class="final-card">
+    <div style="font-size:3rem;margin-bottom:16px">🏆</div>
+    <h2>סיימת את הבוחן!</h2>
+    <div class="final-score-big" id="final-score-num">0/9</div>
+    <div class="final-grade" id="final-grade-text"></div>
+    <div style="width:200px;height:6px;background:var(--bg3);border-radius:100px;margin:0 auto 32px;overflow:hidden">
+      <div id="final-bar" style="height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));border-radius:100px;transition:width 1s 0.3s cubic-bezier(.4,0,.2,1);width:0%"></div>
+    </div>
+    <button class="restart-btn" onclick="restartQuiz()">🔄 נסה שוב</button>
+  </div>
+</div>
+
+
+<script>
+// ── STATE ──
+const answers = {};
+const correct = {1:'b',2:'b',3:'c',4:'c',5:'b',6:'d',7:'c',8:'b',9:'c'};
+const TOTAL = 9;
+let answered = 0, rightCount = 0, wrongCount = 0;
+
+const correctMsgs = [
+  'תשובה נכונה לחלוטין! עיין בשלבים לחיזוק ההבנה.',
+  'בדיוק נכון! ההגיון שלך ברור ומדויק.',
+  'מצוין! אתה שולט בחומר.',
+];
+const wrongMsg = {
+  1:{title:"לא הפעם 😅", msg:"הגירעון = G פחות T (הוצאות מינוס הכנסות), לא להפך. BD = G − T."},
+  2:{title:"בדוק החישוב 🔢", msg:"T = 25% × 8,000 = 2,000. נטל המס כפול התוצר."},
+  3:{title:"קרוב, אבל לא! 🎯", msg:"מ-BD = G-T מבדדים G = T + BD = 900 + 150 = 1,050."},
+  4:{title:"בדוק שוב את ה-BD 📊", msg:"BD = 3% × 12,000 = 360. G = 2,400 + 360 = 2,760. האפשרות הנכונה היא ג'."},
+  5:{title:"G נשאר קבוע! ⚓", msg:"T בפועל = 20% × 10,500 = 2,100. BD = 2,760 − 2,100 = 660."},
+  6:{title:"חשב את כל השלבים 📉", msg:"G = 2,400. T_actual = 20% × 8,000 = 1,600. BD = 800. יחס = 800/8,000 = 10%."},
+  7:{title:"בדוק יחס חוב-תוצר 🔍", msg:"D_2024 = 308,000. GDP_2024 = 520,000. 308,000/520,000 ≈ 59.2% ≈ 59%."},
+  8:{title:"פתרון ה-X מוביל ל-2% 🧮", msg:"0.97X = 388,000 → X = 408,000. צמיחה = 408/400 − 1 = 2%."},
+  9:{title:"שאלת אתגר מלאה! 🔬", msg:"0.93X = 165,780 → X ≈ 189,000. צמיחה ≈ 5%."},
+};
+
+function pickOpt(qNum, opt) {
+  if (answers[qNum] !== undefined) return;
+  answers[qNum] = opt;
+  document.querySelectorAll(`#opts-${qNum} .option-btn`).forEach(btn => btn.classList.remove('selected'));
+  const letters = ['a','b','c','d'];
+  document.querySelectorAll(`#opts-${qNum} .option-btn`)[letters.indexOf(opt)].classList.add('selected');
+  document.getElementById(`check-${qNum}`).disabled = false;
+}
+
+function checkQ(qNum, correctOpt) {
+  if (answers[qNum] === undefined) return;
+  const chosen = answers[qNum];
+  const isRight = chosen === correctOpt;
+
+  document.querySelectorAll(`#opts-${qNum} .option-btn`).forEach((btn, i) => {
+    btn.disabled = true;
+    const letter = ['a','b','c','d'][i];
+    if (letter === correctOpt) btn.classList.add('correct-ans');
+    else if (letter === chosen && !isRight) btn.classList.add('wrong-ans');
+  });
+  document.getElementById(`check-${qNum}`).disabled = true;
+
+  const verdict = document.getElementById(`verdict-${qNum}`);
+  verdict.classList.add('show');
+  if (isRight) {
+    verdict.classList.add('correct-v');
+    verdict.querySelector('.verdict-icon').textContent = '🎉';
+    verdict.querySelector('.title').textContent = ['מעולה! ✨','כל הכבוד! 🌟','פנטסטי! 💎'][qNum % 3];
+    verdict.querySelector('p').textContent = correctMsgs[qNum % 3];
+    rightCount++;
+    document.getElementById('card-'+qNum).classList.add('correct');
+  } else {
+    verdict.classList.add('wrong-v');
+    verdict.querySelector('.verdict-icon').textContent = '💡';
+    verdict.querySelector('.title').textContent = wrongMsg[qNum].title;
+    verdict.querySelector('p').textContent = wrongMsg[qNum].msg;
+    wrongCount++;
+    document.getElementById('card-'+qNum).classList.add('wrong');
+  }
+
+  const steps = document.getElementById(`steps-${qNum}`);
+  if (steps) steps.classList.remove('hidden');
+
+  answered++;
+  updateScore();
+  if (answered === TOTAL) setTimeout(showFinal, 800);
+}
+
+function updateScore() {
+  document.getElementById('s-correct').textContent = rightCount;
+  document.getElementById('s-wrong').textContent = wrongCount;
+  const pct = answered ? Math.round(rightCount / answered * 100) : 0;
+  document.getElementById('s-pct').textContent = pct + '%';
+  document.getElementById('prog').style.width = (answered / TOTAL * 100) + '%';
+  document.getElementById('prog-label').textContent = `${answered} מתוך ${TOTAL} שאלות`;
+}
+
+function showStep(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('hidden');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+  if (window.MathJax) MathJax.typesetPromise([el]).catch(()=>{});
+}
+
+function showInsight(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.remove('hidden');
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('visible')));
+  if (window.MathJax) MathJax.typesetPromise([el]).catch(()=>{});
+}
+
+function showFinal() {
+  const section = document.getElementById('final-score-section');
+  section.style.display = 'block';
+  document.getElementById('final-score-num').textContent = `${rightCount}/${TOTAL}`;
+  const pct = Math.round(rightCount / TOTAL * 100);
+  document.getElementById('final-bar').style.width = pct + '%';
+  let grade = '';
+  if (pct === 100) grade = '💎 מושלם — שליטה מלאה בחומר!';
+  else if (pct >= 78) grade = '🌟 מצוין — ידע מוצק, כמעט שם!';
+  else if (pct >= 56) grade = '👍 טוב — בסיס חזק, חזק את הנקודות החלשות';
+  else grade = '📚 שווה עוד תרגול — עיין בשלבים ונסה שוב';
+  document.getElementById('final-grade-text').textContent = grade;
+  section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function restartQuiz() { window.location.reload(); }
+</script>
+</body>
+</html>
