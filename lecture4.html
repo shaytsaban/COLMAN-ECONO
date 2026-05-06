@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>תקציב הממשלה - מערך שיעור אינטראקטיבי</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- MathJax -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        console.log('MathJax initial typesetting complete');
+                    });
+                }
+            }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+
+        .math-block {
+            direction: ltr;
+            text-align: center;
+            font-size: 1rem; 
+            margin: 0.75rem 0;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .math-inline {
+            direction: ltr;
+            display: inline-block;
+            font-size: 1rem;
+        }
+
+        .var-block {
+            direction: ltr;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Interactive Elements */
+        .reveal-content {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-reveal {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: normal;
+            height: auto;
+            text-align: right;
+            line-height: 1.4;
+        }
+        
+        .btn-reveal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Balance Sheet (Table) styling */
+        .balance-sheet {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px;
+            background-color: #cbd5e1;
+            border: 2px solid #94a3b8;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .balance-header {
+            background-color: #f1f5f9;
+            font-weight: 800;
+            text-align: center;
+            padding: 1rem;
+        }
+        .balance-cell {
+            background-color: white;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            min-height: 150px;
+        }
+        .balance-item {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.5s ease;
+            text-align: center;
+        }
+
+        /* Flowchart vertical styling */
+        .flow-card { 
+            position: relative; 
+            z-index: 10; 
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .flow-arrow-down::after {
+            content: '⬇️'; 
+            position: absolute; 
+            bottom: -35px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            font-size: 2rem; 
+            z-index: 1;
+        }
+
+        /* Animations */
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .animate-bounce-subtle { animation: bounce-subtle 2s infinite ease-in-out; }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <!-- Hero Section -->
+    <header class="hero-gradient text-white py-16 px-4 shadow-xl mb-12 rounded-b-[3rem]">
+        <div class="max-w-5xl mx-auto text-center">
+            <h1 class="text-5xl font-extrabold mb-4 tracking-tight">תקציב הממשלה 🏛️</h1>
+            <p class="text-xl font-light opacity-90 max-w-2xl mx-auto">מתוכנן מול בפועל: איך המדינה מתכננת את הוצאותיה, ומה קורה כשהמציאות דופקת בדלת?</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 space-y-16">
+
+        <!-- Glossary / Legend Section -->
+        <section class="bg-indigo-50 rounded-3xl p-8 border border-indigo-100 shadow-sm">
+            <h2 class="text-2xl font-bold text-indigo-900 mb-6 text-center border-b-2 border-indigo-200 inline-block pb-2 mx-auto flex justify-center">מילון מונחים 📖</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-center">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-50">
+                    <p class="text-indigo-500 font-bold text-xl mb-1" dir="ltr">GDP</p>
+                    <p class="text-sm font-medium text-slate-700">תוצר (Y)</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-50">
+                    <p class="text-indigo-500 font-bold text-xl mb-1" dir="ltr">T</p>
+                    <p class="text-sm font-medium text-slate-700">גביית מסים</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-50">
+                    <p class="text-indigo-500 font-bold text-xl mb-1" dir="ltr">t</p>
+                    <p class="text-sm font-medium text-slate-700">נטל המס (%)</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-50">
+                    <p class="text-indigo-500 font-bold text-xl mb-1" dir="ltr">BD</p>
+                    <p class="text-sm font-medium text-slate-700">גירעון</p>
+                </div>
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-indigo-50 col-span-2 md:col-span-1">
+                    <p class="text-indigo-500 font-bold text-xl mb-1" dir="ltr">G</p>
+                    <p class="text-sm font-medium text-slate-700">הוצאות ממשלה</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Intro Theory Section (From PDF Page 1) -->
+        <section class="bg-white rounded-3xl p-8 shadow-sm border border-slate-100">
+            <h2 class="text-3xl font-bold text-slate-800 mb-6 text-center border-b-4 border-blue-500 inline-block pb-2 mx-auto flex justify-center">מבוא: למה בכלל מתכננים? 🤔</h2>
+            
+            <div class="prose max-w-none text-slate-700 text-lg leading-relaxed">
+                <p class="mb-4"><strong>מבוא קצר לניתוח המתקשר ליעד הגירעון והתקציב:</strong> באופן כללי, הממשלה מעוניינת לתכנן את פעילותה; לשם כך היא מתבססת על תחזיות כלכליות, גוזרת מהן את צפי גביית המסים והגירעון - ומשתמשת בכך כדי להעריך את היקף הוצאותיה האפשרי. נבצע ניתוחים המתבססים על תהליך זה.</p>
+                
+                <div class="bg-blue-50 border-r-4 border-blue-500 p-4 rounded-xl my-6">
+                    <p class="font-bold text-blue-900 mb-2">האתגר: אי ודאות!</p>
+                    <p>כשמדינה / ממשלה מתכננת את ההתנהלות הכלכלית שלה לשנה הקרובה - <strong>קיימת אי ודאות</strong> לגבי הערכים הכלכליים שיווצרו לאורך השנה.</p>
+                    <p class="mt-2">בפרט, המדינה <strong>לא באמת יודעת</strong> מה יהיה התוצר; מה תהיינה המשכורות; מה יהיו הרווחים בחברות, ובהתאם - היא לא יודעת בוודאות מה תהיה גביית המסים.</p>
+                    <p class="mt-2 font-bold">מה שהיא כן יכולה לעשות זה לנסות להעריך / לאמוד את הערכים הכלכליים הללו, כבסיס לעריכת התקציב.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-14 relative mt-10">
+                <!-- Step 1 -->
+                <div class="flow-card flow-arrow-down bg-blue-50 p-6 rounded-2xl border-2 border-blue-200 text-center shadow-md">
+                    <div class="text-4xl mb-3 animate-bounce-subtle">🔮</div>
+                    <h3 class="font-bold text-blue-900 text-xl mb-2">1. תחזית תוצר</h3>
+                    <p class="text-blue-800">מעריכים כמה המשק ייצר השנה:</p>
+                    <div class="var-block text-blue-600">$GDP_{Expected}$</div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="flow-card flow-arrow-down bg-emerald-50 p-6 rounded-2xl border-2 border-emerald-200 text-center shadow-md">
+                    <div class="text-4xl mb-3 animate-bounce-subtle" style="animation-delay: 0.2s;">🎯</div>
+                    <h3 class="font-bold text-emerald-900 text-xl mb-2">2. גזירת יעדים</h3>
+                    <p class="text-emerald-800">לפי נטל המס ויעד הגירעון הרצוי, מחשבים צפי מסים וגירעון מתוכנן:</p>
+                    <div class="var-block text-emerald-600">$T_{Expected} \ , \ BD_{Expected}$</div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="flow-card flow-arrow-down bg-purple-50 p-6 rounded-2xl border-2 border-purple-200 text-center shadow-md">
+                    <div class="text-4xl mb-3 animate-bounce-subtle" style="animation-delay: 0.4s;">💰</div>
+                    <h3 class="font-bold text-purple-900 text-xl mb-2">3. קביעת הוצאות</h3>
+                    <p class="text-purple-800">הסכום של המס והגירעון המותר קובע את תקרת ההוצאות הממשלתית שמקובעת בחוק!</p>
+                    <div class="var-block text-purple-600">$G_{Expected}$</div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="flow-card bg-rose-50 p-6 rounded-2xl border-2 border-rose-200 text-center shadow-md">
+                    <div class="text-4xl mb-3 animate-bounce-subtle" style="animation-delay: 0.6s;">📊</div>
+                    <h3 class="font-bold text-rose-900 text-xl mb-2">4. התמודדות בפועל</h3>
+                    <p class="text-rose-800">בסוף השנה: ההוצאות קבועות, אבל המסים תלויים בתוצר האמיתי, ולכן הגירעון מחושב מחדש כהפרש!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- QUESTION 1 FROM PDF (BUDGET)               -->
+        <!-- ========================================== -->
+        <section class="mt-16">
+            <h2 class="text-3xl font-bold text-slate-800 mb-8 flex items-center gap-3 pb-2 border-b-4 border-slate-800 inline-block">
+                <span class="bg-blue-100 p-2 rounded-lg">1️⃣</span> שאלה 1 - תקציב (הוצאות ממשלה, מסים וגירעון)
+            </h2>
+
+            <div class="bg-white rounded-3xl p-8 shadow-lg border border-slate-200">
+                <div class="bg-slate-50 p-6 rounded-2xl mb-8 border-r-4 border-blue-500">
+                    <h3 class="text-xl font-bold mb-4">נתוני הבסיס:</h3>
+                    <p class="mb-2">בדצמבר 2023, משרד האוצר ערך את הצעת התקציב לשנת 2024. הכלכלן הראשי במשרד האוצר העריך שבשנת 2024 התוצר של המדינה יהיה בסך <strong>5,000</strong>.</p>
+                    <p class="font-bold mt-4 mb-2">מידע נוסף:</p>
+                    <ul class="list-disc list-inside text-slate-700 space-y-1">
+                        <li>נטל המס במדינה הוא <strong>30%</strong> מהתוצר.</li>
+                        <li>יעד הגירעון של הממשלה הוא <strong>4%</strong> מהתוצר.</li>
+                    </ul>
+                </div>
+
+                <!-- PART A -->
+                <div>
+                    <h4 class="font-bold text-xl text-blue-800 mb-4 flex items-center gap-2"><span class="bg-blue-100 px-3 py-1 rounded text-sm">נדרש א'</span> הציגו את התקציב המתוכנן לשנת 2024</h4>
+                    
+                    <div id="q1-step1-wrap" class="mb-6">
+                        <p class="text-lg mb-2"><strong>בתור התחלה – אני מחשב את התקבולים הצפויים ממסים.</strong></p>
+                        <p class="text-slate-600 mb-4">אם ניתן להעריך את התוצר הצפוי בהיקף של 5,000 (נתון) ונטל המס צפוי להיות בשיעור 30% מתוצר זה (נתון), אזי גביית המס הצפויה תחושב כמכפלה שלהם:</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-step1-wrap', 'q1-step1-target', 'q1-step2-wrap')">
+                            1. קליק להצגת חישוב גביית המסים הצפויה 🧐
+                        </button>
+                    </div>
+
+                    <div id="q1-step1-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-4">
+                        <div class="bg-green-50 p-5 rounded-2xl border border-green-100 relative">
+                            <span class="absolute top-3 left-3 text-2xl opacity-50">💸</span>
+                            <div class="math-block">$$T_{Expected} = 30\% \times 5,000 = 1,500$$</div>
+                            <p class="text-sm mt-2 text-green-900"><strong>במלים:</strong> גביית המס הצפויה T היא המכפלה של נטל המס בתוצר הצפוי GDP (או Y).</p>
+                        </div>
+                    </div>
+
+                    <div id="q1-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-2"><strong>בנוסף, נתון שיעד הגירעון BD הוא 4% מהתוצר.</strong> כלומר, בואו נחשב את סך הגירעון הצפוי:</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-step2-wrap', 'q1-step2-target', 'q1-step3-wrap')">
+                            2. קליק להצגת חישוב יעד הגירעון 🎯
+                        </button>
+                    </div>
+
+                    <div id="q1-step2-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-4">
+                        <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100 relative">
+                            <span class="absolute top-3 left-3 text-2xl opacity-50">📉</span>
+                            <div class="math-block">$$BD_{Expected} = 4\% \times 5,000 = 200$$</div>
+                            <p class="text-sm mt-2 font-bold text-orange-900">במלים: אם התוצר הצפוי 5,000, והממשלה קובעת כיעד שהגירעון יהיה 4% מהתוצר, היא בעצם מתירה ומתכננת גירעון של 200.</p>
+                            <p class="text-sm mt-2 text-orange-800">שימו לב שהגדרה זו של גירעון שונה מההגדרה הטבעית (סך הוצאות הממשלה בניכוי סך הכנסות ממסים). וזה הגיוני כי אנחנו בשלב שבו אנחנו מתכננים את הגירעון, ולא מחשבים את ערכו בפועל.</p>
+                        </div>
+                    </div>
+
+                    <div id="q1-step3-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">נערוך כעת את תקציב הממשלה הצפוי לשנה הנדונה, כדי להבין מהו היקף הוצאות הממשלה (G).</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-step3-wrap', 'q1-table1-wrap')">
+                            3. קליק לפתיחת המאזן התקציבי ⚖️
+                        </button>
+                    </div>
+
+                    <!-- Interactive Balance Sheet 1 -->
+                    <div id="q1-table1-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-12">
+                        <h5 class="font-bold text-center mb-4 text-slate-700 text-xl">תקציב מתוכנן 2024</h5>
+                        
+                        <div class="balance-sheet">
+                            <div class="balance-header">הכנסות צפויות</div>
+                            <div class="balance-header">הוצאות</div>
+                            
+                            <div class="balance-cell">
+                                <div id="t1-cell-taxes" class="balance-item hidden opacity-0 translate-y-2">
+                                    <p class="text-sm font-bold text-slate-600 mb-1">חושב:</p>
+                                    <div class="var-block text-slate-500 mb-2 text-sm">$T_{Expected}$</div>
+                                    <p class="math-inline font-bold text-xl text-green-600">$1,500$</p>
+                                </div>
+                                <div id="t1-cell-deficit" class="balance-item hidden opacity-0 translate-y-2 mt-4">
+                                    <p class="text-sm font-bold text-slate-600 mb-1">חושב:</p>
+                                    <div class="var-block text-slate-500 mb-2 text-sm">$BD_{Expected}$</div>
+                                    <p class="math-inline font-bold text-xl text-orange-600">$200$</p>
+                                </div>
+                            </div>
+                            
+                            <div class="balance-cell justify-center bg-blue-50 relative">
+                                <div id="t1-cell-expenses" class="text-center hidden opacity-0 translate-y-2">
+                                    <p class="text-base font-bold text-slate-800 mb-1">הוצאות הממשלה נקבעות לפי צפי גירעון והכנסות ממס:</p>
+                                    <div class="var-block text-blue-800 mb-2">$G_{Expected}$</div>
+                                    <div class="math-inline font-black text-3xl text-blue-700 border-b-4 border-blue-400 pb-2">
+                                        $1,700$
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table Controls -->
+                        <div id="t1-controls-taxes" class="text-center mb-4">
+                            <button class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-6 py-2 rounded-full font-bold transition-colors" onclick="reveal('t1-controls-taxes', 't1-cell-taxes', 't1-controls-deficit')">
+                                שלב א' בטבלה: הוסף הכנסות ממסים (1,500)
+                            </button>
+                        </div>
+                        <div id="t1-controls-deficit" class="text-center mb-4 hidden opacity-0">
+                            <button class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-6 py-2 rounded-full font-bold transition-colors" onclick="reveal('t1-controls-deficit', 't1-cell-deficit', 't1-controls-expenses')">
+                                שלב ב' בטבלה: הוסף את הגירעון המתוכנן (200)
+                            </button>
+                        </div>
+                        <div id="t1-controls-expenses" class="text-center mb-4 hidden opacity-0">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full font-bold transition-colors shadow-lg" onclick="reveal('t1-controls-expenses', 't1-cell-expenses', 't1-summary-wrap')">
+                                שלב ג' בטבלה: סכם להוצאות ממשלה מותרות (G)
+                            </button>
+                        </div>
+
+                        <div id="t1-summary-wrap" class="hidden opacity-0 translate-y-4 reveal-content text-center mt-6">
+                            <p class="text-slate-700 font-medium">מה עשינו כאן? אנו מתייחסים להכנסות / למקורות בתור ההכנסות הצפויות ממסים יחד עם סך הגירעון הצפוי. סיכום מקורות אלו מגדיר את סך הוצאות הממשלה הצפויות.</p>
+                            <button class="mt-6 bg-slate-800 text-white px-6 py-2 rounded-full font-bold" onclick="reveal('t1-summary-wrap', 'q1-partB-wrap')">
+                                הבנתי. המשך לנדרש הבא ⬇️
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- PART B -->
+                    <div id="q1-partB-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-8 pt-8 border-t border-slate-200">
+                        <h4 class="font-bold text-xl text-emerald-800 mb-4 flex items-center gap-2"><span class="bg-emerald-100 px-3 py-1 rounded text-sm">נדרש ב'</span> התקציב בפועל במצב של חוסר בתוצר</h4>
+                        <p class="text-lg mb-2"><strong>הניחו כעת שהתוצר התברר כנמוך ב-15% מהצפי לעיל.</strong></p>
+                        <p class="text-slate-700 mb-4">הציגו את התקציב בפועל וחשבו את שיעור הגירעון ביחס לתוצר.<br>
+                        <em>הערה: יש להניח שהוצאות הממשלה נותרות קבועות שכן אישור התקציב הוא מחייב, לעומת ההכנסות ממסים יכולות להשתנות כי הן פונקציה של התוצר.</em></p>
+                        
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-partB-wrap', 'q1-partB-step1-target', 'q1-partB-step2-wrap')">
+                            1. קליק לחישוב התוצר המעודכן בפועל 📉
+                        </button>
+                    </div>
+
+                    <div id="q1-partB-step1-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border-r-4 border-rose-500">
+                            <p class="font-bold text-slate-700">תזכורת - התוצר הצפוי היה 5,000 ונתון שהתוצר בפועל נמוך ב-15% מסכום זה:</p>
+                            <div class="math-block bg-white">
+                                $$GDP_{Expected} = 5,000$$
+                                $$GDP_{Actual} = 5,000 \times (1 - 15\%) = 4,250$$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="q1-partB-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <div class="bg-red-50 border border-red-200 p-4 rounded-xl mb-4">
+                            <p class="font-bold text-red-900">שימו לב!</p>
+                            <p class="text-red-800">ברגע שהממשלה תקצבה הוצאות ממשלה בסך 1,700 לפי נתוני התחזית הכלכלית, היא לא יכולה לתקן הוצאות אלו לאחור. אם התוצר מתברר כנמוך מהצפי, ערך ה-G (הוצאות הממשלה) לא ישתנה, אך היקף גביית המס יקטן ובהתאם - הגירעון יעלה.</p>
+                        </div>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-partB-step2-wrap', 'q1-partB-step2-target', 'q1-partB-table-wrap')">
+                            2. קליק לחישוב המסים שנגבו בפועל 🧾
+                        </button>
+                    </div>
+
+                    <div id="q1-partB-step2-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="bg-slate-50 p-4 rounded-xl border-r-4 border-green-500 mb-6">
+                            <p class="font-bold text-slate-700">תחילה, גביית המסים הנשענת על נטל מס קבוע בשיעור 30% מהתוצר תהיה בסכום נמוך יותר לאור התוצר הנמוך יותר:</p>
+                            <div class="math-block bg-white">$$T_{Actual} = 30\% \times 4,250 = 1,275$$</div>
+                        </div>
+                    </div>
+
+                    <div id="q1-partB-table-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">היקף הוצאות הממשלה נותר ללא שינוי. הגירעון יהא ההפרש בין ההוצאות בפועל לגביית המס בפועל. בואו נבנה את התקציב בפועל.</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-partB-table-wrap', 'q1-table2-wrap')">
+                            3. קליק לפתיחת המאזן בפועל 📊
+                        </button>
+                    </div>
+
+                    <!-- Interactive Balance Sheet 2 (Actual) -->
+                    <div id="q1-table2-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-8">
+                        <h5 class="font-bold text-center mb-4 text-slate-700 text-xl">תקציב בפועל</h5>
+                        
+                        <div class="balance-sheet">
+                            <div class="balance-header">הכנסות בפועל</div>
+                            <div class="balance-header">הוצאות</div>
+                            
+                            <div class="balance-cell">
+                                <div id="t2-cell-taxes" class="balance-item border-green-300 hidden opacity-0 translate-y-2">
+                                    <p class="text-sm font-bold text-slate-600 mb-1">נטל המס (כנתון) הוא 30% מתוצר:</p>
+                                    <div class="var-block text-slate-500 mb-2 text-sm">$T$</div>
+                                    <p class="math-inline font-bold text-xl text-green-600">$1,275$</p>
+                                </div>
+                                <div id="t2-cell-deficit" class="balance-item border-rose-300 bg-rose-50 hidden opacity-0 translate-y-2 mt-4">
+                                    <p class="text-sm font-bold text-slate-600 mb-1">ההפרש בין סך ההוצאות לנטל המס (PN):</p>
+                                    <div class="var-block text-slate-500 mb-2 text-sm">$BD = G - T$</div>
+                                    <div class="math-block border-none bg-transparent text-sm">$$1,700 - 1,275 = 425$$</div>
+                                    <p class="math-inline font-bold text-xl text-rose-600">$425$</p>
+                                </div>
+                            </div>
+                            
+                            <div class="balance-cell justify-center bg-blue-50 relative">
+                                <div id="t2-cell-expenses" class="text-center hidden opacity-0 translate-y-2">
+                                    <p class="text-base font-bold text-slate-800 mb-1">הוצאות הממשלה בפועל = לפי התקציב הראשוני המתוכנן:</p>
+                                    <div class="var-block text-blue-800 mb-2">$G$</div>
+                                    <div class="math-inline font-black text-3xl text-blue-700 border-b-4 border-blue-400 pb-2">
+                                        $1,700$
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Table 2 Controls -->
+                        <div id="t2-controls-expenses" class="text-center mb-4">
+                            <button class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-6 py-2 rounded-full font-bold transition-colors" onclick="reveal('t2-controls-expenses', 't2-cell-expenses', 't2-controls-taxes')">
+                                שלב א': הצב את ההוצאות המקובעות (G = 1,700)
+                            </button>
+                        </div>
+                        <div id="t2-controls-taxes" class="text-center mb-4 hidden opacity-0">
+                            <button class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-6 py-2 rounded-full font-bold transition-colors" onclick="reveal('t2-controls-taxes', 't2-cell-taxes', 't2-controls-deficit')">
+                                שלב ב': הוסף את המסים המופחתים שגבינו (T = 1,275)
+                            </button>
+                        </div>
+                        <div id="t2-controls-deficit" class="text-center mb-4 hidden opacity-0">
+                            <button class="bg-rose-500 hover:bg-rose-600 text-white px-6 py-2 rounded-full font-bold transition-colors shadow-lg" onclick="reveal('t2-controls-deficit', 't2-cell-deficit', 't2-summary-wrap')">
+                                שלב ג': חשב את הגירעון שנוצר מההפרש (BD)
+                            </button>
+                        </div>
+
+                        <div id="t2-summary-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-8 bg-slate-100 p-4 rounded-xl">
+                            <p class="font-bold mb-2">תהליך העבודה שיישמנו היה:</p>
+                            <ol class="list-decimal list-inside space-y-2">
+                                <li>התחלנו מההגדרה של G שערכו בפועל חייב להיות שווה לנתוני התחזית שערכנו קודם.</li>
+                                <li>את התקבולים של הממשלה ממסים, T מחשבים לפי נטל המס (30%) כפול התוצר העדכני בפועל (שקטן).</li>
+                                <li>את הגירעון התקציבי BD בפועל חישבנו על בסיס ההפרש בין ה-G (הוצאות הממשלה) לבין תקבולי הממשלה ממסים בפועל (T).</li>
+                            </ol>
+                            <button class="mt-6 bg-slate-800 text-white px-6 py-2 rounded-full font-bold w-full" onclick="reveal('t2-summary-wrap', 'q1-partC-wrap')">
+                                הבנתי. המשך לנדרש ג' ⬇️
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- PART C -->
+                    <div id="q1-partC-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-8 pt-8 border-t border-slate-200">
+                        <h4 class="font-bold text-xl text-purple-800 mb-4 flex items-center gap-2"><span class="bg-purple-100 px-3 py-1 rounded text-sm">נדרש ג'</span> השוואת הגירעון ביחס לתוצר</h4>
+                        <p class="text-lg mb-4"><strong>השוו את הגירעון המתוכנן לגירעון בפועל (במונחים יחסיים ביחס לתוצר), הסבירו בקצרה:</strong></p>
+                        <p class="mb-4">בראש השאלה הופיע נתון מפורש לפיו יעד הגירעון המתוכנן הוא 4%. זהו יחס הגירעון ביחס לתוצר על פי התחזית. מהו יחס הגירעון בפועל?</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-partC-wrap', 'q1-partC-target', 'q1-partD-wrap')">
+                            1. קליק לחישוב יחס הגירעון העדכני 📊
+                        </button>
+                    </div>
+
+                    <div id="q1-partC-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                            <p class="font-bold text-purple-900 mb-2">יחס הגירעון בפועל ביחס לתוצר בפועל לעומת זאת:</p>
+                            <div class="math-block bg-white">$$\frac{BD}{GDP} = \frac{425}{4,250} = 10\%$$</div>
+                            <p class="mt-4 font-bold text-rose-600">העובדה שהתוצר בפועל היה נמוך מהתוצר הצפוי - הובילה ליחס גירעון תוצר גבוה יותר.</p>
+                        </div>
+                    </div>
+
+                    <!-- PART D -->
+                    <div id="q1-partD-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-8 pt-8 border-t border-slate-200">
+                        <h4 class="font-bold text-xl text-emerald-800 mb-4 flex items-center gap-2"><span class="bg-emerald-100 px-3 py-1 rounded text-sm">נדרש ד'</span> תרחיש של צמיחה מוגברת</h4>
+                        <p class="text-lg mb-2"><strong>הניחו כעת שהתוצר התברר כגבוה ב-8% מהצפי לעיל בנתוני הבסיס של השאלה.</strong></p>
+                        <p class="text-slate-700 mb-4">הציגו את התקציב בפועל וחשבו את שיעור הגירעון ביחס לתוצר. הסבירו בקצרה תוך השוואה לממצאי סעיפים ב', ג'.<br>
+                        תזכורת: תוצר צפוי היה 5,000, נטל המס 30%, והוצאות הממשלה נקבעו על 1,700.</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-partD-wrap', 'q1-partD-step1-target', 'q1-partD-step2-wrap')">
+                            1. קליק לחישוב המסים במצב צמיחה 📈
+                        </button>
+                    </div>
+
+                    <div id="q1-partD-step1-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="p-4 border-r-4 border-green-500 bg-slate-50">
+                            <p class="font-bold">נטל המס (כנתון) הוא 30% מתוצר מוגדל (8%+):</p>
+                            <div class="math-block bg-white">$$T = 30\% \times 5,000 \times (1+8\%) = 1,620$$</div>
+                        </div>
+                    </div>
+
+                    <div id="q1-partD-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">הוצאות הממשלה נותרות קבועות (1,700). כמה גירעון (BD) יוותר עכשיו?</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-partD-step2-wrap', 'q1-partD-step2-target', 'q1-partD-step3-wrap')">
+                            2. קליק לחישוב הגירעון העדכני ⚖️
+                        </button>
+                    </div>
+
+                    <div id="q1-partD-step2-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="p-4 border-r-4 border-orange-500 bg-slate-50">
+                            <p class="font-bold">ההפרש בין סך ההוצאות לנטל המס (PN):</p>
+                            <div class="math-block bg-white">$$BD = G - T = 1,700 - 1,620 = 80$$</div>
+                        </div>
+                    </div>
+
+                    <div id="q1-partD-step3-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">ולסיום - מהו יחס גירעון תוצר עדכני בתרחיש זה?</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q1-partD-step3-wrap', 'q1-partD-step3-target', 'q1-superman-wrap')">
+                            3. קליק לחישוב יחס הגירעון 📊
+                        </button>
+                    </div>
+
+                    <div id="q1-partD-step3-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="p-4 border-r-4 border-purple-500 bg-purple-50">
+                            <p class="font-bold text-purple-900">יחס גירעון תוצר עדכני:</p>
+                            <div class="math-block bg-white">$$\frac{BD}{GDP} = \frac{80}{5,000 \times (1+8\%)} = 1.48\%$$</div>
+                            <p class="mt-2 text-slate-800">יחס הגירעון תוצר - שיעור הגירעון ביחס לתוצר הוא במקרה זה נמוך מהותית מהצפי / היעד הממשלתי, מה שהגיוני לאור העלייה בתוצר ובגביית המסים בהתאם.</p>
+                        </div>
+                    </div>
+
+                    <!-- Superman Tip -->
+                    <div id="q1-superman-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-8">
+                        <div class="flex items-start gap-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 shadow-md">
+                            <div class="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 text-4xl shadow-inner border-4 border-white">
+                                🦸‍♂️
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-bold text-blue-900 mb-2">טיפ לכלכלן:</h4>
+                                <p class="mb-3 text-slate-700">מעבר לתרגול המתמטי, השאלה הנ"ל ממחישה כיצד יעד הגירעון מהווה סוג של <strong>"מייצב כלכלי" אוטומטי</strong>:</p>
+                                <ul class="list-disc list-inside space-y-2 text-slate-700 mb-4">
+                                    <li>במצב שבו נוצר מיתון (ירידה בפעילות הכלכלית ובתוצר ביחס לצפי): אוטומטית שיעור הגירעון גדל מה שמהווה סוג של "זריקת מרץ" כלכלית למשק.</li>
+                                    <li>במצב שבו נוצרת צמיחה משופרת (עלייה בפעילות הכלכלית ובתוצר ביחס לצפי) אוטומטית שיעור הגירעון קטן, מה שמהווה סוג של "איתות הרגעה" למשק בהיבט הביקוש.</li>
+                                </ul>
+                                <p class="font-bold text-indigo-800 bg-indigo-100 p-2 rounded inline-block">שינויים אלו מתרחשים באופן אוטומטי, גם מבלי שהמדינה תשנה את המדיניות הכלכלית שלה, פשוט משום שההכנסות ממסים תלויות בתוצר, בעוד שהוצאות הממשלה קבועות.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- QUESTION 3 FROM PDF (DEBT TO GDP)          -->
+        <!-- ========================================== -->
+        <section class="mt-16">
+            <h2 class="text-3xl font-bold text-slate-800 mb-8 flex items-center gap-3 pb-2 border-b-4 border-slate-800 inline-block">
+                <span class="bg-blue-100 p-2 rounded-lg">2️⃣</span> שאלה 3 - חילוצים רבותי חילוצים (חישוב GDP)
+            </h2>
+
+            <div class="bg-white rounded-3xl p-8 shadow-lg border border-slate-200">
+                <div class="bg-slate-50 p-6 rounded-2xl mb-8 border-r-4 border-emerald-500">
+                    <p class="mb-4">בשנת 2024, במדינת "בר" התוצר היה <strong>200,000</strong> ויחס חוב תוצר עמד על <strong>50%</strong>.</p>
+                    <p class="text-sm text-slate-500 font-bold mb-4">(טיפ: יחס חוב תוצר איננו BD/GDP אלא D/GDP).</p>
+                </div>
+
+                <!-- PART A -->
+                <div>
+                    <h4 class="font-bold text-xl text-emerald-800 mb-4 flex items-center gap-2"><span class="bg-emerald-100 px-3 py-1 rounded text-sm">נדרש א'</span> התקציב המתוכנן לשנת 2025</h4>
+                    
+                    <div id="q2-step1-wrap" class="mb-6">
+                        <p class="text-lg mb-2"><strong>בדצמבר 2024, משרד האוצר הציג את התקציב המתוכנן לשנת 2025.</strong> בהתאם לנתוני התקציב והערכות משרד האוצר, התוצר צפוי לגדול ב-12%, נטל המס צפוי להיות 25%, ויעד הגירעון הוא 2.5% מהתוצר.</p>
+                        <p class="text-slate-600 mb-4">הציגו את תקציב הממשלה המתוכנן לשנת 2025. נתחיל מהמסים:</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-step1-wrap', 'q2-step1-target', 'q2-step2-wrap')">
+                            1. קליק לחישוב גביית המס הצפויה (T) 💸
+                        </button>
+                    </div>
+
+                    <div id="q2-step1-target" class="hidden opacity-0 translate-y-4 reveal-content mb-8">
+                        <div class="p-4 bg-white border border-green-200 rounded-lg shadow-sm border-r-4 border-green-500">
+                            <p class="font-bold text-slate-700">היקף גביית המס הצפויה לפי נטל המס הנתון:</p>
+                            <div class="math-block">$$T = 25\% \times 200,000 \times (1+12\%) = 56,000$$</div>
+                        </div>
+                    </div>
+
+                    <div id="q2-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">כעת נחשב את הגירעון המתוכנן על פי היעד (2.5%):</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-step2-wrap', 'q2-step2-target', 'q2-step3-wrap')">
+                            2. קליק לחישוב הגירעון המתוכנן (BD) 📉
+                        </button>
+                    </div>
+
+                    <div id="q2-step2-target" class="hidden opacity-0 translate-y-4 reveal-content mb-8">
+                        <div class="p-4 bg-white border border-orange-200 rounded-lg shadow-sm border-r-4 border-orange-500">
+                            <p class="font-bold text-slate-700">הגירעון המתוכנן לפי יעד הגירעון מהתוצר:</p>
+                            <div class="math-block">$$BD = 2.5\% \times 200,000 \times (1+12\%) = 5,600$$</div>
+                        </div>
+                    </div>
+
+                    <div id="q2-step3-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">הסכום של שניהם ייתן לנו את הוצאות הממשלה שנקבעות:</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-step3-wrap', 'q2-step3-target', 'q2-partB-wrap')">
+                            3. קליק לחישוב ההוצאות (G) 🏛️
+                        </button>
+                    </div>
+
+                    <div id="q2-step3-target" class="hidden opacity-0 translate-y-4 reveal-content mb-8">
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg shadow-sm text-center">
+                            <div class="math-block border-none bg-transparent font-bold text-xl text-blue-700">$$G = 56,000 + 5,600 = 61,600$$</div>
+                        </div>
+                    </div>
+
+                    <!-- PART B -->
+                    <div id="q2-partB-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-8 pt-8 border-t border-slate-200">
+                        <h4 class="font-bold text-xl text-red-800 mb-4 flex items-center gap-2"><span class="bg-red-100 px-3 py-1 rounded text-sm">נדרש ב'</span> התקציב בפועל</h4>
+                        <p class="text-lg mb-2"><strong>ב-2025, התברר שהתוצר עלה בפחות מ-12%. בתום שנת 2025, יחס החוב תוצר עמד על 55%.</strong></p>
+                        <p class="text-slate-700 mb-4">הציגו את התקציב בפועל לשנת 2025 וחשבו את שיעור הצמיחה בתוצר.<br>
+                        תזכורת: לגבי שנת 2024, התוצר היה 200,000 ויחס חוב תוצר היה 50%.</p>
+                        
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-partB-wrap', 'q2-partB-step1-target', 'q2-partB-step2-wrap')">
+                            1. קליק לחילוץ יתרת החוב מתחילת השנה 🔙
+                        </button>
+                    </div>
+
+                    <div id="q2-partB-step1-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="bg-slate-100 p-4 rounded-xl text-slate-700 border-r-4 border-slate-400">
+                            <p class="mb-2">על בסיס נתונים אלו, בתור התחלה, ניתן לחשב את יתרת החוב ליום 31.12.2024:</p>
+                            <div class="math-block">$$D_{31.12.2024} = 50\% \times 200,000 = 100,000$$</div>
+                        </div>
+                    </div>
+
+                    <div id="q2-partB-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-2">נשב כעת על התקציב בפועל. נטל המס מהווה 25% מהתוצר <b>שלא ידוע ולכן X</b>.</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-partB-step2-wrap', 'q2-partB-step2-target', 'q2-partB-step3-wrap')">
+                            2. קליק לבניית ביטויי הכנסות והוצאות עם X 🧾
+                        </button>
+                    </div>
+
+                    <div id="q2-partB-step2-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="bg-green-50 p-4 rounded-xl border-r-4 border-green-500 mb-4">
+                            <p class="font-bold">הכנסות בפועל:</p>
+                            <div class="math-block bg-white">$$T = 25\% \times X$$</div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-xl border-r-4 border-blue-500 mb-4">
+                            <p class="font-bold">סך ההוצאות (חושב בנדרש א'):</p>
+                            <div class="math-block bg-white">$$G = 61,600$$</div>
+                            <p class="text-sm">סך ההוצאות הממשלתיות נקבעות בשלב התכנון התקציבי, ואינן משתנות גם אם השינוי בתוצר שונה מהתכנון.</p>
+                        </div>
+                    </div>
+
+                    <div id="q2-partB-step3-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">על בסיס ההוצאות והמסים, נרכיב את הגירעון בפועל השנה:</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-partB-step3-wrap', 'q2-partB-step3-target', 'q2-equation-wrap')">
+                            3. קליק להצגת הגירעון עם נעלם X ⚖️
+                        </button>
+                    </div>
+
+                    <div id="q2-partB-step3-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="bg-red-50 p-4 rounded-xl border-r-4 border-red-500">
+                            <p class="font-bold text-red-800">הגירעון בפועל השנה:</p>
+                            <div class="math-block bg-white">$$G - T = 61,600 - 0.25X$$</div>
+                        </div>
+                    </div>
+
+                    <div id="q2-equation-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">הואיל ויחס החוב תוצר העדכני הוא 55% כנתון, מתקיים ש:</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-equation-wrap', 'q2-equation-target', 'q2-solve1-wrap')">
+                            4. קליק לבניית המשוואה המלאה 🧮
+                        </button>
+                    </div>
+
+                    <div id="q2-equation-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="bg-gray-800 text-white p-6 rounded-xl relative overflow-hidden shadow-lg mb-6">
+                            <div class="absolute top-0 right-0 bg-red-600 text-white font-bold px-4 py-1 rounded-bl-lg">מה זה לעזאזל?</div>
+                            <p class="mt-4 font-light text-gray-300">היחס בין החוב לתוצר נתון כ-55%. התוצר לא ידוע (במכנה) ולכן סומן כ-X.</p>
+                            <p class="mt-2 text-gray-200">המונה שהוא החוב העדכני מורכב מ:<br>החוב לתום שנה קודמת 31.12.2024 (100,000)<br>בתוספת הגירעון השנה (61,600 - 0.25X).</p>
+                            <div class="math-block bg-gray-900 border-gray-700 text-yellow-300 py-4 my-4">
+                                $$55\% = \frac{100,000 + 61,600 - 0.25X}{X}$$
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="q2-solve1-wrap" class="hidden opacity-0 translate-y-4 reveal-content mb-6">
+                        <p class="text-lg mb-4">אנחנו חולצים את X מהמשוואה כדי למצוא את התוצר (החיצים מייצגים את שלבי הפתרון):</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-solve1-wrap', 'q2-solve1-target', 'q2-final-wrap')">
+                            5. קליק לחילוץ התוצר (X) 🏆
+                        </button>
+                    </div>
+
+                    <div id="q2-solve1-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="p-4 border-r-4 border-indigo-500 bg-slate-50">
+                            <div class="math-block bg-white text-left inline-block w-full">
+                                <div class="text-center">$$0.55X = 161,600 - 0.25X$$</div>
+                                <div class="text-center">$$0.8X = 161,600$$</div>
+                                <div class="text-center font-bold text-emerald-600 border-t-2 mt-2 pt-2 border-slate-200">$$X = 202,000$$</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="q2-final-wrap" class="hidden opacity-0 translate-y-4 reveal-content mt-6">
+                        <p class="text-lg mb-4">ועכשיו אחרי שאני יודע בדיוק מה התוצר בפועל, אוכל לשבת ולערוך את התקציב כמותית כמו שצריך:</p>
+                        <button class="btn-reveal text-white px-6 py-3 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('q2-final-wrap', 'q2-final-target')">
+                            6. קליק להצגת הנתונים הסופיים והצמיחה 🏁
+                        </button>
+                    </div>
+
+                    <div id="q2-final-target" class="hidden opacity-0 translate-y-4 reveal-content mb-6 mt-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                                <p class="font-bold text-green-900 mb-1">נטל המס (T):</p>
+                                <div class="math-block bg-white">$$T = 25\% \times 202,000 = 50,500$$</div>
+                            </div>
+                            <div class="bg-rose-50 p-4 rounded-xl border border-rose-200">
+                                <p class="font-bold text-rose-900 mb-1">הגירעון בפועל השנה (BD):</p>
+                                <div class="math-block bg-white">$$G - T = 61,600 - 50,500 = 11,100$$</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 p-6 rounded-xl border-l-4 border-blue-500">
+                            <p class="font-bold text-xl text-blue-900 mb-2">הצמיחה בתוצר:</p>
+                            <p class="mb-2 text-slate-700">הואיל ונתון שהתוצר בשנה קודמת היה 200,000 והצלחתי לחלץ את התוצר השנה כ-202,000, שיעור הצמיחה בתוצר הוא 1%:</p>
+                            <div class="math-block bg-white">
+                                $$i = \frac{GDP_{2025}}{GDP_{2024}} - 1 = \frac{202,000}{200,000} - 1 = 1\%$$
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- FUN FACTS & SUMMARY (PAGE 7)               -->
+        <!-- ========================================== -->
+        <section class="mt-16 bg-white p-8 rounded-3xl border border-slate-200 shadow-md">
+            <h2 class="text-3xl font-bold text-slate-800 mb-8 flex items-center gap-3 justify-center text-center">
+                <span class="bg-pink-100 p-2 rounded-lg">🇮🇱</span> Fun Facts! מצב פיסקלי ישראל
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <!-- 2024 Card -->
+                <div class="bg-slate-50 rounded-3xl p-6 shadow-inner border-t-8 border-pink-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-pink-100 text-pink-800 px-4 py-1 font-bold rounded-bl-xl text-lg">2024</div>
+                    <div class="flex items-center justify-around mt-8">
+                        <div class="text-center">
+                            <p class="text-slate-500 font-bold mb-2 text-lg">גירעון / תוצר</p>
+                            <p class="text-5xl font-black text-rose-600">6.9%</p>
+                        </div>
+                        <div class="w-px h-20 bg-slate-300"></div>
+                        <div class="text-center">
+                            <p class="text-slate-500 font-bold mb-2 text-lg">חוב / תוצר</p>
+                            <p class="text-5xl font-black text-slate-700">69%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2025 Card -->
+                <div class="bg-slate-50 rounded-3xl p-6 shadow-inner border-t-8 border-indigo-500 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-indigo-100 text-indigo-800 px-4 py-1 font-bold rounded-bl-xl text-lg">2025</div>
+                    <div class="flex items-center justify-around mt-8">
+                        <div class="text-center">
+                            <p class="text-slate-500 font-bold mb-2 text-lg">גירעון / תוצר</p>
+                            <p class="text-5xl font-black text-indigo-600" dir="ltr">4.4-4.9%</p>
+                        </div>
+                        <div class="w-px h-20 bg-slate-300"></div>
+                        <div class="text-center">
+                            <p class="text-slate-500 font-bold mb-2 text-lg">חוב / תוצר</p>
+                            <p class="text-5xl font-black text-slate-700" dir="ltr">~69%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary by Haim -->
+            <div class="bg-amber-50 rounded-3xl p-8 border border-amber-200 shadow-sm mt-12">
+                <h3 class="text-2xl font-bold text-amber-900 mb-6 flex items-center gap-2">
+                    <span>👨‍🏫</span> כפי שחיים ציין:
+                </h3>
+                <ul class="list-disc list-inside space-y-4 text-amber-900 text-lg font-medium leading-relaxed">
+                    <li>למדנו על ההבדל בין <b>גירעון</b> (לשנה) לבין <b>חוב</b> (מצטבר).</li>
+                    <li>הצגנו את תכנון התקציב לפי יעד הגירעון.</li>
+                    <li>ואת התקציב בפועל לפי התוצר בפועל כאשר הוצאות הממשלה נקבעו בשלב התכנון ולא השתנו.</li>
+                    <li>הראינו כיצד ניתן לחלץ ערכים על פי הגדרות יחס חוב תוצר וגירעון.</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- ========================================== -->
+        <!-- EXTRA PRACTICE MCQS                        -->
+        <!-- ========================================== -->
+        <section class="mt-16 border-t-4 border-purple-500 pt-12">
+            <h2 class="text-3xl font-bold text-slate-800 mb-8 flex items-center gap-3">
+                <span class="bg-purple-100 p-2 rounded-lg">🤔</span> תרגול נוסף - שאלות רב-ברירה (עם שלבים!)
+            </h2>
+
+            <!-- MCQ 1 -->
+            <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-200 mb-8">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800">השפעת צמיחה על הגירעון</h3>
+                        <p class="text-lg text-slate-600 mt-2">
+                            משק תכנן תקציב בהנחת צמיחה של 0%. בפועל, המשק צמח ב-5%. בהנחה שהוצאות הממשלה (G) נותרו כפי שתוכננו, וישנו נטל מס קבוע - מה יקרה לגירעון <b>בפועל</b> לעומת המתוכנן?
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pl-14 mb-8">
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq1-opt1">א. הגירעון בפועל יהיה גדול מהמתוכנן.</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq1-opt2">ב. הגירעון בפועל יהיה קטן מהמתוכנן.</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq1-opt3">ג. הגירעון בפועל יהיה שווה בדיוק לגירעון המתוכנן.</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq1-opt4">ד. לא ניתן לדעת ללא נתונים מספריים מדויקים.</div>
+                </div>
+
+                <div id="mcq1-wrap" class="pl-14">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('mcq1-wrap', 'mcq1-step1-target', 'mcq1-step2-wrap')">
+                        1. קליק להצגת ניתוח שלב ראשון (G) 🧐
+                    </button>
+                </div>
+
+                <div id="mcq1-step1-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="border-l-4 border-purple-400 pl-4 mb-4">
+                        <p><strong>שלב 1:</strong> הוצאות הממשלה (G) קבועות לחלוטין. הצמיחה החיובית (5%) משמעותה שהתוצר האמיתי (GDP) <b>גדול</b> מהצפוי.</p>
+                    </div>
+                </div>
+
+                <div id="mcq1-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-4">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('mcq1-step2-wrap', 'mcq1-step2-target', 'mcq1-step3-wrap')">
+                        2. קליק להשפעה על מסים (T) 📈
+                    </button>
+                </div>
+
+                <div id="mcq1-step2-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="border-l-4 border-purple-400 pl-4 mb-4">
+                        <p><strong>שלב 2:</strong> מאחר שהתוצר גדל, ונטל המס נותר כאחוז קבוע, סך המסים הנגבים בפועל (T) יהיה <b>גבוה</b> יותר ממה שתוכנן.</p>
+                    </div>
+                </div>
+
+                <div id="mcq1-step3-wrap" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-4">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="revealAndHighlight('mcq1-step3-wrap', 'mcq1-step3-target', 'mcq1-opt2')">
+                        3. קליק למסקנה הסופית (התשובה) ✅
+                    </button>
+                </div>
+
+                <div id="mcq1-step3-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="border-l-4 border-purple-400 pl-4 mb-4">
+                        <p><strong>שלב 3: חוקיות הגירעון.</strong> הגירעון מוגדר כהפרש: $BD = G - T$. <br>אם ההוצאות נותרו ללא שינוי, והמסים (T) גדלו - ההפרש ביניהם בהכרח <b>מצטמצם</b>!</p>
+
+                        <div class="bg-emerald-100 border border-emerald-300 p-4 rounded-xl mt-4">
+                            <p class="font-bold text-emerald-800 text-lg">✅ התשובה הנכונה היא ב'.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MCQ 2 -->
+            <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-200 mb-8">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800">הבנת "המייצב האוטומטי"</h3>
+                        <p class="text-lg text-slate-600 mt-2">
+                            על פי עקרון "המייצב הכלכלי האוטומטי", מה יקרה לשיעור הגירעון מתוך התוצר כאשר המשק נקלע למיתון חריף (התוצר יורד משמעותית), בהנחה ששיעורי המס והוצאות הממשלה אינם משתנים בחקיקה?
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pl-14 mb-8">
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq3-opt1">א. שיעור הגירעון יקטן, וימתן את השפעת המיתון.</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq3-opt2">ב. שיעור הגירעון יגדל, ויהווה "זריקת מרץ" לפעילות הכלכלית.</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq3-opt3">ג. שיעור הגירעון יישאר ללא שינוי כי ההוצאות מקובעות.</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq3-opt4">ד. שיעור הגירעון יגדל, אך זה יחמיר את המיתון.</div>
+                </div>
+
+                <div id="mcq3-wrap" class="pl-14">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('mcq3-wrap', 'mcq3-step1-target', 'mcq3-step2-wrap')">
+                        1. קליק לניתוח השפעת מיתון 📉
+                    </button>
+                </div>
+
+                <div id="mcq3-step1-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="border-l-4 border-indigo-400 pl-4 mb-4">
+                        <p><strong>מיתון:</strong> התוצר יורד. לכן, גביית המסים מצטמצמת באופן אוטומטי למרות שנטל המס לא השתנה. כתוצאה מכך הגירעון <b>גדל</b> (ההוצאות נותרו כשהיו וההכנסות קטנו).</p>
+                    </div>
+                </div>
+
+                <div id="mcq3-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-4">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="revealAndHighlight('mcq3-step2-wrap', 'mcq3-step2-target', 'mcq3-opt2')">
+                        2. קליק למשמעות הכלכלית (התשובה) 💡
+                    </button>
+                </div>
+
+                <div id="mcq3-step2-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="border-l-4 border-indigo-400 pl-4 mb-4">
+                        <p><strong>המשמעות:</strong> גירעון גדל משמעו שהממשלה מוציאה יותר כסף במשק ממה שהיא שואבת ממנו באמצעות מסים. הזרמת הכסף הזו מעודדת ביקושים ומהווה "זריקת מרץ" שעוזרת למשק לצאת מהמיתון.</p>
+
+                        <div class="bg-emerald-100 border border-emerald-300 p-4 rounded-xl mt-4">
+                            <p class="font-bold text-emerald-800 text-lg">✅ התשובה הנכונה היא ב'.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MCQ 3 -->
+            <div class="bg-white rounded-3xl p-8 shadow-md border border-slate-200">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-purple-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-xl flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800">חישוב יתרת חוב חדשה</h3>
+                        <p class="text-lg text-slate-600 mt-2">
+                            נתון כי בשנת 2023 התוצר עמד על 100 מיליארד, ויחס חוב-תוצר עמד על 60%. בשנת 2024 הממשלה הוציאה (G) סך של 40 מיליארד, וגבתה מסים (T) בסך 35 מיליארד. מהי יתרת החוב (במיליארדים) בסוף שנת 2024?
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pl-14 mb-8">
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq4-opt1">א. 60</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq4-opt2">ב. 65</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq4-opt3">ג. 105</div>
+                    <div class="p-3 border border-slate-200 rounded-lg bg-slate-50 transition-colors" id="mcq4-opt4">ד. 5</div>
+                </div>
+
+                <div id="mcq4-wrap" class="pl-14">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('mcq4-wrap', 'mcq4-step1-target', 'mcq4-step2-wrap')">
+                        1. קליק לחילוץ החוב של שנה שעברה 🔙
+                    </button>
+                </div>
+
+                <div id="mcq4-step1-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 mb-6">
+                        <p class="font-bold mb-2">שלב 1: החוב בסוף 2023</p>
+                        <div class="math-block bg-white">$$Debt_{2023} = 60\% \times 100 = 60$$</div>
+                    </div>
+                </div>
+
+                <div id="mcq4-step2-wrap" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-4">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="reveal('mcq4-step2-wrap', 'mcq4-step2-target', 'mcq4-step3-wrap')">
+                        2. קליק לחישוב הגירעון שנוסף השנה ⚖️
+                    </button>
+                </div>
+
+                <div id="mcq4-step2-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 mb-6">
+                        <p class="font-bold mb-2">שלב 2: הגירעון (BD) ב-2024</p>
+                        <div class="math-block bg-white">$$BD = G - T = 40 - 35 = 5$$</div>
+                        <p class="text-sm">התווספו 5 מיליארד לחוב.</p>
+                    </div>
+                </div>
+
+                <div id="mcq4-step3-wrap" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-4">
+                    <button class="btn-reveal text-white px-6 py-2 rounded-full font-bold shadow-md flex items-center gap-2" onclick="revealAndHighlight('mcq4-step3-wrap', 'mcq4-step3-target', 'mcq4-opt2')">
+                        3. קליק לסיכום החוב החדש (התשובה) 🧮
+                    </button>
+                </div>
+
+                <div id="mcq4-step3-target" class="hidden opacity-0 translate-y-4 reveal-content pl-14 mt-6">
+                    <div class="border-l-4 border-indigo-400 pl-4 mb-4">
+                        <div class="math-block bg-white">
+                            $$Debt_{2024} = 60 + 5 = 65$$
+                        </div>
+
+                        <div class="bg-emerald-100 border border-emerald-300 p-4 rounded-xl mt-4">
+                            <p class="font-bold text-emerald-800 text-lg">✅ התשובה הנכונה היא ב'.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Interactive Script -->
+    <script>
+        function reveal(btnWrapId, targetId, nextElementId = null) {
+            const btnWrap = document.getElementById(btnWrapId);
+            if(btnWrap) btnWrap.style.display = 'none';
+
+            const target = document.getElementById(targetId);
+            if(target) {
+                target.classList.remove('hidden');
+                void target.offsetWidth; 
+                target.classList.remove('opacity-0', 'translate-y-4', 'translate-y-2');
+            }
+
+            if(nextElementId) {
+                const nextEl = document.getElementById(nextElementId);
+                if(nextEl) {
+                    nextEl.classList.remove('hidden');
+                    void nextEl.offsetWidth; 
+                    nextEl.classList.remove('opacity-0', 'translate-y-4');
+                }
+            }
+        }
+
+        function revealAndHighlight(btnWrapId, targetId, optionId) {
+            reveal(btnWrapId, targetId);
+            
+            const option = document.getElementById(optionId);
+            if(option) {
+                option.classList.remove('bg-slate-50', 'border-slate-200');
+                option.classList.add('bg-emerald-50', 'border-emerald-400', 'font-bold', 'text-emerald-900', 'shadow-sm');
+            }
+        }
+    </script>
+</body>
+</html>
