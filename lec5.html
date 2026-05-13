@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הרצאה 7 – תקציב הממשלה, תקרת ההוצאה ומדיניות פיסקלית אנטי-מחזורית</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Frank+Ruhl+Libre:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+    --surface2: #f0eee8;
+    --navy: #1a2744;
+    --navy-light: #253564;
+    --indigo: #3d5a99;
+    --gold: #c9a84c;
+    --gold-light: #f0d98a;
+    --teal: #2a7f7f;
+    --teal-light: #e0f4f4;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --green: #1e7e52;
+    --green-light: #e3f5ec;
+    --amber: #e07b39;
+    --amber-light: #fef3e8;
+    --purple: #5b4fcf;
+    --purple-light: #f0eeff;
+    --text: #1a1a2e;
+    --text-soft: #4a4a6a;
+    --text-muted: #888;
+    --border: #e0ddd4;
+    --shadow: 0 2px 12px rgba(26,39,68,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,39,68,0.13);
+    --radius: 12px;
+    --radius-sm: 7px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    direction: rtl;
+    text-align: right;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+
+  /* HEADER */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, #2d4a8a 100%);
+    color: white;
+    padding: 36px 24px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(201,168,76,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; right: -40px;
+    width: 220px; height: 220px;
+    background: radial-gradient(circle, rgba(61,90,153,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 860px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(201,168,76,0.25);
+    border: 1px solid rgba(201,168,76,0.5);
+    color: var(--gold-light);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  .hero-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 16px;
+  }
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.9);
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  /* NAV */
+  .toc {
+    background: var(--navy);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 2px solid var(--gold);
+    padding: 0 16px;
+    overflow-x: auto;
+  }
+  .toc-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+  }
+  .toc a {
+    display: inline-block;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .toc a:hover { color: var(--gold-light); border-bottom-color: var(--gold); }
+
+  /* MAIN */
+  .main { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  /* SECTION */
+  .section { margin-bottom: 22px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-num {
+    background: var(--navy);
+    color: var(--gold-light);
+    font-size: 12px;
+    font-weight: 800;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .card-accent-gold { border-right: 4px solid var(--gold); }
+  .card-accent-teal { border-right: 4px solid var(--teal); }
+  .card-accent-red { border-right: 4px solid var(--red); }
+  .card-accent-green { border-right: 4px solid var(--green); }
+  .card-accent-navy { border-right: 4px solid var(--navy); }
+  .card-accent-purple { border-right: 4px solid var(--purple); }
+  .card-accent-amber { border-right: 4px solid var(--amber); }
+
+  .card h3 {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .card p { font-size: 14px; color: var(--text-soft); line-height: 1.65; margin-bottom: 6px; }
+  .card p:last-child { margin-bottom: 0; }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: linear-gradient(135deg, #1a2744 0%, #253564 100%);
+    color: white;
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .formula-box::before {
+    content: '';
+    position: absolute;
+    top: -20px; left: -20px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+  }
+  .formula-box .formula-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+  .formula-box .formula-main {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .formula-box .formula-sub {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+  .formula-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .formula-mini {
+    background: var(--navy);
+    color: white;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    border-top: 2px solid var(--gold);
+  }
+  .formula-mini .fm-label { font-size: 10px; color: rgba(255,255,255,0.6); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .formula-mini .fm-eq { font-family: 'Frank Ruhl Libre', serif; font-size: 16px; color: white; font-weight: 700; }
+  .formula-mini .fm-note { font-size: 11px; color: rgba(255,255,255,0.55); margin-top: 4px; line-height: 1.4; }
+
+  /* HIGHLIGHT BOXES */
+  .highlight {
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .highlight-gold { background: #faf5e7; border: 1px solid #e8d47a; }
+  .highlight-teal { background: var(--teal-light); border: 1px solid #a0d4d4; }
+  .highlight-red { background: var(--red-light); border: 1px solid #f5b7b1; }
+  .highlight-green { background: var(--green-light); border: 1px solid #a9dfbf; }
+  .highlight-purple { background: var(--purple-light); border: 1px solid #c0b3f0; }
+  .highlight-amber { background: var(--amber-light); border: 1px solid #f5cba7; }
+  .highlight-navy { background: #edf0f7; border: 1px solid #b3bdd8; }
+
+  .highlight strong { color: var(--navy); }
+  .hl-icon { font-size: 16px; margin-left: 6px; }
+
+  /* STEPS */
+  .steps { margin: 0; padding: 0; list-style: none; }
+  .step {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .step-num {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    background: var(--navy);
+    color: var(--gold-light);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .step-content { font-size: 13.5px; color: var(--text-soft); line-height: 1.6; }
+  .step-content strong { color: var(--navy); }
+
+  /* ACCORDION (Q&A) */
+  .accordion { margin-bottom: 10px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .accordion-header {
+    background: var(--surface);
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    user-select: none;
+  }
+  .accordion-header:hover { background: #f5f4f0; }
+  .accordion-header.open { background: var(--navy); color: white; }
+  .accordion-title {
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .accordion-header.open .accordion-title { color: white; }
+  .accordion-badge {
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+  }
+  .accordion-header.open .accordion-badge { background: rgba(201,168,76,0.3); color: var(--gold-light); }
+  .accordion-arrow {
+    font-size: 13px;
+    transition: transform 0.25s;
+    color: var(--text-muted);
+  }
+  .accordion-header.open .accordion-arrow { transform: rotate(180deg); color: var(--gold-light); }
+  .accordion-body {
+    display: none;
+    padding: 14px 16px;
+    background: #fdfcfa;
+    border-top: 1px solid var(--border);
+  }
+  .accordion-body.open { display: block; }
+
+  /* SOLUTION STEPS */
+  .sol-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    font-size: 13.5px;
+    color: var(--text-soft);
+  }
+  .sol-step .sol-step-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--indigo);
+    margin-bottom: 4px;
+  }
+  .sol-step strong { color: var(--navy); }
+
+  /* VERDICT */
+  .verdict {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .verdict-item {
+    flex: 1;
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .verdict-pass { background: var(--green-light); color: var(--green); border: 1.5px solid #a9dfbf; }
+  .verdict-fail { background: var(--red-light); color: var(--red); border: 1.5px solid #f5b7b1; }
+  .verdict-item .vi-label { font-size: 10px; font-weight: 600; opacity: 0.7; margin-bottom: 2px; }
+  .verdict-item .vi-icon { font-size: 18px; margin-bottom: 3px; }
+
+  .final-verdict {
+    margin-top: 10px;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .fv-approved { background: var(--green-light); color: var(--green); border: 2px solid var(--green); }
+  .fv-rejected { background: var(--red-light); color: var(--red); border: 2px solid var(--red); }
+
+  /* TABLE */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+  .data-table th {
+    background: var(--navy);
+    color: var(--gold-light);
+    padding: 8px 12px;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+  }
+  .data-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-soft); }
+  .data-table tr:nth-child(even) td { background: #faf9f7; }
+  .data-table .pass-cell { color: var(--green); font-weight: 700; }
+  .data-table .fail-cell { color: var(--red); font-weight: 700; }
+  .data-table .neutral-cell { color: var(--indigo); font-weight: 700; }
+
+  /* COMPARISON */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .compare-card {
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    border: 2px solid;
+  }
+  .compare-left { background: #edf5ff; border-color: #3d5a99; }
+  .compare-right { background: #fff5e6; border-color: #e07b39; }
+  .compare-card h4 {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.8;
+  }
+  .compare-left h4 { color: var(--indigo); }
+  .compare-right h4 { color: var(--amber); }
+  .compare-item {
+    font-size: 12.5px;
+    color: var(--text-soft);
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    line-height: 1.45;
+  }
+  .compare-item:last-child { border-bottom: none; }
+  .compare-item strong { color: var(--text); }
+
+  /* TAKEAWAY */
+  .takeaway {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5282 100%);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .takeaway::before {
+    content: '💡';
+    position: absolute;
+    top: -5px; left: 10px;
+    font-size: 60px;
+    opacity: 0.08;
+  }
+  .takeaway h4 {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 8px;
+  }
+  .takeaway ul { list-style: none; padding: 0; }
+  .takeaway li {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.88);
+    padding: 4px 0;
+    padding-right: 16px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .takeaway li::before {
+    content: '→';
+    position: absolute;
+    right: 0;
+    color: var(--gold-light);
+    font-weight: 700;
+  }
+
+  /* SUMMARY */
+  .summary-box {
+    background: var(--surface);
+    border: 2px solid var(--navy);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .summary-box h3 {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 17px;
+    color: var(--navy);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ANALOGY */
+  .analogy-box {
+    background: #fffbf0;
+    border: 1px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .analogy-icon { font-size: 28px; flex-shrink: 0; }
+  .analogy-text { font-size: 13.5px; color: var(--text-soft); line-height: 1.6; }
+  .analogy-text strong { color: var(--navy); }
+
+  /* MATH DISPLAY */
+  .math-display {
+    background: #f0eee8;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 17px;
+    color: var(--navy);
+    text-align: center;
+    margin: 8px 0;
+    direction: ltr;
+  }
+  .math-inline {
+    font-family: 'Frank Ruhl Libre', serif;
+    font-size: 15px;
+    color: var(--navy);
+    background: #f0eee8;
+    padding: 1px 6px;
+    border-radius: 4px;
+    direction: ltr;
+    display: inline-block;
+  }
+
+  /* PILL */
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 12px;
+    letter-spacing: 0.3px;
+  }
+  .pill-navy { background: #edf0f7; color: var(--navy); }
+  .pill-green { background: var(--green-light); color: var(--green); }
+  .pill-red { background: var(--red-light); color: var(--red); }
+  .pill-gold { background: #faf5e7; color: #8b6914; border: 1px solid var(--gold); }
+
+  /* INLINE CHECK QUIZ */
+  .quiz-block {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .quiz-block h4 { font-size: 13.5px; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+  .quiz-choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    margin-bottom: 6px;
+    border: 1.5px solid var(--border);
+    transition: all 0.15s;
+    font-size: 13.5px;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+  .quiz-choice:hover { background: var(--surface2); }
+  .quiz-choice input { margin-top: 2px; flex-shrink: 0; }
+  .quiz-result { margin-top: 8px; padding: 9px 12px; border-radius: var(--radius-sm); font-size: 13px; display: none; }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to left, transparent, var(--border), transparent);
+    margin: 18px 0;
+  }
+
+  /* CHIP ROW */
+  .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+
+  /* ISRAEL CHART */
+  .bar-chart { margin-bottom: 12px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .bar-label { width: 90px; font-size: 12px; color: var(--text-soft); text-align: left; direction: ltr; flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--surface2); border-radius: 3px; height: 20px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 700; color: white; transition: width 0.6s ease; }
+  .bar-left { background: linear-gradient(to right, #c0392b, #e74c3c); }
+  .bar-right { background: linear-gradient(to right, #2980b9, #3498db); }
+  .bar-il { background: linear-gradient(to right, #c9a84c, #e8c56a); color: #333; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .formula-grid { grid-template-columns: 1fr; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .verdict { flex-direction: column; }
+    .hero h1 { font-size: 20px; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .section { animation: fadeUp 0.5s ease both; }
+  .section:nth-child(1) { animation-delay: 0.05s; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.15s; }
+  .section:nth-child(4) { animation-delay: 0.2s; }
+
+  .icon-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .ib-gold { background: #faf5e7; }
+  .ib-teal { background: var(--teal-light); }
+  .ib-red { background: var(--red-light); }
+  .ib-green { background: var(--green-light); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 580px) { .two-col { grid-template-columns: 1fr; } }
+
+  .q-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--navy);
+    color: var(--gold-light);
+    font-size: 12px;
+    font-weight: 800;
+    padding: 3px 12px 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">מאקרו-כלכלה · הרצאה 7</div>
+    <h1>תקציב הממשלה – תקרת ההוצאה<br>ומדיניות פיסקלית אנטי-מחזורית</h1>
+    <div class="hero-sub">15.12.2025 · עיבוד אינטראקטיבי מלא של חומר הלימוד</div>
+    <div class="hero-tags">
+      <span class="tag">יעד הגירעון</span>
+      <span class="tag">תקרת ההוצאה</span>
+      <span class="tag">תעמשת תקציבית</span>
+      <span class="tag">ימין כלכלי / שמאל כלכלי</span>
+      <span class="tag">שאלות פתורות</span>
+    </div>
+  </div>
+</div>
+
+<!-- TOC -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#s1">📐 בסיס</a>
+    <a href="#s2">🎯 יעד גירעון</a>
+    <a href="#s3">🔒 תקרת הוצאה</a>
+    <a href="#s4">📊 שאלה 7.1</a>
+    <a href="#s5">📊 שאלה 7.2</a>
+    <a href="#s6">✅ שאלה 7.2.1</a>
+    <a href="#s7">📊 שאלה 7.3</a>
+    <a href="#s8">⚖️ ימין/שמאל</a>
+    <a href="#s9">🇮🇱 ישראל</a>
+    <a href="#s10">📌 סיכום</a>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ============================================================ -->
+<!-- SECTION 1: BASIC BUDGET EQUATION -->
+<!-- ============================================================ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div class="section-title">בסיס – משוואת התקציב הממשלתי</div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">📐 משוואת יסוד</div>
+    <div class="formula-main">גירעון = הוצאה ממשלתית (G) − הכנסות מסים (T)</div>
+    <div class="formula-sub">
+      גירעון חיובי ← הממשלה מוציאה יותר ממה שגובה &nbsp;|&nbsp; עודף ← הממשלה גובה יותר ממה שמוציאה
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card card-accent-green">
+      <h3>💰 הכנסות ממסים (T)</h3>
+      <p>מס הכנסה, מע"מ, מס חברות ועוד. תלויות בפעילות הכלכלית בפועל — עולות כשהמשק פורח ויורדות במיתון.</p>
+    </div>
+    <div class="card card-accent-red">
+      <h3>🏛️ הוצאות ממשלה (G)</h3>
+      <p>רכש, שכר עובדים, העברות, ביטחון ועוד. חלקן נקבעות מראש בחוק ועמידות יחסית לתנודות המחזור.</p>
+    </div>
+  </div>
+
+  <div class="highlight highlight-gold">
+    <span class="hl-icon">⚠️</span> <strong>נקודה מרכזית:</strong> הגירעון <em>בפועל</em> ייוודע רק בדיעבד, לאחר שנדע מה נגבה בפועל. לכן הממשלה מנהלת תקציב על בסיס <strong>תחזיות</strong> – יעד גירעון כ-% מהתוצר הצפוי.
+  </div>
+
+  <div class="takeaway">
+    <h4>💡 טייק-אווי – בסיס</h4>
+    <ul>
+      <li>גירעון גבוה ומצטבר → חוב ציבורי גדל → פרמיית הסיכון עולה → עלויות מימון יקרות יותר לממשלה.</li>
+      <li>משמעת תקציבית נכונה חיונית כדי לשמור על אמינות מול שווקי ההון.</li>
+      <li>ישראל – צרכי ביטחון, כלכלת הייטק תנודתית ולחצים קואליציוניים מחייבים מנגנוני בקרה נוספים.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: DEFICIT TARGET -->
+<!-- ============================================================ -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div class="section-title">יעד הגירעון – הבלמים בכלי הרכב הממשלתי</div>
+  </div>
+
+  <div class="card card-accent-navy">
+    <h3>🎯 מה זה יעד הגירעון?</h3>
+    <p>יעד הגירעון הוא <strong>אחוז מהתוצר הצפוי</strong> שהממשלה מחליטה עליו מראש כ"מסגרת מותרת" לגירעון. הוא מחשב את ה<strong>הוצאה המרבית האפשרית</strong> בהתחשב בגביית המסים הצפויה.</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">📐 נוסחת יעד הגירעון</div>
+    <div class="formula-main">G<sub>MAX</sub> = T + BD &nbsp;&nbsp; כאשר &nbsp;&nbsp; BD = יעד גירעון% × תוצר צפוי</div>
+    <div class="formula-sub">
+      T = גביית מסים · BD = הגירעון המרבי המותר (לפי אחוז מהתוצר)
+    </div>
+  </div>
+
+  <div class="formula-grid">
+    <div class="formula-mini">
+      <div class="fm-label">דוגמה – יעד 3% מתוצר 1,000</div>
+      <div class="fm-eq">BD = 3% × 1,000 = 30</div>
+      <div class="fm-note">אם T = 380 → G<sub>MAX</sub> = 380 + 30 = 410</div>
+    </div>
+    <div class="formula-mini">
+      <div class="fm-label">בדיקת ציות ליעד הגירעון</div>
+      <div class="fm-eq">G ≤ G<sub>MAX</sub> ?</div>
+      <div class="fm-note">אם G ≤ T + BD → עומדים | אם G > T + BD → לא עומדים</div>
+    </div>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-icon">🚗</div>
+    <div class="analogy-text">
+      <strong>אנלוגיה – "הבלמים":</strong> יעד הגירעון הוא כמו <em>בלמים</em> ברכב הממשלתי. כשנוסעים בחושך או בדרך מפותלת, הבלמים עוזרים להאט ולמנוע סיכון מופרז. השימוש בבלמים תלוי בשיקול דעת ובתנאי הדרך (המצב הכלכלי).
+    </div>
+  </div>
+
+  <div class="highlight highlight-teal">
+    <span class="hl-icon">🔑</span> <strong>למה יעד הגירעון תלוי ברצות?</strong><br>
+    כאשר הכלכלה פורחת → גביית מסים עולה → מותר להוציא יותר (G<sub>MAX</sub> גדל). כאשר יש מיתון → גביית מסים יורדת → G<sub>MAX</sub> קטן → הממשלה נאלצת לקצץ. זהו מאפיין מובנה של יעד הגירעון.
+  </div>
+
+  <div class="takeaway">
+    <h4>💡 טייק-אווי – יעד הגירעון</h4>
+    <ul>
+      <li>יעד הגירעון נקבע כ-% מהתוצר <strong>הצפוי</strong>, ומחושב מראש בבניית התקציב.</li>
+      <li>הגירעון בפועל מתברר רק בדיעבד – לכן חייבים לתכנן על בסיס תחזיות.</li>
+      <li>הגדרה: <strong>G<sub>MAX</sub> = T + BD</strong> – זה הגבול העליון להוצאה ממשלתית על-פי יעד הגירעון.</li>
+      <li>חסרון: בתקופת שגשוג, הממשלה <em>יכולה</em> להגדיל הוצאות בצורה דרמטית – חוסר משמעת תקציבית.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: EXPENDITURE CEILING -->
+<!-- ============================================================ -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div class="section-title">תקרת ההוצאה – "מהירות מרבית מותרת"</div>
+  </div>
+
+  <div class="card card-accent-gold">
+    <h3>🔒 מה זה תקרת ההוצאה?</h3>
+    <p>תקרת ההוצאה היא <strong>מספר מוחלט</strong> (לא % מהתוצר) הנקבע בחקיקה, המגביל את <strong>ס"כ ההוצאה הממשלתית</strong> ללא תלות בהכנסות המסים.</p>
+    <p>זו כמו "<strong>מהירות מרבית מותרת</strong>" – מונעת בזבוז יתר בנסיעה, גם כשהדרך נראית פתוחה וברורה.</p>
+  </div>
+
+  <div class="highlight highlight-gold">
+    <span class="hl-icon">📌</span> <strong>בדיקת ציות לתקרת ההוצאה:</strong>
+    <div class="math-display">G ≤ תקרת ההוצאה</div>
+    <p style="font-size:13px;color:var(--text-soft);margin-top:4px;">ללא קשר לגביית המסים ולמצב הכלכלי, אם G עולה על תקרת ההוצאה → התקציב <strong>לא מאושר</strong>.</p>
+  </div>
+
+  <div class="analogy-box">
+    <div class="analogy-icon">🚀</div>
+    <div class="analogy-text">
+      <strong>אנלוגיה – "מהירות מרבית":</strong> יעד הגירעון הוא הבלמים (מגיבים לתנאי הדרך), ואילו תקרת ההוצאה היא תמרור <em>"מהירות מרבית 100 קמ"ש"</em> – קיים בכל תנאי דרך ומגביל מוחלט.
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card card-accent-green">
+      <h3>✅ יתרון מרכזי</h3>
+      <p>מונעת בזבוז מופרז בתקופות שגשוג, גם כשהמסים גבוהים וכלכלית "הכל נראה טוב".</p>
+    </div>
+    <div class="card card-accent-red">
+      <h3>⚠️ חסרון מרכזי</h3>
+      <p>ייתכן שתהיה לא רלוונטית (גירעון עדיין גבוה) אם קבועה בגובה גבוה מדי מלכתחילה.</p>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="card">
+    <h3>📊 השוואה – יעד גירעון מול תקרת הוצאה</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>מאפיין</th>
+          <th>יעד הגירעון</th>
+          <th>תקרת ההוצאה</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>מה מגביל?</strong></td>
+          <td>שרפה בין הוצאות לתוסנכות מסים</td>
+          <td>ס"כ ההוצאה עצמה</td>
+        </tr>
+        <tr>
+          <td><strong>אופן המדידה</strong></td>
+          <td>% מהתוצר – לדג דינמי</td>
+          <td>סכום קבוע / צומח בקצב מוסכם</td>
+        </tr>
+        <tr>
+          <td><strong>תלות ברצות?</strong></td>
+          <td class="pass-cell">כן – עולה עם המסים</td>
+          <td class="fail-cell">לא – עצמאי (=אוטונומי)</td>
+        </tr>
+        <tr>
+          <td><strong>יתרון מרכזי</strong></td>
+          <td>מונע צבירת חוב מופרז</td>
+          <td>מונע בזבוז בתקופות פריחה</td>
+        </tr>
+        <tr>
+          <td><strong>חסרון מרכזי</strong></td>
+          <td>מאפשר הוצאה גבוהה בעת מסים גבוהים</td>
+          <td>לא מונע ישירות גירעון גדול</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="takeaway">
+    <h4>💡 טייק-אווי – תקרת ההוצאה</h4>
+    <ul>
+      <li><strong>תקרת ההוצאה אוטונומית</strong> – נקבע כמספר מוחלט בחקיקה, לא תלוי בגביית המסים.</li>
+      <li>שני הכלים יחד יוצרים משמעת תקציבית "משני הצדדים" – מניעת גירעון מופרז <em>ומניעת</em> בזבוז.</li>
+      <li>כדי שהתקציב יאושר – חייבים לעמוד <strong>בשני</strong> הנחבמים: גם יעד הגירעון וגם תקרת ההוצאה.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: QUESTION 7.1 -->
+<!-- ============================================================ -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div class="section-title">שאלה 7.1 – אישור תקציב: שלושה תרחישים</div>
+  </div>
+
+  <div class="card card-accent-navy">
+    <h3>📋 נתוני הבסיס לשאלה 7.1</h3>
+    <div class="chip-row">
+      <span class="chip">תוצר צפוי: 1,000</span>
+      <span class="chip">יעד גירעון: 3% = 30</span>
+      <span class="chip">תקרת הוצאה: 400</span>
+    </div>
+    <div class="highlight highlight-navy">
+      <strong>שלבי הבדיקה לכל תרחיש:</strong><br>
+      1️⃣ חשב <span class="math-inline">G_MAX = T + BD = T + (3% × 1,000)</span><br>
+      2️⃣ בדוק: האם <span class="math-inline">G ≤ G_MAX</span>? (יעד גירעון ✓/✗)<br>
+      3️⃣ בדוק: האם <span class="math-inline">G ≤ 400</span>? (תקרת הוצאה ✓/✗)<br>
+      4️⃣ התקציב מאושר רק אם <strong>שני</strong> הנחבמים עוברים ✓
+    </div>
+  </div>
+
+  <!-- 7.1a -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">סעיף א'</span>
+        גביית מסים T = 380, הוצאה ממשלתית G = 410
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 1 – חישוב G_MAX לפי יעד הגירעון</div>
+        <div class="math-display">G_MAX = T + BD = 380 + (3% × 1,000) = 380 + 30 = 410</div>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 2 – בדיקת יעד הגירעון</div>
+        <strong>G = 410 ≤ G_MAX = 410</strong> ← שוויון מדויק → <span class="pill pill-green">✓ עומדים ביעד הגירעון</span>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 3 – בדיקת תקרת ההוצאה</div>
+        <strong>G = 410 > תקרת הוצאה = 400</strong> ← חורגים מהתקרה → <span class="pill pill-red">✗ לא עומדים בתקרת ההוצאה</span>
+        <br><small style="color:var(--text-muted)">תקרת ההוצאה היא מספר מוחלט. אין שיקול לגודל המסים – 410 > 400, פשוט.</small>
+      </div>
+      <div class="verdict">
+        <div class="verdict-item verdict-pass"><div class="vi-label">יעד גירעון</div><div class="vi-icon">✅</div>עובר</div>
+        <div class="verdict-item verdict-fail"><div class="vi-label">תקרת הוצאה</div><div class="vi-icon">❌</div>לא עובר</div>
+      </div>
+      <div class="final-verdict fv-rejected">🚫 התקציב לא מאושר – לא עומדים בתקרת ההוצאה</div>
+    </div>
+  </div>
+
+  <!-- 7.1b -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">סעיף ב'</span>
+        גביית מסים T = 320, הוצאה ממשלתית G = 390
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 1 – חישוב G_MAX לפי יעד הגירעון</div>
+        <div class="math-display">G_MAX = T + BD = 320 + (3% × 1,000) = 320 + 30 = 350</div>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 2 – בדיקת יעד הגירעון</div>
+        <strong>G = 390 > G_MAX = 350</strong> ← חורגים מגירעון מרבי → <span class="pill pill-red">✗ לא עומדים ביעד הגירעון</span>
+        <br><small style="color:var(--text-muted)">ההוצאה הרצויה (390) גבוהה מהמותר לפי יעד הגירעון (350). גירעון בפועל = 390 – 320 = 70, גדול מ-30.</small>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 3 – בדיקת תקרת ההוצאה</div>
+        <strong>G = 390 ≤ תקרת הוצאה = 400</strong> ← בתוך התקרה → <span class="pill pill-green">✓ עומדים בתקרת ההוצאה</span>
+      </div>
+      <div class="verdict">
+        <div class="verdict-item verdict-fail"><div class="vi-label">יעד גירעון</div><div class="vi-icon">❌</div>לא עובר</div>
+        <div class="verdict-item verdict-pass"><div class="vi-label">תקרת הוצאה</div><div class="vi-icon">✅</div>עובר</div>
+      </div>
+      <div class="final-verdict fv-rejected">🚫 התקציב לא מאושר – לא עומדים ביעד הגירעון</div>
+      <div class="highlight highlight-amber" style="margin-top:8px">
+        <span class="hl-icon">📌</span> <strong>שים לב:</strong> גם כאשר עומדים בתקרת ההוצאה, אי-עמידה ביעד הגירעון לבדה מספיקה לדחות את התקציב. שני הנחבמים חובה.
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.1c -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">סעיף ג'</span>
+        גביית מסים T = 370, הוצאה ממשלתית G = 395
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 1 – חישוב G_MAX לפי יעד הגירעון</div>
+        <div class="math-display">G_MAX = T + BD = 370 + (3% × 1,000) = 370 + 30 = 400</div>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 2 – בדיקת יעד הגירעון</div>
+        <strong>G = 395 ≤ G_MAX = 400</strong> ← בתוך הגירעון המותר → <span class="pill pill-green">✓ עומדים ביעד הגירעון</span>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 3 – בדיקת תקרת ההוצאה</div>
+        <strong>G = 395 ≤ תקרת הוצאה = 400</strong> ← בתוך התקרה → <span class="pill pill-green">✓ עומדים בתקרת ההוצאה</span>
+      </div>
+      <div class="verdict">
+        <div class="verdict-item verdict-pass"><div class="vi-label">יעד גירעון</div><div class="vi-icon">✅</div>עובר</div>
+        <div class="verdict-item verdict-pass"><div class="vi-label">תקרת הוצאה</div><div class="vi-icon">✅</div>עובר</div>
+      </div>
+      <div class="final-verdict fv-approved">✅ התקציב מאושר – עומדים בשני הנחבמים!</div>
+    </div>
+  </div>
+
+  <!-- Summary table 7.1 -->
+  <div class="card" style="margin-top:12px">
+    <h3>📊 טבלת סיכום – שאלה 7.1 (נתוני בסיס: תוצר=1000, יעד=3%, תקרה=400)</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>סעיף</th><th>T</th><th>G</th><th>G_MAX (=T+30)</th><th>יעד גירעון</th><th>תקרת הוצאה</th><th>מאושר?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>א'</td><td>380</td><td>410</td><td>410</td><td class="pass-cell">✓</td><td class="fail-cell">✗ (410>400)</td><td class="fail-cell">לא</td></tr>
+        <tr><td>ב'</td><td>320</td><td>390</td><td>350</td><td class="fail-cell">✗ (390>350)</td><td class="pass-cell">✓ (390≤400)</td><td class="fail-cell">לא</td></tr>
+        <tr><td>ג'</td><td>370</td><td>395</td><td>400</td><td class="pass-cell">✓ (395≤400)</td><td class="pass-cell">✓ (395≤400)</td><td class="pass-cell">כן ✅</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: QUESTION 7.2 -->
+<!-- ============================================================ -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div class="section-title">שאלה 7.2 – תרחיש חדש עם נתונים שונים</div>
+  </div>
+
+  <div class="card card-accent-navy">
+    <h3>📋 נתוני הבסיס לשאלה 7.2</h3>
+    <div class="chip-row">
+      <span class="chip">תוצר צפוי: 2,000</span>
+      <span class="chip">יעד גירעון: 5% = 100</span>
+      <span class="chip">גביית מסים T: 500</span>
+      <span class="chip">תקרת הוצאה: 640</span>
+      <span class="chip">הוצאה מוצעת G: 620</span>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">פתרון</span>
+        האם יאושר תקציב עם G = 620?
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 1 – חישוב G_MAX לפי יעד הגירעון</div>
+        <div class="math-display">BD = 5% × 2,000 = 100 &nbsp;|&nbsp; G_MAX = T + BD = 500 + 100 = 600</div>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 2 – בדיקת יעד הגירעון</div>
+        <strong>G = 620 > G_MAX = 600</strong> → <span class="pill pill-red">✗ לא עומדים ביעד הגירעון</span>
+        <br><small style="color:var(--text-muted)">גירעון בפועל = 620 – 500 = 120, גדול מגירעון מרבי = 100.</small>
+      </div>
+      <div class="sol-step">
+        <div class="sol-step-label">שלב 3 – בדיקת תקרת ההוצאה</div>
+        <strong>G = 620 ≤ תקרת הוצאה = 640</strong> → <span class="pill pill-green">✓ עומדים בתקרת ההוצאה</span>
+      </div>
+      <div class="verdict">
+        <div class="verdict-item verdict-fail"><div class="vi-label">יעד גירעון</div><div class="vi-icon">❌</div>לא עובר</div>
+        <div class="verdict-item verdict-pass"><div class="vi-label">תקרת הוצאה</div><div class="vi-icon">✅</div>עובר</div>
+      </div>
+      <div class="final-verdict fv-rejected">🚫 התקציב לא מאושר – אי-עמידה ביעד הגירעון</div>
+      <div class="highlight highlight-amber" style="margin-top:8px">
+        <span class="hl-icon">🧠</span> <strong>שיעור:</strong> גם אם עומדים בתקרת ההוצאה, <strong>עמידה בשני הנחבמים חובה</strong>. נכשלים בנחבם אחד = כישלון כולל.
+      </div>
+    </div>
+  </div>
+
+  <!-- Middle summary -->
+  <div class="summary-box" style="margin-top:14px">
+    <h3>📌 טבלת סיכום ביניים – יעד גירעון מול תקרת הוצאה</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>קריטריון</th><th>יעד הגירעון</th><th>תקרת ההוצאה</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>מה מגביל?</strong></td><td>הפרש בין הוצאות להכנסות מסים (=גירעון)</td><td>ס"כ ההוצאה</td></tr>
+        <tr><td><strong>אופן מדידה</strong></td><td>% מהתוצר – דינמי</td><td>סכום קבוע / צומח</td></tr>
+        <tr><td><strong>תלות ברצות?</strong></td><td class="pass-cell">כן – עולה עם המסים</td><td class="fail-cell">לא – אוטונומי</td></tr>
+        <tr><td><strong>יתרון מרכזי</strong></td><td>מונע צבירת חוב מופרז לאורך זמן</td><td>מונע בזבוז בתקופות שגשוג</td></tr>
+        <tr><td><strong>חסרון מרכזי</strong></td><td>מאפשר הוצאה גבוהה בעת מסים גבוהים</td><td>לא מונע ישירות גירעון גבוה</td></tr>
+      </tbody>
+    </table>
+    <div class="highlight highlight-navy" style="margin-top:8px">
+      <strong>ביחד:</strong> מסגרת תקציבית מנוהלת נכון משתמשת בשני הכלים – מניעת צבירת חוב מופרז <em>ומניעת</em> בזבוז מופרז.
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: QUESTION 7.2.1 – CLAIMS -->
+<!-- ============================================================ -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div class="section-title">שאלה 7.2.1 – ניתוח טענות: נכון / לא נכון?</div>
+  </div>
+
+  <div class="card card-accent-purple">
+    <h3>📋 שלוש טענות לבחינה</h3>
+    <p>לכל טענה – החליטו: נכון / לא נכון, ונמקו. לחצו על הטענה לפתרון.</p>
+  </div>
+
+  <!-- Claim 1 -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">טענה 1</span>
+        "יעד הגירעון קובע את הסכום המרבי שניתן לאשר כהוצאה ממשלתית אוטונומית"
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="final-verdict fv-rejected" style="margin-bottom:10px">❌ לא נכון</div>
+      <div class="highlight highlight-red">
+        <strong>הסבר:</strong> יעד הגירעון <em>אינו</em> קובע סכום אוטונומי – הוא תלוי ברצות ובתחזיות. ה-G_MAX שלו משתנה עם גביית המסים (T). הסכום שנקבע בצורה אוטונומית (כמספר עצמאי מוחלט) הוא דווקא <strong>תקרת ההוצאה</strong>. הטענה מבלבלת בין השניים.
+      </div>
+      <div class="highlight highlight-teal">
+        <span class="hl-icon">🎯</span> <strong>המסר:</strong> G_MAX (יעד גירעון) = T + BD – <em>תלוי</em> ב-T. תקרת הוצאה = קבוע בחוק, עצמאי מ-T.
+      </div>
+    </div>
+  </div>
+
+  <!-- Claim 2 -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">טענה 2</span>
+        "מנגנון תקרת ההוצאה תמיד מבטיח שהממשלה לא תנהג בצורה הגורמת לגירעון"
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="final-verdict fv-rejected" style="margin-bottom:10px">❌ לא נכון</div>
+      <div class="highlight highlight-red">
+        <strong>הסבר:</strong> תקרת ההוצאה היא ערך קבוע ומוחלט – אינה תלויה בגביית המסים. אם גביית המסים נמוכה מאוד, ייתכן שהממשלה תוציא פחות מהתקרה <em>ועדיין</em> תיצור גירעון גבוה מאוד. למשל: תקרה = 5,000, T = 2,000 → גירעון = 3,000 אף שהממשלה "עמדה בתקרה".
+      </div>
+      <div class="highlight highlight-teal">
+        <span class="hl-icon">🎯</span> <strong>המסר:</strong> תקרת הוצאה מגבילה <em>כמות</em> ההוצאה, לא את <em>הגירעון</em>. הגירעון מתוחם רק על-ידי יעד הגירעון.
+      </div>
+    </div>
+  </div>
+
+  <!-- Claim 3 -->
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">טענה 3</span>
+        "אם תקציב מסוים מאושר לפי יעד הגירעון, משמעות הדבר שהוא יעבור גם את ניחבם תקרת ההוצאה"
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="final-verdict fv-rejected" style="margin-bottom:10px">❌ לא נכון</div>
+      <div class="highlight highlight-red">
+        <strong>הסבר:</strong> מדובר בשני ניחבמים שונים, ועמידה באחד אינה מבטיחה עמידה בשני. ראינו בסעיף א' של שאלה 7.1: עמדנו ביעד הגירעון (G = G_MAX = 410) אך לא עמדנו בתקרת ההוצאה (410 > 400). ניתן לעבור ניחבם אחד ולהיכשל בשני.
+      </div>
+      <div class="highlight highlight-teal">
+        <span class="hl-icon">🎯</span> <strong>המסר:</strong> הניחבמים עצמאיים זה מזה. כדי לאשר תקציב: <strong>חובה לעמוד בשניהם במקביל</strong>.
+      </div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <h4>💡 טייק-אווי – שאלה 7.2.1</h4>
+    <ul>
+      <li>יעד הגירעון = דינמי, תלוי ברצות; תקרת ההוצאה = סטטי, אוטונומי.</li>
+      <li>תקרת הוצאה לא מבטיחה גירעון קטן; יעד גירעון לא מבטיח שהוצאה בגבולות התקרה.</li>
+      <li>שני הניחבמים עצמאיים – כישלון בכל אחד מהם = אי-אישור התקציב.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 7: QUESTION 7.3 -->
+<!-- ============================================================ -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <div class="section-title">שאלה 7.3 – השפעת תוצר נמוך מהצפי</div>
+  </div>
+
+  <div class="card card-accent-amber">
+    <h3>📋 הקשר: רצות נמוכה מהצפי ← מה ההשלכות?</h3>
+    <p>כלכלן טוען שב-2023, קצב הצמיחה היה נמוך מהצפוי בתחילת השנה. כתוצאה מכך:</p>
+    <p><strong>טענה א':</strong> המדינה לא תוכל לעמוד ביעד הגירעון שנקבע.</p>
+    <p><strong>טענה ב':</strong> המדינה לא תוכל לעמוד בתקרת ההוצאה שנקבעה.</p>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">פתרון א'</span>
+        האם טענה א' נכונה? – יעד הגירעון ותוצר נמוך
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="final-verdict fv-approved" style="margin-bottom:10px">✅ טענה א' – נכונה</div>
+      <div class="sol-step">
+        <div class="sol-step-label">שרשרת הסיבתיות</div>
+        <div class="math-display">תוצר בפועל ↓  →  גביית מסים T ↓  →  G_MAX (= T + BD) ↓  →  גירעון בפועל ↑</div>
+      </div>
+      <div class="highlight highlight-green">
+        <strong>הסבר:</strong> תוצר נמוך מהצפי → פחות פעילות כלכלית → גביית מסים נמוכה יותר מהתוכנית. מאחר שהוצאות הממשלה נקבעו מראש ונשארות בערך קבועות → הגירעון בפועל גדל. G_MAX שהיה אמור להיות T_תוכנית + BD, כעת נמוך יותר כי T_בפועל < T_תוכנית. לכן ייתכן שG > G_MAX החדש.
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">פתרון ב'</span>
+        האם טענה ב' נכונה? – תקרת ההוצאה ותוצר נמוך
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="final-verdict fv-rejected" style="margin-bottom:10px">❌ טענה ב' – לא נכונה</div>
+      <div class="highlight highlight-red">
+        <strong>הסבר:</strong> תקרת ההוצאה נקבעת כסכום מוחלט בחוק – <em>לא מושפעת מהתוצר!</em> אם נקבעה תקרה של 5,000 בתחילת השנה, היא נשארת 5,000 בין אם התוצר עלה ובין אם ירד. הממשלה לא "חורגת מהתקרה" רק בגלל שהתוצר ירד.
+      </div>
+      <div class="two-col">
+        <div class="highlight highlight-teal">
+          <strong>יעד גירעון:</strong> ← מושפע מהתוצר<br>(BD = % × תוצר)
+        </div>
+        <div class="highlight highlight-navy">
+          <strong>תקרת הוצאה:</strong> לא מושפעת<br>(סכום קבוע בחקיקה)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="accordion-header" onclick="toggleAcc(this)">
+      <div class="accordion-title">
+        <span class="accordion-badge">סעיף נוסף</span>
+        "גירעון נמוך = שירותים ציבוריים פחותים"? – הטענה הכלכלית
+      </div>
+      <span class="accordion-arrow">▼</span>
+    </div>
+    <div class="accordion-body">
+      <div class="final-verdict fv-rejected" style="margin-bottom:10px">❌ הטענה שגויה</div>
+      <div class="highlight highlight-red">
+        <strong>הסבר:</strong> גירעון = הפרש בין הוצאות ממשלה לבין גביית מסים. אם הממשלה גובה מסים גבוהים – היא יכולה לממן הוצאות גבוהות (ושירותים ציבוריים רבים) גם ללא גירעון גבוה. מדינות עם גירעון נמוך ומסים גבוהים עשויות לספק שירותים ציבוריים נרחבים בהרבה ממדינות עם גירעון גבוה.
+      </div>
+      <div class="formula-box" style="padding:12px 16px">
+        <div class="formula-label">זכרו</div>
+        <div class="formula-main" style="font-size:16px">הוצאה גבוהה + מסים גבוהים = גירעון נמוך ✓</div>
+        <div class="formula-sub">לא חייב לבחור בין שירותים ציבוריים לבין משמעת תקציבית!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="takeaway">
+    <h4>💡 טייק-אווי – שאלה 7.3</h4>
+    <ul>
+      <li>תוצר נמוך → מסים נמוכים → G_MAX קטן → קשה לעמוד ביעד הגירעון. ✓</li>
+      <li>תוצר נמוך לא משפיע על תקרת ההוצאה (שהיא מספר מוחלט בחוק). ✗ לטענה ב'.</li>
+      <li>גירעון נמוך ≠ שירותים ציבוריים מועטים. ניתן לשלב מסים גבוהים עם הוצאות גבוהות וגירעון נמוך.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 8: LEFT / RIGHT -->
+<!-- ============================================================ -->
+<div class="section" id="s8">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <div class="section-title">ימין כלכלי / שמאל כלכלי</div>
+  </div>
+
+  <div class="card card-accent-gold">
+    <h3>⚖️ מהו "ימין/שמאל כלכלי"?</h3>
+    <p>מעבר למנגנונים הטכניים, ישנה גישה פוליטית-חברתית המניעה את המדיניות הכלכלית. ניתן לפרוס ציר זמן כלכלי בין שתי קצוות:</p>
+  </div>
+
+  <div class="compare-grid">
+    <div class="compare-card compare-left">
+      <h4>🔴 שמאל כלכלי<br><small style="font-weight:500;font-size:11px">(סוציאל-דמוקרטי)</small></h4>
+      <div class="compare-item"><strong>תפקיד המדינה:</strong> לדאוג לרווחת אזרחיה, לספק שירותים ציבוריים ברמה גבוהה</div>
+      <div class="compare-item"><strong>מדיניות מס:</strong> נטל מס גבוה – לצורך מימון שירותים ציבוריים</div>
+      <div class="compare-item"><strong>שוויון:</strong> עידוד משמעותי של שוויון ברמת חיים, צמצום פערים חברתיים</div>
+      <div class="compare-item"><strong>השקעות:</strong> השקעות ממשלתיות גבוהות</div>
+      <div class="compare-item"><strong>ביטחון סוציאלי:</strong> מתן "רשת ביטחון" לאזרחים</div>
+      <div class="compare-item"><strong>דוגמאות:</strong> שוודיה, דנמרק, נורווגיה, פינלנד</div>
+    </div>
+    <div class="compare-card compare-right">
+      <h4>🔵 ימין כלכלי<br><small style="font-weight:500;font-size:11px">(ניאו-ליברלי)</small></h4>
+      <div class="compare-item"><strong>תפקיד המדינה:</strong> לא להתערב, לתת לכוחות השוק לפעול ביעילות</div>
+      <div class="compare-item"><strong>מדיניות מס:</strong> נטל מס נמוך – לעודד עבודה, השקעות ויזמות</div>
+      <div class="compare-item"><strong>שוויון:</strong> הטלת אחריות להצלחה על האינדיבידואל</div>
+      <div class="compare-item"><strong>השקעות:</strong> תחרות, גם בעולם ההשקעות – לתפיסת הימין הכלכלי, מעודדת חדשנות</div>
+      <div class="compare-item"><strong>הנחת יסוד:</strong> השוק הפרטי יעיל ממשק הציבורי בניהול ובניצול משאבים</div>
+      <div class="compare-item"><strong>דוגמאות:</strong> ארה"ב, יפן, אוסטרליה, שווייץ</div>
+    </div>
+  </div>
+
+  <div class="highlight highlight-gold">
+    <span class="hl-icon">📌</span> <strong>מדד עזר נפוץ:</strong> שיעור הוצאות הממשלה כ-% מהתוצר – ככל שגבוה יותר, כך המדינה מתקרבת לעולם הסוציאל-דמוקרטי (שמאל). ככל שנמוך יותר – לניאו-ליברלי (ימין).
+  </div>
+
+  <div class="takeaway">
+    <h4>💡 טייק-אווי – ימין/שמאל כלכלי</h4>
+    <ul>
+      <li>ימין/שמאל כלכלי = קיצוניות בגישה לתפקיד המדינה בכלכלה, לא רק עניין טכני.</li>
+      <li>המדיניות הפיסקלית (תקציב, יעדי גירעון, מיסוי) נגזרת גם מהתפיסה הפוליטית-חברתית.</li>
+      <li>הוצאות ממשלה גבוהות + מסים גבוהים = ניתן לשמור גירעון נמוך (שמאל עם משמעת).</li>
+      <li>הוצאות נמוכות + מסים נמוכים = ניתן לשמור גירעון נמוך (ימין עם משמעת).</li>
+      <li>הוצאות גבוהות + מסים נמוכים = גירעון גבוה ← בעיה מכל גישה!</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 9: ISRAEL -->
+<!-- ============================================================ -->
+<div class="section" id="s9">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <div class="section-title">ישראל – היכן על הציר?</div>
+  </div>
+
+  <div class="card card-accent-gold">
+    <h3>🇮🇱 ישראל – "במקום באמצע"</h3>
+    <p>ישראל מוגדרת כלכלית <strong>באמצע הציר</strong>. אחד המדדים המשמשים לכך: <strong>שיעור הוצאות הממשלה כ-% מהתוצר.</strong></p>
+    <p>ישראל כ-45% מהתוצר (2024), גבוה ממדינות ימין כלכלי כמו ארה"ב (37%) ושווייץ (32%), אך נמוך ממדינות שמאל כמו צרפת (57%) ושוודיה (52%). ב-2024 עלה שיעור ההוצאה בגלל הוצאות ביטחון גבוהות.</p>
+  </div>
+
+  <!-- Bar chart -->
+  <div class="card">
+    <h3>📊 הוצאות ממשלה כ-% מהתוצר (2024)</h3>
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">🇫🇷 צרפת</div>
+        <div class="bar-track"><div class="bar-fill bar-left" style="width:86%">57%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇸🇪 שוודיה</div>
+        <div class="bar-track"><div class="bar-fill bar-left" style="width:78%">52%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇩🇰 דנמרק</div>
+        <div class="bar-track"><div class="bar-fill bar-left" style="width:76%">51%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇩🇪 גרמניה</div>
+        <div class="bar-track"><div class="bar-fill bar-left" style="width:72%" style="background:linear-gradient(to right,#8e44ad,#9b59b6)">48%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇮🇱 ישראל</div>
+        <div class="bar-track"><div class="bar-fill bar-il" style="width:67%">~45%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇬🇧 בריטניה</div>
+        <div class="bar-track"><div class="bar-fill bar-right" style="width:66%">44%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇺🇸 ארה"ב</div>
+        <div class="bar-track"><div class="bar-fill bar-right" style="width:55%">37%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇦🇺 אוסטרליה</div>
+        <div class="bar-track"><div class="bar-fill bar-right" style="width:52%">35%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">🇨🇭 שווייץ</div>
+        <div class="bar-track"><div class="bar-fill bar-right" style="width:47%">32%</div></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--text-muted)">
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:10px;background:#e74c3c;border-radius:2px;display:inline-block"></span> שמאל כלכלי</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:10px;background:#3498db;border-radius:2px;display:inline-block"></span> ימין כלכלי</span>
+      <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:10px;background:var(--gold);border-radius:2px;display:inline-block"></span> ישראל</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:6px">מקור: IMF, Trading Economics, 2024. הוצאות ישראל עלו משמעותית ב-2024 בשל הוצאות ביטחון.</div>
+  </div>
+
+  <div class="highlight highlight-gold">
+    <span class="hl-icon">🇮🇱</span> <strong>מדוע ישראל זקוקה במיוחד למשמעת תקציבית?</strong><br>
+    הוצאות ביטחון גבוהות שיכולות "לרוץ" ללא תקרת הוצאה · כלכלת הייטק מבוססת עם תנודתיות בגביית מסים · לחצים קואליציוניים · מניעת אינפלציה גבוהה מדי · הצורך לזכות באמון עולמי.
+  </div>
+
+  <div class="takeaway">
+    <h4>💡 טייק-אווי – ישראל</h4>
+    <ul>
+      <li>ישראל נמצאת <strong>במרכז הציר</strong> – לא קיצונית לכיוון כלשהו.</li>
+      <li>מדד ההוצאות כ-% מהתוצר הוא אינדיקציה לגישה הכלכלית, לא חוק.</li>
+      <li>ישראל ייחודית: צרכי ביטחון גבוהים + כלכלת הייטק תנודתית = חובה למסגרת תקציבית חזקה.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SECTION 10: FINAL SUMMARY -->
+<!-- ============================================================ -->
+<div class="section" id="s10">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <div class="section-title">סיכום כללי – הכל ביחד</div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">🔑 שתי בדיקות לאישור תקציב</div>
+    <div class="formula-main" style="font-size:17px">
+      1️⃣ &nbsp; G ≤ G<sub>MAX</sub> = T + (יעד% × תוצר צפוי) &nbsp;&nbsp;&nbsp; [יעד גירעון]<br>
+      2️⃣ &nbsp; G ≤ תקרת ההוצאה &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [תקרה]
+    </div>
+    <div class="formula-sub">חובה לעמוד בשתיהן. כישלון באחת = אי-אישור התקציב.</div>
+  </div>
+
+  <div class="summary-box">
+    <h3>📌 כל מה שצריך לזכור – בטבלה אחת</h3>
+    <table class="data-table">
+      <thead>
+        <tr><th>נושא</th><th>הגדרה</th><th>נוסחה/כלל</th><th>נקודה מרכזית</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>גירעון</strong></td>
+          <td>G − T</td>
+          <td>גירעון = הוצאות − מסים</td>
+          <td>גירעון מצטבר → חוב → פרמיית סיכון</td>
+        </tr>
+        <tr>
+          <td><strong>יעד גירעון</strong></td>
+          <td>% מהתוצר, דינמי</td>
+          <td>G ≤ T + BD</td>
+          <td>תלוי ברצות – עולה עם המסים</td>
+        </tr>
+        <tr>
+          <td><strong>תקרת הוצאה</strong></td>
+          <td>סכום מוחלט בחוק</td>
+          <td>G ≤ תקרה</td>
+          <td>אוטונומי – לא תלוי ברצות</td>
+        </tr>
+        <tr>
+          <td><strong>תוצר נמוך</strong></td>
+          <td>T יורד → G_MAX יורד</td>
+          <td>קשה לעמוד ביעד גירעון</td>
+          <td>תקרת הוצאה לא מושפעת</td>
+        </tr>
+        <tr>
+          <td><strong>שמאל כלכלי</strong></td>
+          <td>רווחה, מסים גבוהים</td>
+          <td>הוצאות/תוצר גבוה</td>
+          <td>שוודיה, דנמרק, צרפת</td>
+        </tr>
+        <tr>
+          <td><strong>ימין כלכלי</strong></td>
+          <td>שוק חופשי, מסים נמוכים</td>
+          <td>הוצאות/תוצר נמוך</td>
+          <td>ארה"ב, שווייץ, אוסטרליה</td>
+        </tr>
+        <tr>
+          <td><strong>ישראל</strong></td>
+          <td>~45% מהתוצר (2024)</td>
+          <td>מרכז הציר</td>
+          <td>צרכי ביטחון, הייטק, קואליציה</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Final big takeaway -->
+  <div class="takeaway">
+    <h4>🏆 סיכום – טייק-אוויז מרכזיים מהרצאה 7</h4>
+    <ul>
+      <li><strong>גירעון = G − T.</strong> גירעון מצטבר = חוב גדל = פרמיית סיכון גבוהה = ריבית יקרה.</li>
+      <li><strong>יעד הגירעון</strong> הוא "הבלמים" – מגיב לתנאי הכלכלה (רצות), מונע גירעון ממצטבר.</li>
+      <li><strong>תקרת ההוצאה</strong> היא "מהירות מרבית" – קבועה בחוק, מונעת בזבוז בכל מצב כלכלי.</li>
+      <li>ביחד – שני הכלים מספקים משמעת תקציבית "משני הצדדים".</li>
+      <li>כדי לאשר תקציב: G ≤ T + BD <strong>וגם</strong> G ≤ תקרת הוצאה – חייב לעמוד בשניהם.</li>
+      <li>תוצר נמוך מהצפי → G_MAX קטן → קשה לעמוד ביעד הגירעון. תקרת ההוצאה לא מושפעת.</li>
+      <li>גירעון נמוך ≠ שירותים ציבוריים מועטים – עם מסים גבוהים ניתן לממן הרבה שירותים בגירעון נמוך.</li>
+      <li>ישראל – אמצע הציר (~45% GDP), אך נדרשת משמעת תקציבית ייחודית: ביטחון + הייטק + לחצים.</li>
+    </ul>
+  </div>
+
+  <!-- Self-test section -->
+  <div class="card card-accent-purple">
+    <h3>🧠 בחינה עצמית – שאלות חשיבה</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">?</div>
+        <div class="step-content">מדינה עם תוצר 500, יעד גירעון 4%, מסים 200, הוצאה 222 ותקרת הוצאה 230 – האם התקציב יאושר?<br><small style="color:var(--text-muted)">רמז: G_MAX = 200 + 4%×500 = 220 → 222 > 220 → לא עומד ביעד הגירעון → לא יאושר!</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">?</div>
+        <div class="step-content">מדינה עם הוצאות גבוהות ומסים גבוהים – האם בהכרח גירעון גבוה? הסבירו.<br><small style="color:var(--text-muted)">רמז: גירעון = G − T. אם G גבוה אבל T גבוה בהתאמה → גירעון יכול להיות קטן.</small></div>
+      </div>
+      <div class="step">
+        <div class="step-num">?</div>
+        <div class="step-content">מדוע ישראל זקוקה לתקרת הוצאה גם בנוסף ליעד הגירעון?<br><small style="color:var(--text-muted)">רמז: הוצאות ביטחון יכולות "לרוץ" בלי בלם, לחצים קואליציוניים, תנודות בגביית מסים מהייטק.</small></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:18px 0 4px;color:var(--text-muted);font-size:12px">
+    הרצאה 5 · מאקרו-כלכלה · ד"ר צבאן | © עיבוד אינטראקטיבי
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<script>
+function toggleAcc(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.accordion-header.open').forEach(h => {
+    h.classList.remove('open');
+    h.nextElementSibling.classList.remove('open');
+  });
+  // Open clicked if was closed
+  if (!isOpen) {
+    header.classList.add('open');
+    body.classList.add('open');
+  }
+}
+
+// Smooth scroll for TOC
+document.querySelectorAll('.toc a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Animate bars on load
+window.addEventListener('load', () => {
+  const fills = document.querySelectorAll('.bar-fill');
+  fills.forEach(fill => {
+    const w = fill.style.width;
+    fill.style.width = '0';
+    setTimeout(() => { fill.style.width = w; }, 300);
+  });
+});
+</script>
+</body>
+</html>
