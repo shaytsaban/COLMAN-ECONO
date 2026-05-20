@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מעבדת המקרו-כלכלה האינטראקטיבית: חוב ומדיניות פיסקאלית</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']],
+                processEscapes: true
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #f8fafc;
+            line-height: 1.35;
+        }
+        .no-break {
+            white-space: nowrap;
+            display: inline-block;
+            direction: ltr;
+        }
+        /* אנימציות חשיפה והתרחבות חלקות בסגנון Brilliant */
+        .reveal-box {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+        .reveal-box.open {
+            max-height: 2000px;
+            opacity: 1;
+        }
+        /* עיצוב תחנות התקדמות פדגוגיות */
+        .process-node {
+            border-right: 4px solid #e2e8f0;
+            padding-right: 20px;
+            position: relative;
+            transition: border-color 0.4s ease;
+        }
+        .process-node.active {
+            border-color: #3b82f6;
+        }
+        .process-node::before {
+            content: '';
+            position: absolute;
+            right: -6.5px;
+            top: 6px;
+            width: 9px;
+            height: 9px;
+            background-color: #cbd5e1;
+            border-radius: 50%;
+            transition: all 0.4s ease;
+        }
+        .process-node.active::before {
+            background-color: #3b82f6;
+            transform: scale(1.3);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+        }
+        /* כפתורי מסיחים אחידים לחלוטין ללא שום הבדל ויזואלי התחלתי */
+        .opt-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: right;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            font-weight: 400; /* אחיד לחלוטין */
+        }
+        .opt-card:hover:not(:disabled) {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.05);
+        }
+        .opt-card:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+        
+        /* אנימציות CSS ייחודיות - חגיגות קונפטי ואימוג'ים זזים */
+        @keyframes successPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes celebrateEmoji {
+            0% { transform: translateY(20px) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(20deg); opacity: 0; }
+        }
+        @keyframes floatEffect {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        .anim-pop {
+            animation: successPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        .anim-float {
+            animation: floatEffect 3.5s infinite ease-in-out;
+        }
+        .floating-emoji {
+            position: absolute;
+            animation: celebrateEmoji 1.4s ease-out forwards;
+            pointer-events: none;
+            font-size: 28px;
+            z-index: 50;
+        }
+
+        /* מבנה תרשימי זרימה פיסקאליים */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+        }
+        @media (min-width: 768px) {
+            .flow-container {
+                flex-direction: row;
+                align-items: stretch;
+                gap: 10px;
+            }
+        }
+        .flow-step-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .flow-step-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 12px 20px -5px rgba(0,0,0,0.04);
+            transform: translateY(-2px);
+        }
+        .flow-arrow-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #cbd5e1;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        @media (max-width: 767px) {
+            .flow-arrow-indicator {
+                transform: rotate(90deg);
+                margin: -4px 0;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased p-3 md:p-6 bg-slate-50/50">
+
+    <div class="max-w-4xl mx-auto mb-8 bg-white border border-slate-200 rounded-3xl p-6 shadow-[0_4px_30px_rgba(0,0,0,0.02)] relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-36 h-36 bg-blue-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="flex items-center gap-4">
+                <div class="p-4 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-2xl shadow-xl shadow-blue-500/10 anim-float">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">מעבדת המקרו-כלכלה האינטראקטיבית</h1>
+                    <p class="text-xs text-slate-500 mt-1 max-w-xl leading-relaxed">למידה חווייתית ואינטואיטיבית המבוססת על אנלוגיית "העוגה והפרוסה". פתור את 10 שאלות המפתח וקבל משוב מיידי המפרק כל שלב ללוגיקה פשוטה ומובנת.</p>
+                </div>
+            </div>
+            
+            <div class="bg-slate-50 border border-slate-200/60 rounded-2xl p-4 text-center min-w-[190px] self-stretch md:self-auto shadow-inner">
+                <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">מדד הצלחה כללי</span>
+                <span class="text-3xl font-black text-slate-800 my-1 block font-mono" id="lab-counter">0/10</span>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden mt-2 relative">
+                    <div id="lab-progress-bar" class="bg-gradient-to-r from-blue-500 to-indigo-600 h-full w-0 transition-all duration-500 ease-out"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto space-y-8 pb-20">
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-1">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg">שאלה 1 (מקורית)</span>
+                    <span class="text-xs text-slate-400 font-medium">ניתוח טענות מבחן</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-bolt text-[10px]"></i> קושי: בינוני</span>
+            </div>
+            
+            <h3 class="font-extrabold text-slate-900 mb-3 text-base leading-snug">להלן מספר טענות בנוגע לנושאים שונים שנלמדו בקורס. בחן את נכונותן הכלכלית:</h3>
+            
+            <div class="space-y-2.5 mb-5 bg-slate-50/60 p-4 rounded-xl border border-slate-100 text-xs text-slate-700 leading-relaxed">
+                <p><strong>טענה I:</strong> כאשר הממשלה שומרת על גירעון תקציבי נמוך לאורך שנים, אז מצד אחד הוצאות הריבית של הממשלה יורדות, אך מנגד רמת השירותים שאזרחי המדינה מקבלים מהממשלה נפגעת.</p>
+                <p><strong>טענה II:</strong> חריגה מיעד הגירעון עלולה להיגרם כתוצאה מכך שהצמיחה בפועל נמוכה מהצמיחה שנחזתה בתחילת השנה.</p>
+                <p><strong>טענה III:</strong> עליה בגירעון התקציבי כאחוז מהתוצר תגרום בהכרח לעליה ביחס חוב תוצר.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(1, 'א', false)" class="opt-card flex items-center justify-between group"><span>א. רק טענות I ו-II נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(1, 'ב', false)" class="opt-card flex items-center justify-between group"><span>ב. רק טענות II ו-III נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(1, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. כל הטענות נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(1, 'ד', true)" class="opt-card flex items-center justify-between group"><span>ד. רק טענה II נכונה.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(1, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: מילים מוחלטות ומטעות</button>
+                <button onclick="toggleHintBox(1, 2)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5 hidden" id="hint-btn-1-2"><i class="fa-solid fa-lightbulb text-sm"></i> רמז 2: משקל העוגה</button>
+                <button onclick="activateSteps(1)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-1"><i class="fa-solid fa-stairs text-sm"></i> פתרון שלב-אחר-שלב</button>
+            </div>
+
+            <div id="hint-box-1-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-2xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>אינטואיציה פשוטה:</strong> שים לב לטענה I. האם הדרך היחידה להוריד גירעון היא לקצץ שירותים? ממשלה יכולה להקטין גירעון פשוט על ידי העלאת מסים או נהירה של משקיעים וצמיחה בשוק, מבלי לפגוע בשום שירות לאזרח.
+            </div>
+            <div id="hint-box-1-2" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-2xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>מבט על החוב:</strong> יחס חוב-תוצר הוא כמו נתח מעוגה. אם העוגה (התוצר) גדלה בקצב מטורף ומהיר בהרבה מהגירעון שהתווסף, אחוז החוב מהעוגה דווקא יקטן! לכן המילה "בהכרח" בטענה III שגויה.
+            </div>
+
+            <div id="steps-area-1" class="mt-5 space-y-3 hidden">
+                <div id="node-1-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">שלב 1: פסילת טענות הקיצון (I ו-III)</span>
+                    <p class="text-slate-600 leading-relaxed">הסבר אינטואיטיבי: טענה I נפסלת כי גירעון נמוך אינו פוגע "בהכרח" בשירותים, הממשלה יכולה להעלות מסים במקום לקצץ. טענה III נפסלת כי יחס חוב-תוצר תלוי בקצב צמיחת הכלכלה כולה. אם המדינה צומחת מהר, היחס יורד גם כשיש גירעון בשל הגדלת העוגה הכלכלית הכוללת.</p>
+                    <button onclick="openNextProcessNode(1, 2)" class="mt-2 text-[11px] font-bold text-blue-600 hover:underline">המשך לשלב 2 &larr;</button>
+                </div>
+                
+                <div id="node-1-2" class="process-node text-xs bg-slate-50 p-4 rounded-xl reveal-box">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">שלב 2: אישוש טענה II ותרשים זרימה לוגי</span>
+                    <p class="text-slate-600 leading-relaxed">טענה II נכונה לחלוטין: כשהכלכלה צומחת פחות מהצפוי, האזרחים והחברות מרוויחים פחות ולכן משלמים פחות מסים למדינה. מכיוון שהוצאות הממשלה נקבעו מראש והן קשיחות, נוצר חור בתקציב שמוביל ישירות לחריגה מהגירעון.</p>
+                    
+                    <div class="mt-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-red-50 border-red-200 text-red-900"><i class="fa-solid fa-arrow-trend-down text-lg mb-1 text-red-500"></i><span class="font-bold text-[11px]">הצמיחה חלשה מהתחזית</span></div>
+                            <div class="flow-arrow-indicator"><i class="fa-solid fa-chevron-left md:block hidden"></i><i class="fa-solid fa-chevron-down md:hidden block"></i></div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><i class="fa-solid fa-coins text-lg mb-1 text-amber-500"></i><span class="font-bold text-[11px]">תקבולי המסים צונחים אוטומטית</span></div>
+                            <div class="flow-arrow-indicator"><i class="fa-solid fa-chevron-left md:block hidden"></i><i class="fa-solid fa-chevron-down md:hidden block"></i></div>
+                            <div class="flow-step-card bg-slate-50 border-slate-200 text-slate-800"><i class="fa-solid fa-lock text-lg mb-1 text-slate-400"></i><span class="font-bold text-[11px]">הוצאות הממשלה נעולות בשקלים</span></div>
+                            <div class="flow-arrow-indicator"><i class="fa-solid fa-chevron-left md:block hidden"></i><i class="fa-solid fa-chevron-down md:hidden block"></i></div>
+                            <div class="flow-step-card bg-rose-50 border-rose-200 text-rose-900"><i class="fa-solid fa-circle-exclamation text-lg mb-1 text-rose-500"></i><span class="font-bold text-[11px] text-rose-700 font-extrabold">חריגה מעבר ליעד הגירעון</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-3">מסקנה פדגוגית: רק טענה II נכונה. התשובה היא ד'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-2">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg">שאלה 2 (מקורית)</span>
+                    <span class="text-xs text-slate-400 font-medium">כלים פיסקאליים בשוק</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-bolt text-[10px]"></i> קושי: קל</span>
+            </div>
+            
+            <h3 class="font-extrabold text-slate-900 mb-3 text-base leading-snug">להלן מספר טענות בנוגע למדיניות פיסקאלית של ממשלות במצבי משק משתנים. בחן את נכונותן:</h3>
+            
+            <div class="space-y-2.5 mb-5 bg-slate-50/60 p-4 rounded-xl border border-slate-100 text-xs text-slate-700 leading-relaxed">
+                <p><strong>טענה I:</strong> מדיניות פיסקאלית מרחיבה ננקטת בתקופות של מיתון כלכלי כאשר המשק נמצא במצב של אבטלה.</p>
+                <p><strong>טענה II:</strong> הגדלת מיסים הינה אחת מהדרכים שבהן ממשלות נוקטות כאשר הן מבצעות מדיניות פיסקאלית מרחיבה.</p>
+                <p><strong>טענה III:</strong> מדיניות פיסקאלית מצמצמת ננקטת בתקופות של מיתון כלכלי, כאשר הכנסות הממשלה ממיסים נפגעות, הגירעון התקציבי גדל והממשלה נאלצת לצמצם את הוצאותיה בכדי למנוע עליה נוספת בגירעון התקציבי.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(2, 'א', true)" class="opt-card flex items-center justify-between group"><span>א. רק טענה I נכונה.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(2, 'ב', false)" class="opt-card flex items-center justify-between group"><span>ב. רק טענות I ו-II נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(2, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. רק טענה III נכונה.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(2, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. כל הטענות אינן נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(2, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: מהות הזרמת הדלק לשוק</button>
+                <button onclick="activateSteps(2)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-2"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-2-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>ההיגיון מאחורי המילה "הרחבה":</strong> מדיניות מרחיבה נועדה להזריק דלק, כסף וביקושים לשוק מנומנם כדי להילחם באבטלה. האם לקיחת עוד כסף מהכיס של הציבור (העלאת מסים) מעודדת אותם לבזבז ולייצר מקומות עבודה חדשים, או שהיא עושה בדיוק את ההפך וחונקת את הכלכלה?
+            </div>
+
+            <div id="steps-area-2" class="mt-4 space-y-3 hidden">
+                <div id="node-2-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">הסבר רציונלי מלא ותרשים זרימה</span>
+                    <p class="text-slate-600 leading-relaxed">בזמן מיתון ואבטלה, הממשלה מעוניינת להמריץ את המשק על ידי הזרמת כספים (הרחבה), ולכן טענה I נכונה. הגדלת מסים חונקת את כוח הקנייה ולכן היא כלי מצמצם (פסילת טענה II). קיצוץ הוצאות הממשלה בזמן משבר (טענה III) רק מעמיק את המיתון ומחמיר את מצב האזרחים, ולכן אינו המדיניות המייצבת הרצויה במקרו-כלכלה.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-blue-50 border-blue-200 text-blue-900"><span class="font-bold text-[11px]">משק באבטלה ומיתון</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-emerald-50 border-emerald-200 text-emerald-900"><span class="font-bold text-[11px]">מדיניות מרחיבה:</span><span class="text-[10px] text-slate-500 mt-0.5 leading-tight">הממשלה מגדילה הוצאות או מורידה מסים</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-indigo-50 border-indigo-200 text-indigo-900"><span class="font-bold text-[11px]">תוצאה משקית:</span><span class="text-[10px] text-slate-500 mt-0.5 leading-tight">הציבור מקבל כסף פנוי, הביקושים עולים</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא א' (רק טענה I נכונה).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-3">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg">שאלה 3 (מקורית)</span>
+                    <span class="text-xs text-slate-400 font-medium">חישוב גירעון דינמי</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-calculator text-[10px]"></i> קושי: חישובי מורכב</span>
+            </div>
+            
+            <p class="font-bold text-slate-900 mb-3 text-sm leading-relaxed">בעת הכנת התקציב לשנת 2022, העריכו במשרד האוצר כי התוצר בשנה זו יהיה <span class="no-break">600,000 ₪</span>. נטל המס קבוע תמיד על <span class="no-break">26%</span> מהתוצר, ויעד הגירעון המתוכנן נקבע ל-<span class="no-break">4%</span> מהתוצר. במהלך השנה התרחשה צמיחה כלכלית מהירה והתוצר בפועל היה גבוה ב-<span class="no-break">8%</span> מהתחזית הראשונית. בהנחה שהוצאות הממשלה נותרו קשיחות כפי שתוכננו, מה היה הגירעון התקציבי בפועל כאחוז מהתוצר הממשי החדש?</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(3, 'א', true)" class="opt-card flex items-center justify-between group"><span>א. 1.78%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(3, 'ב', false)" class="opt-card flex items-center justify-between group"><span>ב. 1.44%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(3, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. 3.46%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(3, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. 2.92%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(3, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: סוד ההוצאה הנעולה</button>
+                <button onclick="toggleHintBox(3, 2)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5 hidden" id="hint-btn-3-2"><i class="fa-solid fa-lightbulb text-sm"></i> רמז 2: גזירת המסים החדשים</button>
+                <button onclick="activateSteps(3)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-3"><i class="fa-solid fa-stairs text-sm"></i> פתרון שלב-אחר-שלב</button>
+            </div>
+
+            <div id="hint-box-3-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>רציונל קשיחות ההוצאות:</strong> חוק התקציב קובע מראש כמה שקלים הממשלה רשאית להוציא השנה, והסכום השקלי הזה נעול לחלוטין. מצא קודם כל כמה כסף הממשלה תכננה להוציא במקור (סך המסים המתוכננים בשקלים + סך הגירעון המתוכנן בשקלים).
+            </div>
+            <div id="hint-box-3-2" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>הרעיון במציאות החדשה:</strong> כעת חשב את התוצר האמיתי החדש שנוצר בעקבות הצמיחה של ה-8%. גזור ממנו את המסים שבאמת נאספו (26% מהתוצר החדש), והחסר אותם מסך ההוצאה הקשיחה שחישבת ברמז הראשון.
+            </div>
+
+            <div id="steps-area-3" class="mt-4 space-y-3 hidden">
+                <div id="node-3-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">שלב א': שחזור התוכנית המקורית בשקלים</span>
+                    <p class="text-slate-600 leading-relaxed">הממשלה תכננה לאסוף מסים בשווי 26% מתוך 600,000 ₪, שזה שווה ל-156,000 ₪. בנוסף, היא אישרה לעצמה גירעון (חור תקציבי מתוכנן) של 4% מהתוצר, שזה שווה ל-24,000 ₪. 
+                    <br>אם היא אוספת 156,000 ₪ ומלווה עוד 24,000 ₪ – סימן שתוכנית ההוצאה הכוללת שלה נעולה על **180,000 ₪** ואינה משתנה.</p>
+                    <button onclick="openNextProcessNode(3, 2)" class="mt-2 text-[11px] font-bold text-blue-600 hover:underline">המשך לשלב הבא &larr;</button>
+                </div>
+                
+                <div id="node-3-2" class="process-node text-xs bg-slate-50 p-4 rounded-xl reveal-box">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">שלב ב': כניסת הצמיחה המהירה לתמונה</span>
+                    <p class="text-slate-600 leading-relaxed">בפועל התרחשה חגיגה כלכלית והתוצר זינק ב-8% מעל התחזית, כלומר הוא הגיע ל-648,000 ₪. 
+                    <br>מכיוון שנטל המס קבוע על 26%, הממשלה גובה אוטומטית 26% מהתוצר החדש והמוגדל, שזה שווה ל-168,480 ₪. המסים עלו מעצמם!</p>
+                    <button onclick="openNextProcessNode(3, 3)" class="mt-2 text-[11px] font-bold text-blue-600 hover:underline">המשך לחישוב האחוז הסופי &larr;</button>
+                </div>
+
+                <div id="node-3-3" class="process-node text-xs bg-slate-50 p-4 rounded-xl reveal-box">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">שלב ג': חילוץ אחוז הגירעון הממשי החדש</span>
+                    <p class="text-slate-600 leading-relaxed">ההוצאות של הממשלה קפואות על 180,000 ₪. המסים החדשים שנכנסו לקופה הם 168,480 ₪. 
+                    <br>הפער (הגירעון האמיתי בשקלים) הצטמצם ל-11,520 ₪ בלבד!
+                    <br>נבדוק כמה מהווה הגירעון הקטן הזה מתוך התוצר החדש והגדול: 11,520 ₪ מתוך 648,000 ₪ שווים בדיוק ל-**1.78%**.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-50 border-slate-200 text-slate-800"><span class="font-bold text-[11px]">הוצאה נעולה מראש</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">180,000 ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-blue-50 border-blue-200 text-blue-900"><span class="font-bold text-[11px]">תוצר ממשי חדש (+8%)</span><span class="text-[10px] text-blue-600 font-mono mt-0.5">648,000 ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><span class="font-bold text-[11px]">מסים בפועל שנגבו</span><span class="text-[10px] text-amber-600 font-mono mt-0.5">168,480 ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-emerald-50 border-emerald-200 text-emerald-900"><span class="font-bold text-[11px]">אחוז גירעון סופי</span><span class="text-[11px] text-emerald-600 font-black mt-0.5">1.78%</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא א'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-lg">שאלה 4 (מקורית)</span>
+                    <span class="text-xs text-slate-400 font-medium">דינמיקת יחס חוב-תוצר</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-calculator text-[10px]"></i> קושי: חישובי מתקדם</span>
+            </div>
+            
+            <p class="font-bold text-slate-900 mb-3 text-sm leading-relaxed">בסוף שנת 2021 עמד יחס החוב תוצר של ישראל על <span class="no-break">80%</span>. על פי התחזית של בנק ישראל התוצר של ישראל יצמח בשיעור של <span class="no-break">5%</span> בשנת 2022 ויצמח בשיעור של <span class="no-break">3.5%</span> בשנת 2023. כמו כן בהתאם לתחזיות הגירעון התקציבי בשנת 2022 יהיה <span class="no-break">1%</span> מהתוצר ויחס חוב תוצר בסוף שנת 2023 יעמוד על <span class="no-break">78%</span>. מהו הגירעון באחוזי תוצר המשלם והנדרש בשנת 2023?</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(4, 'א', false)" class="opt-card flex items-center justify-between group"><span>א. 4.28%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(4, 'ב', true)" class="opt-card flex items-center justify-between group"><span>ב. 3.42%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(4, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. 2.12%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(4, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. 5.14%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(4, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: שחיקת שנה א'</button>
+                <button onclick="toggleHintBox(4, 2)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5 hidden" id="hint-btn-4-2"><i class="fa-solid fa-lightbulb text-sm"></i> רמז 2: השלמת הפאזל</button>
+                <button onclick="activateSteps(4)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-4"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-4-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>אינטואיציית השחיקה:</strong> החוב המקורי הוא 80% מגודל המשק. בשנת 2022 המשק צמח ב-5%, כלומר העוגה גדלה פי 1.05. חלקו היחסי של החוב הישן הצטמק מעצמו ל-80% חלקי 1.05. הוסף לזה את הגירעון החדש של אותה שנה (1%) ותקבל את החוב בסוף 2022.
+            </div>
+            <div id="hint-box-4-2" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>סוף הדרך:</strong> קח את יחס החוב מסוף 2022, ושחוק אותו שוב ב-3.5% (חלק ב-1.035) בגלל צמיחת 2023. אנו יודעים שהחוב הסופי הרשמי חייב לעמוד על 78%. ההפרש החסר הוא בדיוק הגירעון שנוצר ב-2023.
+            </div>
+
+            <div id="steps-area-4" class="mt-4 space-y-3 hidden">
+                <div id="node-4-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">שלב 1: ניתוח שנת 2022 והשחיקה הראשונה</span>
+                    <p class="text-slate-600 leading-relaxed">החוב התחיל ב-80% מהמשק. בגלל שהמשק צמח ב-5%, הפרוסה של החוב הצטמצמה יחסית לעוגה הכללית: $80\% / 1.05 = 76.19\%$. 
+                    <br>במהלך השנה הממשלה יצרה גירעון חדש של 1% שהתווסף ישירות לחוב, ולכן סיימנו את שנת 2022 עם יחס חוב של: $76.19\% + 1\% = 77.19\%$.</p>
+                    <button onclick="openNextProcessNode(4, 2)" class="mt-2 text-[11px] font-bold text-blue-600 hover:underline">המשך לשנת 2023 &larr;</button>
+                </div>
+                
+                <div id="node-4-2" class="process-node text-xs bg-slate-50 p-4 rounded-xl reveal-box">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">שלב 2: ניתוח שנת 2023 ומציאת הגירעון המשלים</span>
+                    <p class="text-slate-600 leading-relaxed">פתחנו את שנת 2023 עם חוב של 77.19%. השנה הכלכלה צמחה ב-3.5%, ולכן החוב הישן נשחק שוב: $77.19\% / 1.035 = 74.58\%$.
+                    <br>בדוח הממשלתי כתוב שהגענו בסוף השנה בדיוק ל-78%. מהו רכיב הפאזל החסר שהקפיץ אותנו מ-74.58% ל-78%? זהו בדיוק הגירעון של אותה שנה: $78\% - 74.58\% = 3.42\%$.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-50 border-slate-200 text-slate-800"><span class="font-bold text-[11px]">מוצא 2021</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">80.00%</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-blue-50 border-blue-200 text-blue-900"><span class="font-bold text-[11px]">סוף שנת 2022</span><span class="text-[10px] text-blue-600 font-mono mt-0.5">77.19%</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><span class="font-bold text-[11px]">שחיקת 2023</span><span class="text-[10px] text-amber-600 font-mono mt-0.5">74.58%</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-emerald-50 border-emerald-200 text-emerald-900"><span class="font-bold text-[11px]">גירעון 2023 נדרש</span><span class="text-[11px] text-emerald-600 font-black mt-0.5">3.42%</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא ב'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-5">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg">שאלה 5 (חדשה)</span>
+                    <span class="text-xs text-slate-400 font-medium">זיהוי מייצבים מובנים</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-shapes text-[10px]"></i> קושי: בינוני</span>
+            </div>
+            
+            <h3 class="font-extrabold text-slate-900 mb-3 text-base leading-snug">אילו מהמנגנונים הפיסקאליים הבאים מוגדרים כמייצבים אוטומטיים (Automatic Stabilizers) הפועלים בכוחות עצמם ללא שינויי חקיקה מיוחדים?</h3>
+            
+            <div class="space-y-2.5 mb-5 bg-slate-50/60 p-4 rounded-xl border border-slate-100 text-xs text-slate-700 leading-relaxed">
+                <p><strong>מנגנון א':</strong> מערכת מס הכנסה פרוגרסיבית שבה אחוז המס עולה ככל שההכנסה של האזרח גבוהה יותר.</p>
+                <p><strong>מנגנון b':</strong> אישור חוק מענקי חירום מיוחדים ומענקי מזומן בכנסת במהלך משבר פיננסי בלתי צפוי.</p>
+                <p><strong>מנגנון ג':</strong> קצבאות ודמי אבטלה המשולמים אוטומטית מהביטוח הלאומי לכל אזרח שמאבד את עבודתו.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(5, 'א', false)" class="opt-card flex items-center justify-between group"><span>א. רק מנגנון א' נכון.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(5, 'ב', true)" class="opt-card flex items-center justify-between group"><span>ב. רק מנגנונים א' וג' נכונים.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(5, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. רק מנגנונים א' וב' נכונים.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(5, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. כל המנגנונים הם מייצבים אוטומטיים.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(5, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: ההבדל בין חוק קיים לחוק חדש</button>
+                <button onclick="activateSteps(5)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-5"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-5-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>לב העניין:</strong> המילה "אוטומטי" פירושה שהמערכת מגיבה מיד ללא מגע יד אדם. אם פוליטיקאים צריכים להתכנס, להצביע בוועדות ולחוקק חוק ייעודי למענקים (כמו במנגנון ב'), זו מדיניות יזומה ולא מייצב אוטומטי.
+            </div>
+
+            <div id="steps-area-5" class="mt-4 space-y-3 hidden">
+                <div id="node-5-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">הסבר אינטואיטיבי ותרשים תהליך</span>
+                    <p class="text-slate-600 leading-relaxed">מס פרוגרסיבי ודמי אבטלה כבר כתובים בספר החוקים. כשהמשק נכנס למיתון, ההכנסות של האנשים יורדות ולכן הם משלמים פחות מסים באופן אוטומטי, מה שמשקם את כוח הקנייה שלהם. במקביל, מי שמפוטר מקבל מיד דמי אבטלה שמזרימים כסף חיוני לשוק. מענקי חירום מיוחדים דורשים חקיקה מיוחדת ולכן נפסלים.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-50 border-slate-200 text-slate-800"><span class="font-bold text-[11px]">חוקי התקציב הקבועים מראש</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-blue-50 border-blue-200 text-blue-900"><span class="font-bold text-[11px]">שינוי עצמאי ומיידי</span><span class="text-[10px] text-slate-500 mt-0.5 leading-tight">גביית מסים יורדת (א') וקצבאות עולות (ג') מעצמן</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-emerald-50 border-emerald-200 text-emerald-900"><span class="font-bold text-[11px]">תוצאה סופית ממתנת</span><span class="text-[10px] text-slate-500 mt-0.5 leading-tight">בלימה טבעית של עוצמת המשבר הכלכלי</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא ב'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-6">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg">שאלה 6 (חדשה)</span>
+                    <span class="text-xs text-slate-400 font-medium">וריאציה חישובית: הפתעת צמיחה חיובית</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-calculator text-[10px]"></i> קושי: חישובי בינוני</span>
+            </div>
+            
+            <p class="font-bold text-slate-900 mb-3 text-sm leading-relaxed">משרד האוצר תכנן תקציב על בסיס תחזית תוצר של <span class="no-break">500,000 ₪</span>. נטל המס קבוע תמיד על <span class="no-break">30%</span> מהתוצר, ויעד הגירעון המתוכנן הוגדר כ-<span class="no-break">3%</span> מהתוצר. בסוף השנה התברר שהתוצר הפתיע לטובה והיה גבוה ב-<span class="no-break">5%</span> מהצפוי. מה היה אחוז הגירעון בפועל מהתוצר הממשי החדש?</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(6, 'א', false)" class="opt-card flex items-center justify-between group"><span>א. 2.15%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(6, 'ב', true)" class="opt-card flex items-center justify-between group"><span>ב. 1.43%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(6, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. 0.95%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(6, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. 3.00%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(6, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: מציאת סך ההוצאה</button>
+                <button onclick="activateSteps(6)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-6"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-6-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>אינטואיציה פשוטה בשלבים:</strong> 1) חלץ את ההוצאה הקבועה המקורית: הממשלה תכננה מסים של 30% וגירעון של 3%, כלומר סך ההוצאה שלה נעול על 33% מתוך ה-500,000 ₪ המקוריים. 2) מצא את התוצר האמיתי החדש וגזור ממנו 30% מסים חדשים.
+            </div>
+
+            <div id="steps-area-6" class="mt-4 space-y-3 hidden">
+                <div id="node-6-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">פירוק חישובי אינטואיטיבי לחלוטין</span>
+                    <p class="text-slate-600 leading-relaxed">1) סך הוצאות הממשלה שנקבעו מראש: $33\% \times 500,000 = 165,000$ ₪.
+                    <br>2) התוצר בפועל צמח ב-5% והגיע ל-525,000 ₪.
+                    <br>3) המסים שנאספו בפועל מהתוצר הגבוה: $30\% \times 525,000 = 157,500$ ₪.
+                    <br>4) הגירעון בשקלים שנשאר לממשלה לכסות: $165,000 - 157,500 = 7,500$ ₪.
+                    <br>5) נבדוק כמה מהווה החור הזה מהתוצר האמיתי החדש: 7,500 ₪ מתוך 525,000 ₪ שווים בדיוק ל-**1.43%**.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-50 border-slate-200 text-slate-800"><span class="font-bold text-[11px]">$G = 165,000$ ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-blue-50 border-blue-200 text-blue-900"><span class="font-bold text-[11px]">$Y_1 = 525,000$ ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><span class="font-bold text-[11px]">$T_1 = 157,500$ ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-emerald-50 border-emerald-200 text-emerald-900"><span class="font-bold text-[11px]">אחוז גירעון: $1.43\%$</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא ב'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-7">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg">שאלה 7 (חדשה)</span>
+                    <span class="text-xs text-slate-400 font-medium">וריאציה חישובית: חילוץ גירעון במסלול חוב משתנה</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-calculator text-[10px]"></i> קושי: חישובי מורכב</span>
+            </div>
+            
+            <p class="font-bold text-slate-900 mb-3 text-sm leading-relaxed">בסוף שנת 2021 עמד יחס חוב-תוצר של המדינה על <span class="no-break">70%</span>. בשנת 2022 נרשמה במשק צמיחה של <span class="no-break">4%</span> והגירעון הכולל היה <span class="no-break">2%</span> מהתוצר. בשנת 2023 צמח התוצר ב-<span class="no-break">3%</span> נוספים, ויחס החוב-תוצר בסופה התקבע על <span class="no-break">71%</span>. מה היה יחס הגירעון לתוצר בשנת 2023?</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(7, 'א', true)" class="opt-card flex items-center justify-between group"><span>א. 3.71%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(7, 'ב', false)" class="opt-card flex items-center justify-between group"><span>ב. 2.90%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(7, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. 4.12%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(7, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. 1.88%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(7, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: מציאת תחנת האמצע</button>
+                <button onclick="activateSteps(7)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-7"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-7-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>מצא את חוב האמצע בסוף 2022:</strong> קח את חוב הבסיס (70%), שחוק אותו לפי צמיחת שנה א' שהיא 4% (חלק ב-1.04) והוסף את הגירעון של אותה שנה (2%). התוצאה שתקבל תהווה את נקודת המוצא לשנת 2023.
+            </div>
+
+            <div id="steps-area-7" class="mt-4 space-y-3 hidden">
+                <div id="node-7-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">פתרון תהליכי והסבר הגיוני</span>
+                    <p class="text-slate-600 leading-relaxed">שנת 2022: החוב התחיל ב-70% ונשחק בגלל צמיחה של 4%, כלומר הוא ירד ל-67.31%. הממשלה הוסיפה גירעון של 2% ולכן סיימנו את 2022 עם חוב של 69.31%.
+                    <br>שנת 2023: החוב של 69.31% נשחק עקב צמיחה של 3% (חלק ב-1.03) והצטמצם ל-67.29%. נתון שבסוף השנה הגענו ל-71%. הפער המשלים הנוצר בשנה זו הוא בדיוק הגירעון של 2023: $71\% - 67.29\% = 3.71\%$.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-100"><span class="font-bold text-[11px]">מוצא: $70\%$</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-blue-50 border-blue-200 text-blue-900"><span class="font-bold text-[11px]">סוף 2022:</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">69.31%</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><span class="font-bold text-[11px]">שחיקת 2023:</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">67.29%</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-emerald-50 border-emerald-200 text-emerald-900 flex flex-col justify-center items-center text-center p-2 rounded-xl flex-1"><span class="font-bold text-[11px]">גירעון 2023: $3.71\%$</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא א'.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-8">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg">שאלה 8 (חדשה)</span>
+                    <span class="text-xs text-slate-400 font-medium">וריאציה חישובית: השפעת פער מיתון קשה</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-calculator text-[10px]"></i> רמת קושי: חישובי מתקדם</span>
+            </div>
+            
+            <p class="font-bold text-slate-900 mb-3 text-sm leading-relaxed">משרד האוצר תכנן תקציב לשנה הבאה לפי תוצר צפוי של <span class="no-break">400,000 ₪</span>, נטל מס קבוע של <span class="no-break">25%</span> מהתוצר, ויעד גירעון מקורי של <span class="no-break">2%</span> מהתוצר. בפועל, המשק נקלע למשבר עמוק והתוצר הריאלי התכווץ והיה קטן ב-<span class="no-break">4%</span> מהתחזית הראשונית. מה היה יחס הגירעון בפועל מהתוצר הממשי החדש והמצומצם?</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(8, 'א', false)" class="opt-card flex items-center justify-between group"><span>א. 2.08%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(8, 'ב', false)" class="opt-card flex items-center justify-between group"><span>ב. 2.50%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(8, 'ג', true)" class="opt-card flex items-center justify-between group"><span>ג. 3.13%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(8, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. 4.25%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(8, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: רציונל המשבר</button>
+                <button onclick="activateSteps(8)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-8"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-8-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>אינטואיציה למשבר:</strong> הפעם הכלכלה התכווצה (פחות 4% מהתוצר). המסים שהממשלה תגבה בפועל ירדו משמעותיות בשקלים, בעוד שהיא מחויבת להוצאות התקציב המקוריות הגבוהות שלה. הגירעון חייב לזנק! תוצר חדש: $400,000 \times 0.96$.
+            </div>
+
+            <div id="steps-area-8" class="mt-4 space-y-3 hidden">
+                <div id="node-8-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">פירוק המשתנים הפיסקאליים במצב משבר</span>
+                    <p class="text-slate-600 leading-relaxed">1) סך הוצאה קשיחה מתוכננת: $G = (25\% + 2\%) \times 400,000 = 108,000$ ₪.
+                    <br>2) התוצר האמיתי לאחר המיתון התכווץ: $400,000 \times 0.96 = 384,000$ ₪.
+                    <br>3) המסים שנאספו בפועל מהמשק המצומצם: $25\% \times 384,000 = 96,000$ ₪.
+                    <br>4) הגירעון בפועל בשקלים: $108,000 - 96,000 = 12,000$ ₪.
+                    <br>5) אחוז מהתוצר הממשי החדש והמצומצם: 
+                    $$\frac{12,000}{384,000} = 3.125\% \rightarrow 3.13\%$$</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-50 border-slate-200 text-slate-800"><span class="font-bold text-[11px]">$G = 108,000$ ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-red-50 border-red-200 text-red-900"><span class="font-bold text-[11px]">תוצר התכווץ:</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">384,000 ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><span class="font-bold text-[11px]">מסים פחותים שנגבו</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">96,000 ₪</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-rose-50 border-rose-200 text-rose-900 flex flex-col justify-center items-center text-center p-2 rounded-xl flex-1"><span class="font-bold text-[11px]">גירעון מורחב: $3.13\%$</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא ג' (3.13%).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-9">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg">שאלה 9 (חדשה)</span>
+                    <span class="text-xs text-slate-400 font-medium">גירעון ראשוני מול כולל</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-layer-group text-[10px]"></i> רמת קושי: בינוני</span>
+            </div>
+            
+            <h3 class="font-extrabold text-slate-900 mb-3 text-base leading-snug">להלן מספר טענות תיאורטיות בנוגע להגדרות הגירעון הממשלתי והשפעות אינפלציה במשק. בחן את נכונותן:</h3>
+            
+            <div class="space-y-2.5 mb-5 bg-slate-50/60 p-4 rounded-xl border border-slate-100 text-xs text-slate-700 leading-relaxed">
+                <p><strong>טענה א':</strong> הגירעון הראשוני (Primary Deficit) מודד את ההפרש בין הוצאות הממשלה ללא תשלומי ריבית על החוב, לבין הכנסותיה ממסים.</p>
+                <p><strong>טענה ב':</strong> אם מדינה שומרת על גירעון ראשוני מאוזן לחלוטין (0), יחס החוב-תוצר שלה יישאר קבוע בהכרח לאורך זמן.</p>
+                <p><strong>טענה ג':</strong> אינפלציה בלתי צפויה מקטינה את הערך הריאלי של חוב ממשלתי נקוב במטבע מקומי שאינו צמוד למדד.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(9, 'א', false)" class="opt-card flex items-center justify-between group"><span>א. רק טענה א' נכונה.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(9, 'ב', true)" class="opt-card flex items-center justify-between group"><span>ב. רק טענות א' וג' נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(9, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. רק טענות א' וב' נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(9, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. כל הטענות אינן נכונות.</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(9, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: רכיב חובות העבר</button>
+                <button onclick="activateSteps(9)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-9"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-9-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>אינטואיציה להבדל המבני:</strong> גירעון ראשוני בודק רק את ההתנהלות השוטפת של השנה. אבל מה לגבי הריבית על הר החובות הישן שהמדינה סוחבת איתה משנים עברו? הריבית הזו ממשיכה לתפוח, ולכן מאזן ראשוני בלבד לא מבטיח שהחוב לא יגדל.
+            </div>
+
+            <div id="steps-area-9" class="mt-4 space-y-3 hidden">
+                <div id="node-9-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">ניתוח קונספטואלי מלא והכרעה</span>
+                    <p class="text-slate-600 leading-relaxed">טענה א' היא ההגדרה האקדמית המדויקת של המונח. טענה ב' שגויה משום שגם אם הגירעון הראשוני מאוזן, תשלומי הריבית הריאלית על חובות העבר ממשיכים להגדיל את החוב הכולל; אם הריבית גבוהה מקצב צמיחת התוצר, יחס החוב-תוצר יעלה. טענה ג' נכונה – אינפלציה בלתי צפויה שוחקת את כוח הקנייה של הכסף, ולכן החזר החוב הנומינלי הקבוע הופך "קל יותר" ריאלית לממשלה.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-50 border-slate-200 text-slate-800"><span class="font-bold text-[11px]">גירעון ראשוני שוטף = 0</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><span class="font-bold text-[11px]">צבירת ריבית ריאלית על חוב עבר</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-red-50 border-red-200 text-red-900"><span class="font-bold text-[11px]">אם הריבית עוקפת את צמיחת המשק</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-rose-50 border-rose-200 text-rose-900 flex flex-col justify-center items-center text-center p-2 rounded-xl flex-1"><span class="font-bold text-[11px]">יחס החוב-תוצר ממשיך לעלות!</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא ב' (טענות א' וג' נכונות).</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-[0_4px_25_rgba(0,0,0,0.02)] transition-all duration-300 relative overflow-hidden" id="card-10">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-xs font-bold bg-blue-50 text-blue-600 px-2.5 py-1 rounded-lg">שאלה 10 (חדשה)</span>
+                    <span class="text-xs text-slate-400 font-medium">וריאציה חישובית: חילוץ נעלם צמיחה מהמודל</span>
+                </div>
+                <span class="text-xs font-bold text-slate-400 flex items-center gap-1"><i class="fa-solid fa-calculator text-[10px]"></i> רמת קושי: חישובי מתקדם</span>
+            </div>
+            
+            <p class="font-bold text-slate-900 mb-3 text-sm leading-relaxed">נניח שיחס חוב-תוצר של מדינה בסוף שנת 2022 עמד על <span class="no-break">60%</span>. בשנת 2023 נוצר במשק גירעון כולל של <span class="no-break">3%</span> מהתוצר. בסוף שנת 2023 התברר כי יחס החוב-תוצר עלה ל-<span class="no-break">61%</span>. מה היה שיעור צמיחת התוצר המדויק באותה שנה?</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-5">
+                <button onclick="submitAnswer(10, 'א', true)" class="opt-card flex items-center justify-between group"><span>א. 3.45%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(10, 'ב', false)" class="opt-card flex items-center justify-between group"><span>ב. 1.64%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(10, 'ג', false)" class="opt-card flex items-center justify-between group"><span>ג. 5.00%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+                <button onclick="submitAnswer(10, 'ד', false)" class="opt-card flex items-center justify-between group"><span>ד. 2.10%</span><div class="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center text-transparent bg-slate-50 group-hover:border-blue-400"><i class="fa-solid fa-check text-[10px]"></i></div></button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-4">
+                <button onclick="toggleHintBox(10, 1)" class="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1.5"><i class="fa-regular fa-lightbulb text-sm"></i> רמז 1: בידוד הפוך של השחיקה</button>
+                <button onclick="activateSteps(10)" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5 ml-auto hidden" id="steps-main-btn-10"><i class="fa-solid fa-list-check text-sm"></i> צפה בפירוק השלבים</button>
+            </div>
+
+            <div id="hint-box-10-1" class="reveal-box bg-amber-50/40 border border-amber-200/70 rounded-xl p-4 text-xs mt-3 text-amber-900 leading-relaxed">
+                <strong>בידוד לוגי מהסוף להתחלה:</strong> אנו יודעים שהחוב הסופי הוא 61%, ונוספה אליו השנה תוספת גירעון של 3%. משמעות הדבר היא שלפני הוספת הגירעון, החוב הישן לאחר שחיקת הצמיחה היה חייב להיות שווה בדיוק ל-$61\% - 3\% = 58\%$. כעת מצא באיזה קצב צמיחה צריך לחלק את ה-60% המקוריים כדי להגיע ל-58% שחוקים.
+            </div>
+
+            <div id="steps-area-10" class="mt-4 space-y-3 hidden">
+                <div id="node-10-1" class="process-node text-xs bg-slate-50 p-4 rounded-xl">
+                    <span class="font-bold text-slate-800 block mb-1 text-sm">חילוץ הצמיחה המדויקת בשלבים</span>
+                    <p class="text-slate-600 leading-relaxed">1) חוב שחוק נדרש (לפני הוספת הגירעון החדש): $61\% - 3\% = 58\%$.
+                    <br>2) אנו יודעים שהקשר בין החוב המקורי לחוב השחוק נקבע על פי גידול העוגה (התוצר הכולל). 
+                    <br>3) נבדוק את היחס הנדרש: 60% חלקי החוב השחוק (58%) נותן לנו בדיוק את מקדם גידול המשק: $\frac{60\%}{58\%} = 1.03448$.
+                    <br>4) המשמעות היא שהמשק גדל פי 1.03448, כלומר שיעור הצמיחה המדויק באותה שנה עמד על **3.45%**.</p>
+                    
+                    <div class="mt-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                        <div class="flow-container">
+                            <div class="flow-step-card bg-slate-100"><span class="font-bold text-[11px]">חוב סופי: 61%, גירעון: 3%</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-blue-50 border-blue-200 text-blue-900"><span class="font-bold text-[11px]">חוב שחוק נדרש:</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">61% - 3% = 58%</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-amber-50 border-amber-200 text-amber-900"><span class="font-bold text-[11px]">מקדם צמיחה מבוקש:</span><span class="text-[10px] text-slate-500 font-mono mt-0.5">60% / 58% = 1.03448</span></div>
+                            <div class="flow-arrow-indicator">&larr;</div>
+                            <div class="flow-step-card bg-emerald-50 border-emerald-200 text-emerald-900 flex flex-col justify-center items-center text-center p-2 rounded-xl flex-1"><span class="font-bold text-[11px]">שיעור צמיחה: 3.45%</span></div>
+                        </div>
+                    </div>
+                    <p class="text-emerald-700 font-extrabold mt-2">התשובה הנכונה היא א'.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const trackedSolvedQuestions = new Set();
+
+        // סימולטור 1: עדכון דינמי של מזרמת התקציב ומצבי המשק
+        function setEngineScenario(scenario) {
+            const factoryIcon = document.getElementById('engine-gdp-icon');
+            const taxText = document.getElementById('engine-tax-text');
+            const defCard = document.getElementById('engine-deficit-card');
+            const defPct = document.getElementById('engine-deficit-pct');
+            const defCash = document.getElementById('engine-deficit-cash');
+            const statusIcon = document.getElementById('engine-status-icon');
+            
+            const btnBoom = document.getElementById('btn-engine-boom');
+            const btnCrash = document.getElementById('btn-engine-crash');
+
+            if (scenario === 'boom') {
+                btnBoom.className = "px-5 py-2.5 bg-blue-600 rounded-xl text-xs font-bold transition shadow-lg shadow-blue-900/50 transform hover:-translate-y-0.5";
+                btnCrash.className = "px-5 py-2.5 bg-slate-800 rounded-xl text-xs font-bold transition hover:bg-slate-700 border border-white/5 transform hover:-translate-y-0.5";
+                
+                factoryIcon.className = "text-3xl text-blue-400 my-2 transition-all duration-500 transform scale-110";
+                taxText.innerText = "מסים שנאספו: 168,480 ₪";
+                defCard.className = "bg-emerald-500/5 p-4 rounded-xl border border-emerald-500/20 flex flex-col justify-between items-center h-36 transition-all duration-500 shadow-md";
+                defPct.innerText = "אחוז מהתוצר: 1.78%";
+                defCash.innerText = "פער בשקלים: 11,520 ₪";
+                defCash.className = "text-[11px] font-bold text-emerald-400 font-mono";
+                statusIcon.className = "text-3xl text-emerald-400 transition-all duration-500";
+                statusIcon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+            } else {
+                btnCrash.className = "px-5 py-2.5 bg-red-600 rounded-xl text-xs font-bold transition shadow-lg shadow-red-900/50 transform hover:-translate-y-0.5";
+                btnBoom.className = "px-5 py-2.5 bg-slate-800 rounded-xl text-xs font-bold transition hover:bg-slate-700 border border-white/5 transform hover:-translate-y-0.5";
+
+                factoryIcon.className = "text-3xl text-slate-500 my-2 transition-all duration-500 transform scale-90";
+                taxText.innerText = "מסים שנאספו: 96,000 ₪";
+                defCard.className = "bg-red-500/10 p-4 rounded-xl border border-red-500/30 flex flex-col justify-between items-center h-36 transition-all duration-500 shadow-lg anim-pulse-glow border-red-500/50 anim-pulse-red";
+                defPct.innerText = "אחוז מהתוצר: 3.13%";
+                defCash.innerText = "פער בשקלים: 12,000 ₪";
+                defCash.className = "text-[11px] font-bold text-red-400 font-mono";
+                statusIcon.className = "text-3xl text-red-500 transition-all duration-500";
+                statusIcon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            }
+        }
+
+        // סימולטור 2: עדכון גיאומטרי של העוגה הכלכלית ושחיקת החוב
+        function triggerCakeErosion() {
+            document.getElementById('bar-cake-gdp').style.width = '100%';
+            document.getElementById('txt-cake-gdp').innerText = "צמיחה ממומשת בפועל (+5%)";
+            
+            document.getElementById('bar-cake-debt').style.width = '76.19%';
+            const debtLabel = document.getElementById('txt-cake-debt');
+            debtLabel.innerText = "76.19% מתוך העוגה (הצטמק!)";
+            debtLabel.className = "text-emerald-400 font-mono font-bold transition-all duration-1000";
+        }
+
+        function resetCakeErosion() {
+            document.getElementById('bar-cake-gdp').style.width = '66.6%';
+            document.getElementById('txt-cake-gdp').innerText = "מצב בסיס התחלתי (100%)";
+            
+            document.getElementById('bar-cake-debt').style.width = '80%';
+            const debtLabel = document.getElementById('txt-cake-debt');
+            debtLabel.innerText = "80.00% מתוך העוגה";
+            debtLabel.className = "text-amber-400 font-mono font-bold";
+        }
+
+        // ניהול רמזים
+        function toggleHintBox(qNum, hintNum) {
+            const box = document.getElementById(`hint-box-${qNum}-${hintNum}`);
+            box.classList.toggle('open');
+            if(hintNum === 1) {
+                const nextBtn = document.getElementById(`hint-btn-${qNum}-2`);
+                if(nextBtn) nextBtn.classList.remove('hidden');
+            }
+        }
+
+        // בדיקת מסיחים וחגיגת מחיאות כפיים אינטראקטיבית בזמן אמת
+        function submitAnswer(qNum, optionLetter, isCorrect) {
+            const card = document.getElementById(`card-${qNum}`);
+            const buttons = card.querySelectorAll('.opt-card');
+            
+            buttons.forEach(btn => {
+                btn.disabled = true; // חסימת לחיצות כפולות
+                if (btn.innerText.trim().startsWith(optionLetter)) {
+                    if (isCorrect) {
+                        btn.className = "opt-card flex items-center justify-between border-emerald-500 bg-emerald-50 text-emerald-900 font-bold shadow-md shadow-emerald-100/50 anim-pop";
+                        btn.querySelector('div').className = "w-5 h-5 rounded-full bg-emerald-500 border-emerald-600 flex items-center justify-center text-white";
+                        btn.querySelector('i').className = "fa-solid fa-circle-check text-[11px]";
+                        
+                        // הפעלת חגיגת המחיאות כפיים והאימוג'ים הזזים בתוך כרטיס השאלה
+                        spawnCelebrationEffects(card);
+                    } else {
+                        btn.className = "opt-card flex items-center justify-between border-rose-400 bg-rose-50 text-rose-900 shadow-sm";
+                        btn.querySelector('div').className = "w-5 h-5 rounded-full bg-rose-500 border-rose-600 flex items-center justify-center text-white";
+                        btn.querySelector('i').className = "fa-solid fa-circle-xmark text-[11px]";
+                    }
+                }
+            });
+
+            if (isCorrect && !trackedSolvedQuestions.has(qNum)) {
+                trackedSolvedQuestions.add(qNum);
+                updateModuleProgressBar();
+            }
+
+            document.getElementById(`steps-main-btn-${qNum}`).classList.remove('hidden');
+            activateSteps(qNum);
+        }
+
+        // פונקציית ייצור האימוג'ים ומחיאות הכפיים הצבעוניות
+        function spawnCelebrationEffects(targetCard) {
+            const emojis = ['👏', '🥳', '🎉', '🌟', '🙌'];
+            for (let i = 0; i < 15; i++) {
+                const element = document.createElement('div');
+                element.className = 'floating-emoji';
+                element.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                
+                // פיזור אקראי ברחבי הכרטיס של השאלה הנוכחית
+                element.style.left = Math.random() * 80 + 10 + '%';
+                element.style.bottom = Math.random() * 20 + 10 + 'px';
+                element.style.animationDelay = Math.random() * 0.4 + 's';
+                
+                targetCard.appendChild(element);
+                
+                // הסרה אוטומטית לאחר סיום האנימציה הויזואלית
+                setTimeout(() => element.remove(), 1200);
+            }
+        }
+
+        function activateSteps(qNum) {
+            const area = document.getElementById(`steps-area-${qNum}`);
+            area.classList.remove('hidden');
+            const initialNode = document.getElementById(`node-${qNum}-1`);
+            if (initialNode) initialNode.classList.add('active');
+            
+            if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+                MathJax.typeset();
+            }
+        }
+
+        function openNextProcessNode(qNum, stepNum) {
+            const node = document.getElementById(`node-${qNum}-${stepNum}`);
+            if (node) {
+                node.classList.remove('hidden');
+                setTimeout(() => {
+                    node.classList.add('open');
+                    node.classList.add('active');
+                }, 10);
+            }
+            if (typeof MathJax !== 'undefined' && MathJax.typeset) {
+                MathJax.typeset();
+            }
+        }
+
+        function updateModuleProgressBar() {
+            const scoreLabel = document.getElementById('lab-counter');
+            const progressFill = document.getElementById('lab-progress-bar');
+            const solvedCount = trackedSolvedQuestions.size;
+            scoreLabel.innerText = `${solvedCount}/10`;
+            progressFill.style.width = `${(solvedCount / 10) * 100}%`;
+        }
+    </script>
+</body>
+</html>
