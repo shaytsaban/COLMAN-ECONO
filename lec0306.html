@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אקדמיית המט״ח — מסע אינטראקטיבי לשוק מטבע החוץ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Secular+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky-0:#eaf9ff;--sky-1:#bfeeff;--sky-2:#7ddcff;--sky-3:#36c4f5;--sky-4:#0aa6e6;--sky-5:#0784c2;
+  --cyan-1:#3df2e8;--cyan-2:#1fe0d8;--cyan-3:#0bbfb6;--cyan-4:#089a92;
+  --ink:#06324a;--ink-2:#0d4a6b;--ink-3:#3b6e88;--paper:#f6fdff;
+  --gold:#ffd34e;--gold-2:#f5a623;--green:#22c977;--green-d:#149656;--red:#ff6b6b;--red-d:#d8453f;
+  --shadow:0 22px 48px -16px rgba(7,73,110,.5);--shadow-sm:0 10px 24px -10px rgba(7,73,110,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Heebo',sans-serif;color:var(--ink);min-height:100vh;line-height:1.55;
+  background:radial-gradient(1100px 560px at 82% -8%,#d9f7ff 0%,transparent 60%),
+    radial-gradient(900px 520px at 8% -4%,#c9f8f3 0%,transparent 55%),
+    linear-gradient(165deg,#d6f4ff 0%,#aee7ff 28%,#86defc 58%,#62d2f6 100%);overflow-x:hidden}
+.bubbles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bubble{position:absolute;border-radius:50%;background:radial-gradient(circle at 32% 30%,rgba(255,255,255,.85),rgba(255,255,255,.04));
+  box-shadow:inset 0 0 22px rgba(255,255,255,.35);animation:rise linear infinite;opacity:.45}
+@keyframes rise{0%{transform:translateY(112vh) scale(.6)}100%{transform:translateY(-15vh) scale(1.05)}}
+.wrap{position:relative;z-index:2;max-width:800px;margin:0 auto;padding:14px 16px 120px}
+
+/* TOP */
+.top{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+  background:linear-gradient(180deg,rgba(214,244,255,.94),rgba(214,244,255,.55));
+  border-radius:0 0 22px 22px;padding:9px 14px 11px;margin:-14px -16px 14px;box-shadow:0 6px 18px -12px rgba(7,73,110,.5)}
+.brand{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.brand .name{font-family:'Secular One',sans-serif;font-size:18px;color:var(--ink);display:flex;align-items:center;gap:7px}
+.brand .name .dot{font-size:21px;animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.stats{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,.85);border:2px solid #fff;border-radius:13px;padding:4px 9px;
+  font-weight:800;font-size:12.5px;display:flex;align-items:center;gap:4px;box-shadow:var(--shadow-sm)}
+.stat b{color:var(--sky-4)}
+.mute{cursor:pointer;background:rgba(255,255,255,.85);border:2px solid #fff;border-radius:50%;
+  width:32px;height:32px;display:grid;place-items:center;font-size:15px;box-shadow:var(--shadow-sm)}
+.xpbar{margin-top:8px;height:11px;background:rgba(255,255,255,.55);border-radius:30px;overflow:hidden;border:1.5px solid rgba(255,255,255,.8);position:relative}
+.xpfill{height:100%;width:0%;border-radius:30px;background:linear-gradient(90deg,var(--cyan-2),var(--sky-3));transition:width .6s cubic-bezier(.3,.8,.3,1);box-shadow:0 0 14px rgba(31,224,216,.6)}
+.xptext{position:absolute;inset:0;display:grid;place-items:center;font-size:9.5px;font-weight:800;color:var(--ink-2)}
+.nav{display:flex;gap:5px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.nav .n{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:52px;max-width:110px;cursor:pointer}
+.nav .n .ic{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:19px;
+  background:rgba(255,255,255,.55);border:2px solid rgba(255,255,255,.85);transition:.3s;color:var(--ink-3)}
+.nav .n.active .ic{background:var(--gold);transform:scale(1.08) translateY(-2px);box-shadow:0 8px 16px -8px var(--gold-2)}
+.nav .n.done .ic{background:linear-gradient(135deg,var(--green),var(--green-d));color:#fff}
+.nav .n:hover .ic{transform:translateY(-2px)}
+.nav .n .lb{font-size:9px;font-weight:700;color:var(--ink-2);text-align:center;line-height:1.05}
+
+/* CARD */
+.card{background:linear-gradient(180deg,#fff,var(--paper));border-radius:26px;padding:23px 21px;
+  box-shadow:var(--shadow);border:3px solid #fff;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;top:-70px;left:-70px;width:170px;height:170px;
+  background:radial-gradient(circle,var(--cyan-1) 0%,transparent 70%);opacity:.16;pointer-events:none}
+.tag{display:inline-flex;align-items:center;gap:6px;background:var(--cyan-3);color:#fff;font-weight:800;
+  font-size:11.5px;padding:5px 12px;border-radius:30px;margin-bottom:10px;box-shadow:0 6px 14px -7px var(--cyan-3)}
+.steptag{float:left;background:rgba(54,196,245,.14);color:var(--sky-5);font-weight:800;font-size:11px;padding:4px 10px;border-radius:20px}
+.h2{font-family:'Secular One',sans-serif;font-size:clamp(21px,4.6vw,29px);color:var(--ink);margin-bottom:8px;line-height:1.18}
+.lead{color:var(--ink-2);font-weight:500;font-size:15px;margin-bottom:13px}
+.lead b,.body b{color:var(--ink);font-weight:800}
+.body{color:var(--ink-2);font-size:14.5px;margin-bottom:11px}
+.defbox{background:linear-gradient(135deg,rgba(54,196,245,.12),rgba(31,224,216,.12));
+  border:2px solid rgba(11,191,182,.3);border-radius:18px;padding:14px 15px;margin:11px 0}
+.defbox .dt{font-family:'Secular One',sans-serif;font-size:15.5px;color:var(--cyan-4);margin-bottom:5px;display:flex;align-items:center;gap:7px}
+.defbox .dd{font-size:14px;color:var(--ink-2)}
+.eg{background:rgba(255,211,78,.16);border-right:5px solid var(--gold-2);border-radius:12px;padding:10px 13px;font-size:13.5px;color:var(--ink-2);margin:10px 0}
+.intuition{background:rgba(11,191,182,.1);border-radius:14px;padding:11px 14px;font-size:13.5px;color:var(--ink-2);margin:10px 0;display:flex;gap:10px}
+.intuition .bulb{font-size:21px;flex-shrink:0}
+.flowtab{width:100%;border-collapse:separate;border-spacing:0;margin:12px 0;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);font-size:13px}
+.flowtab th{padding:10px 8px;font-family:'Secular One',sans-serif;font-size:13.5px;color:#fff}
+.flowtab th.in{background:linear-gradient(135deg,var(--cyan-3),var(--cyan-4))}
+.flowtab th.out{background:linear-gradient(135deg,#ff8a8a,var(--red-d))}
+.flowtab td{padding:8px 10px;background:#fff;border-top:1.5px solid #eef7fb;font-weight:600;color:var(--ink-2)}
+.flowtab td.in{background:rgba(31,224,216,.06)}.flowtab td.out{background:rgba(255,107,107,.06)}
+
+/* BUTTONS */
+.btn{font-family:'Heebo',sans-serif;cursor:pointer;border:none;font-weight:800;border-radius:15px;
+  padding:12px 26px;font-size:15.5px;transition:.16s;background:var(--gold);color:var(--ink);box-shadow:0 7px 0 var(--gold-2)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 9px 0 var(--gold-2)}
+.btn:active{transform:translateY(4px);box-shadow:0 3px 0 var(--gold-2)}
+.btn.blue{background:var(--sky-3);color:#fff;box-shadow:0 7px 0 var(--sky-5)}
+.btn.blue:hover{box-shadow:0 9px 0 var(--sky-5)}.btn.blue:active{box-shadow:0 3px 0 var(--sky-5)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:0 4px 0 #ccc!important}
+.btn.sm{padding:9px 16px;font-size:13.5px;box-shadow:0 5px 0 var(--gold-2)}
+.center{text-align:center;margin-top:15px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:13px}
+
+/* ONBOARDING */
+.field{margin:12px 0;text-align:right}
+.field label{font-weight:800;font-size:13.5px;color:var(--ink-2);display:block;margin-bottom:5px}
+.field input{width:100%;font-family:'Heebo',sans-serif;font-size:16px;padding:13px 15px;border-radius:14px;
+  border:2.5px solid #d7eefb;background:#fff;color:var(--ink);outline:none;transition:.15s}
+.field input:focus{border-color:var(--sky-3);box-shadow:0 0 0 4px rgba(54,196,245,.18)}
+.field .err{color:var(--red-d);font-size:12px;font-weight:700;margin-top:4px;min-height:15px}
+
+/* SORT */
+.pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0 14px;min-height:44px}
+.token{background:#fff;border:2px solid var(--sky-1);border-radius:13px;padding:8px 12px;font-weight:700;
+  font-size:13px;cursor:grab;box-shadow:var(--shadow-sm);transition:.15s;color:var(--ink);user-select:none;touch-action:none}
+.token:hover{border-color:var(--sky-3);transform:translateY(-2px)}
+.token.sel{outline:3px solid var(--gold);outline-offset:1px}
+.token .ico{margin-left:5px}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:8px}
+@media(max-width:520px){.bins{grid-template-columns:1fr}}
+.bin{border-radius:18px;padding:11px;min-height:110px;border:3px dashed;transition:.18s}
+.bin.in{background:rgba(31,224,216,.09);border-color:var(--cyan-3)}
+.bin.out{background:rgba(255,107,107,.09);border-color:var(--red)}
+.bin.over{transform:scale(1.02);box-shadow:var(--shadow-sm)}
+.bin h4{text-align:center;font-family:'Secular One',sans-serif;font-size:15px;margin-bottom:4px}
+.bin.in h4{color:var(--cyan-4)}.bin.out h4{color:var(--red-d)}
+.bin .ar{text-align:center;font-size:21px;display:block}
+.bin .drop{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+
+/* MCQ */
+.scenario{background:linear-gradient(135deg,var(--sky-3),var(--cyan-2));color:#fff;border-radius:16px;
+  padding:15px;font-weight:700;font-size:15.5px;margin-bottom:13px;box-shadow:var(--shadow-sm);text-align:center}
+.lifelines{display:flex;gap:7px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+.life{cursor:pointer;background:#fff;border:2px solid var(--gold);color:var(--gold-2);font-weight:800;font-size:12px;
+  padding:7px 12px;border-radius:30px;display:flex;align-items:center;gap:5px;box-shadow:var(--shadow-sm);transition:.15s}
+.life:hover{transform:translateY(-2px);background:#fffbef}
+.life[disabled]{opacity:.4;cursor:not-allowed;border-color:#ccc;color:#999;transform:none}
+.options{display:grid;gap:9px}
+.opt{background:#fff;border:2.5px solid #e6f6ff;border-radius:14px;padding:12px 14px;cursor:pointer;
+  font-weight:600;font-size:14px;transition:.15s;display:flex;align-items:center;gap:10px;text-align:right}
+.opt:hover{border-color:var(--sky-3);background:#f4fdff;transform:translateX(-3px)}
+.opt .key{background:var(--sky-1);color:var(--ink);font-weight:900;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;flex-shrink:0;font-size:13.5px}
+.opt.correct{background:rgba(34,201,119,.16);border-color:var(--green)}.opt.correct .key{background:var(--green);color:#fff}
+.opt.wrong{background:rgba(255,107,107,.15);border-color:var(--red)}.opt.wrong .key{background:var(--red);color:#fff}
+.opt.lock{pointer-events:none}.opt.gone{opacity:.25;pointer-events:none}
+.fb{margin-top:14px;border-radius:15px;padding:13px 14px;font-weight:600;font-size:14px;display:none}
+.fb.show{display:block;animation:pop .3s ease}
+.fb.good{background:rgba(34,201,119,.13);border-right:5px solid var(--green);color:#10713f}
+.fb.bad{background:rgba(255,107,107,.13);border-right:5px solid var(--red);color:#a8332f}
+.fb b{font-weight:900}
+@keyframes pop{from{transform:scale(.97);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* RANGE / RATE */
+.rateExp,.calc{background:rgba(255,255,255,.6);border-radius:18px;padding:15px;margin:8px 0}
+.rateHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;font-weight:800}
+.rateHead .l{color:var(--cyan-4)}.rateHead .r{color:var(--red-d)}
+.rateVal{text-align:center;margin:5px 0 10px}
+.rateVal .num{font-family:'Secular One',sans-serif;font-size:40px;color:var(--sky-4);transition:.2s}
+.rateVal .unit{font-size:12.5px;color:var(--ink-3);font-weight:700}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:14px;border-radius:30px;
+  background:linear-gradient(90deg,var(--cyan-2),var(--sky-1),var(--red));outline:none;margin:6px 0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:#fff;border:4px solid var(--sky-4);cursor:pointer;box-shadow:var(--shadow-sm)}
+input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:#fff;border:4px solid var(--sky-4);cursor:pointer}
+.shekel{text-align:center;font-size:13px;font-weight:700;margin-top:8px;color:var(--ink-2);min-height:20px}
+.shekelEmoji{font-size:32px;transition:transform .25s}
+.taskrow{display:flex;gap:8px;justify-content:center;margin-top:11px;flex-wrap:wrap}
+.taskchip{background:#fff;border:2px solid #e6f6ff;border-radius:12px;padding:6px 11px;font-size:12px;font-weight:800;color:var(--ink-3)}
+.taskchip.done{background:rgba(34,201,119,.14);border-color:var(--green);color:var(--green-d)}
+.calcgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:11px 0}
+.cbox{background:#fff;border-radius:14px;padding:11px;text-align:center;box-shadow:var(--shadow-sm)}
+.cbox .lab{font-size:11.5px;font-weight:700;color:var(--ink-3)}
+.cbox .v{font-family:'Secular One',sans-serif;font-size:25px;margin-top:2px}
+.profit-pos{color:var(--green-d)}.profit-neg{color:var(--red-d)}.neutral{color:var(--sky-4)}
+.calcnote{font-size:13px;font-weight:700;text-align:center;margin-top:6px;min-height:38px}
+
+/* GRAPH */
+.graphWrap{background:#fff;border-radius:18px;padding:8px 6px 4px;box-shadow:var(--shadow-sm);border:2px solid var(--sky-1);margin:8px 0}
+svg.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:14px;justify-content:center;font-size:11.5px;font-weight:700;color:var(--ink-2);padding:4px 0 6px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend .sw{width:18px;height:4px;border-radius:3px;display:inline-block}
+.readout{background:rgba(255,255,255,.72);border-radius:16px;padding:12px 14px;margin-top:10px}
+.readTop{display:flex;align-items:center;justify-content:center;gap:11px;flex-wrap:wrap;margin-bottom:5px}
+.rate-old,.rate-new{font-family:'Secular One',sans-serif;font-size:24px}
+.rate-old{color:var(--ink-3)}.rate-new{color:var(--sky-4)}
+.bigarrow{font-size:22px}
+.verdict{display:inline-block;font-weight:900;font-size:15px;padding:6px 16px;border-radius:30px;margin:4px 0}
+.verdict.up{background:rgba(255,107,107,.15);color:var(--red-d)}
+.verdict.down{background:rgba(34,201,119,.15);color:var(--green-d)}
+.scenbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+@media(max-width:520px){.scenbtns{grid-template-columns:1fr}}
+.scbtn{cursor:pointer;border:2px solid #e6f6ff;background:#fff;border-radius:14px;padding:10px;font-weight:800;font-size:12.5px;color:var(--ink-2);transition:.15s;text-align:right;display:flex;align-items:center;gap:8px}
+.scbtn:hover{border-color:var(--sky-3);transform:translateY(-2px)}
+.scbtn .e{font-size:18px}
+.scbtn.tried{background:rgba(34,201,119,.08);border-color:var(--green)}
+.scbtn.tried::after{content:"✓";margin-right:auto;color:var(--green);font-weight:900}
+.predictbtns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:8px 0}
+.pbtn{cursor:pointer;border:none;border-radius:14px;padding:13px;font-weight:800;font-size:14px;color:#fff;box-shadow:var(--shadow-sm);transition:.15s}
+.pbtn.up{background:linear-gradient(135deg,#ff8a8a,var(--red-d))}
+.pbtn.down{background:linear-gradient(135deg,#5fe0a0,var(--green-d))}
+.pbtn:hover{transform:translateY(-2px)}.pbtn:active{transform:translateY(2px)}
+
+/* FINAL / CERT */
+.final{text-align:center}
+.trophy{font-size:74px;animation:bob 2.6s ease-in-out infinite;filter:drop-shadow(0 10px 14px rgba(7,73,110,.3))}
+.bigscore{font-family:'Secular One',sans-serif;font-size:52px;color:var(--sky-4);line-height:1}
+.rankbadge{display:inline-block;background:var(--gold);padding:8px 22px;border-radius:30px;font-weight:900;font-size:19px;margin:10px 0;box-shadow:var(--shadow-sm)}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}
+.sg{background:rgba(255,255,255,.7);border-radius:14px;padding:11px 6px}
+.sg .v{font-family:'Secular One',sans-serif;font-size:23px;color:var(--cyan-4)}
+.sg .l{font-size:11px;font-weight:700;color:var(--ink-3)}
+.cert{background:linear-gradient(135deg,#fffdf5,#fff8e6);border:3px solid var(--gold);border-radius:18px;padding:18px;margin:14px 0}
+.cert .ct{font-family:'Secular One',sans-serif;font-size:18px;color:var(--gold-2)}
+.cert .cn{font-family:'Secular One',sans-serif;font-size:26px;color:var(--ink);margin:6px 0}
+.recap{text-align:right;background:rgba(31,224,216,.09);border-radius:16px;padding:14px;margin:14px 0;font-size:13px;color:var(--ink-2)}
+.recap b{color:var(--ink)}
+
+/* MASCOT */
+#mascot{position:fixed;bottom:74px;left:14px;z-index:40;cursor:pointer;width:74px;height:74px;
+  filter:drop-shadow(0 8px 10px rgba(7,73,110,.3));animation:bob 3.2s ease-in-out infinite;transition:transform .15s}
+#mascot:hover{transform:scale(1.08)}
+#mascot:active{transform:scale(.94)}
+.bubbleTip{position:fixed;bottom:150px;left:14px;z-index:41;max-width:min(310px,82vw);
+  background:#fff;border:3px solid var(--gold);border-radius:18px 18px 18px 4px;padding:12px 14px;
+  box-shadow:var(--shadow);font-size:13.5px;font-weight:600;color:var(--ink-2);display:none;animation:pop .25s ease}
+.bubbleTip.show{display:block}
+.bubbleTip b{color:var(--ink);font-weight:900}
+.bubbleTip .who{font-family:'Secular One',sans-serif;color:var(--gold-2);font-size:13px;margin-bottom:3px;display:flex;align-items:center;gap:6px;justify-content:space-between}
+.bubbleTip .x{cursor:pointer;color:var(--ink-3);font-weight:900}
+
+/* BOTTOM NAV */
+.botnav{position:fixed;bottom:0;left:0;right:0;z-index:30;backdrop-filter:blur(10px);
+  background:linear-gradient(0deg,rgba(214,244,255,.96),rgba(214,244,255,.6));
+  border-radius:22px 22px 0 0;padding:9px 14px;box-shadow:0 -6px 18px -12px rgba(7,73,110,.5);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;max-width:800px;margin:0 auto}
+.botnav.hidden{display:none}
+.nbtn{cursor:pointer;background:#fff;border:2px solid #d7eefb;color:var(--sky-5);font-weight:800;font-size:13px;
+  padding:8px 15px;border-radius:13px;box-shadow:var(--shadow-sm);transition:.15s;font-family:'Heebo',sans-serif}
+.nbtn:hover{transform:translateY(-2px);border-color:var(--sky-3)}
+.nbtn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+.botpos{font-size:12px;font-weight:800;color:var(--ink-2);text-align:center}
+
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-120px);z-index:60;
+  background:linear-gradient(135deg,var(--gold),var(--gold-2));color:var(--ink);font-weight:900;
+  padding:11px 24px;border-radius:18px;box-shadow:var(--shadow);transition:transform .5s cubic-bezier(.2,1.3,.4,1);font-size:15px}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.confetti{position:fixed;width:10px;height:14px;top:-20px;z-index:50;pointer-events:none;border-radius:2px}
+.fade{animation:fadein .4s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.footer{text-align:center;margin-top:18px;color:var(--ink-2);font-size:11.5px;font-weight:600;opacity:.65}
+</style>
+</head>
+<body>
+<div class="bubbles" id="bubbles"></div>
+<div class="toast" id="toast"></div>
+
+<!-- MASCOT -->
+<svg id="mascot" viewBox="0 0 100 100" style="display:none">
+  <circle cx="50" cy="52" r="40" fill="#ffd34e" stroke="#f5a623" stroke-width="5"/>
+  <circle cx="50" cy="52" r="31" fill="none" stroke="#f5a623" stroke-width="3" stroke-dasharray="3 4" opacity=".7"/>
+  <rect x="20" y="32" width="26" height="13" rx="6" fill="#06324a"/>
+  <rect x="54" y="32" width="26" height="13" rx="6" fill="#06324a"/>
+  <rect x="44" y="37" width="12" height="3" fill="#06324a"/>
+  <circle cx="33" cy="38" r="2.4" fill="#3df2e8"/><circle cx="67" cy="38" r="2.4" fill="#3df2e8"/>
+  <path d="M37 60 Q50 72 63 60" fill="none" stroke="#06324a" stroke-width="4" stroke-linecap="round"/>
+  <text x="50" y="86" text-anchor="middle" font-size="15" font-weight="900" fill="#06324a" font-family="Heebo">₪</text>
+</svg>
+<div class="bubbleTip" id="tip">
+  <div class="who"><span>🪙 שוקי השקל</span><span class="x" id="tipX">✕</span></div>
+  <div id="tipBody"></div>
+</div>
+
+<div class="wrap">
+  <div class="top" id="topChrome" style="display:none">
+    <div class="brand">
+      <div class="name"><span class="dot">💱</span> אקדמיית המט״ח</div>
+      <div class="stats">
+        <div class="stat"><span>🔥</span><b id="streak">0</b></div>
+        <div class="stat"><span>⭐</span><b id="lvl">1</b></div>
+        <div class="stat" title="גלגלי הצלה"><span>🛟</span><b id="lifeCount">3</b></div>
+        <div class="mute" id="muteBtn">🔊</div>
+      </div>
+    </div>
+    <div class="xpbar"><div class="xpfill" id="xpfill"></div><div class="xptext" id="xptext">0 / 100 XP</div></div>
+    <div class="nav" id="nav"></div>
+  </div>
+
+  <div id="stage"></div>
+  <div class="footer">אקדמיית המט״ח · שיעור 10 · ייסוף · פיחות · היצע · ביקוש · מאזן התשלומים</div>
+</div>
+
+<div class="botnav hidden" id="botnav">
+  <button class="nbtn" id="prevBtn">→ הקודם</button>
+  <div class="botpos" id="botpos"></div>
+  <button class="nbtn" id="skipBtn">דלג ←</button>
+</div>
+
+<script>
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const $=id=>document.getElementById(id);
+
+/* ============================================================
+   GRAPH ENGINE — axes w/ arrows, labeled E0/E1, excess segment
+   verified baseline eq q=8 p=6
+   ============================================================ */
+function makeGraph(svg){
+  const NS='http://www.w3.org/2000/svg';
+  const P={x0:66,y0:30,w:452,h:318,xMax:20,yMax:12};
+  svg.setAttribute('viewBox','0 0 580 446');svg.setAttribute('class','chart');
+  const sx=q=>P.x0+(q/P.xMax)*P.w, sy=p=>P.y0+(1-p/P.yMax)*P.h;
+  let S={m:0.5,b:2},D={m:-0.5,b:10};
+  const baseS={m:0.5,b:2},baseD={m:-0.5,b:10};
+  let elS,elD,elGhost,elEqV,elEqH,elEqDot,elRateLab,elQtyLab,elEtag,elE0dot,elE0tag,elExcess,elExcessLab;
+
+  const mk=(t,a,txt)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;};
+  const clear=()=>{while(svg.firstChild)svg.removeChild(svg.firstChild);
+    elS=elD=elGhost=elEqV=elEqH=elEqDot=elRateLab=elQtyLab=elEtag=elE0dot=elE0tag=elExcess=elExcessLab=null;};
+  function seg(m,b){const pts=[],q0=0,q1=P.xMax,p0=0,p1=P.yMax;
+    let p=m*q0+b;if(p>=p0-1e-9&&p<=p1+1e-9)pts.push({q:q0,p});
+    p=m*q1+b;if(p>=p0-1e-9&&p<=p1+1e-9)pts.push({q:q1,p});
+    if(m!==0){let q=(p0-b)/m;if(q>=q0-1e-9&&q<=q1+1e-9)pts.push({q,p:p0});
+      q=(p1-b)/m;if(q>=q0-1e-9&&q<=q1+1e-9)pts.push({q,p:p1});}
+    const u=[];pts.forEach(pt=>{if(!u.some(x=>Math.abs(x.q-pt.q)<1e-6&&Math.abs(x.p-pt.p)<1e-6))u.push(pt);});
+    u.sort((a,b)=>a.q-b.q);return [u[0],u[u.length-1]];}
+  const dStr=(m,b)=>{const[a,c]=seg(m,b);return `M${sx(a.q).toFixed(1)} ${sy(a.p).toFixed(1)} L${sx(c.q).toFixed(1)} ${sy(c.p).toFixed(1)}`;};
+  const eq=()=>{const q=(D.b-S.b)/(S.m-D.m);return {q,p:S.m*q+S.b};};
+  const curve=(m,b,c,w)=>mk('path',{d:dStr(m,b),fill:'none',stroke:c,'stroke-width':w,'stroke-linecap':'round'});
+
+  function buildAxes(){
+    clear();
+    const defs=mk('defs',{});
+    defs.innerHTML='<marker id="arrH" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#06324a"/></marker>';
+    svg.appendChild(defs);
+    const g=mk('g',{});
+    for(let i=0;i<=P.yMax;i+=2){const y=sy(i);g.appendChild(mk('line',{x1:sx(0),y1:y,x2:sx(P.xMax),y2:y,stroke:'#e8f4fa','stroke-width':1}));
+      g.appendChild(mk('text',{x:sx(0)-9,y:y+4,'text-anchor':'end','font-size':11,fill:'#7da6bb','font-family':'Heebo'},i));}
+    for(let i=0;i<=P.xMax;i+=5){const x=sx(i);g.appendChild(mk('line',{x1:x,y1:sy(0),x2:x,y2:sy(P.yMax),stroke:'#f0f8fc','stroke-width':1}));
+      g.appendChild(mk('text',{x:x,y:sy(0)+18,'text-anchor':'middle','font-size':11,fill:'#7da6bb','font-family':'Heebo'},i));}
+    svg.appendChild(g);
+    svg.appendChild(mk('line',{x1:sx(0),y1:sy(0),x2:sx(P.xMax)+14,y2:sy(0),stroke:'#06324a','stroke-width':2.5,'marker-end':'url(#arrH)'}));
+    svg.appendChild(mk('line',{x1:sx(0),y1:sy(0),x2:sx(0),y2:sy(P.yMax)-14,stroke:'#06324a','stroke-width':2.5,'marker-end':'url(#arrH)'}));
+    svg.appendChild(mk('text',{x:22,y:sy(P.yMax/2),'text-anchor':'middle','font-size':12.5,fill:'#06324a','font-weight':800,'font-family':'Heebo','transform':`rotate(-90 22 ${sy(P.yMax/2)})`},'שער חליפין (₪ לדולר)'));
+    svg.appendChild(mk('text',{x:sx(P.xMax/2),y:sy(0)+38,'text-anchor':'middle','font-size':12.5,fill:'#06324a','font-weight':800,'font-family':'Heebo'},'כמות מט״ח (דולרים)'));
+  }
+  function placeEq(){
+    const e=eq(),x=sx(e.p<0?0:e.q),y=sy(e.p);
+    if(!elEqV){
+      elEqV=mk('line',{stroke:'#0aa6e6','stroke-width':1.5,'stroke-dasharray':'5 4',opacity:.6});
+      elEqH=mk('line',{stroke:'#0aa6e6','stroke-width':1.5,'stroke-dasharray':'5 4',opacity:.6});
+      elEqDot=mk('circle',{r:7,fill:'#0aa6e6',stroke:'#fff','stroke-width':2.5});
+      elRateLab=mk('text',{'text-anchor':'end','font-size':13.5,'font-weight':900,fill:'#0784c2','font-family':'Secular One'});
+      elQtyLab=mk('text',{'text-anchor':'middle','font-size':12,'font-weight':800,fill:'#0784c2','font-family':'Heebo'});
+      elEtag=mk('text',{'font-size':12.5,'font-weight':900,fill:'#0784c2','font-family':'Secular One'},'E₁');
+      [elEqV,elEqH,elEqDot,elRateLab,elQtyLab,elEtag].forEach(el=>svg.appendChild(el));
+    }
+    elEqV.setAttribute('x1',sx(e.q));elEqV.setAttribute('y1',y);elEqV.setAttribute('x2',sx(e.q));elEqV.setAttribute('y2',sy(0));
+    elEqH.setAttribute('x1',sx(0));elEqH.setAttribute('y1',y);elEqH.setAttribute('x2',sx(e.q));elEqH.setAttribute('y2',y);
+    elEqDot.setAttribute('cx',sx(e.q));elEqDot.setAttribute('cy',y);
+    elRateLab.setAttribute('x',sx(0)-9);elRateLab.setAttribute('y',y-5);elRateLab.textContent=e.p.toFixed(2);
+    elQtyLab.setAttribute('x',sx(e.q));elQtyLab.setAttribute('y',sy(0)+33);elQtyLab.textContent='Q='+e.q.toFixed(1);
+    elEtag.setAttribute('x',sx(e.q)+9);elEtag.setAttribute('y',y-7);
+    return e;
+  }
+  async function drawPath(path,dur){const len=path.getTotalLength();path.style.strokeDasharray=len;path.style.strokeDashoffset=len;
+    void path.getBoundingClientRect();path.style.transition=`stroke-dashoffset ${dur}ms cubic-bezier(.4,.1,.2,1)`;
+    requestAnimationFrame(()=>path.style.strokeDashoffset='0');await sleep(dur+30);path.style.strokeDasharray='';}
+
+  async function intro(opts){
+    opts=opts||{};S={...baseS};D={...baseD};buildAxes();
+    const lblS=()=>{const[,c]=seg(S.m,S.b);svg.appendChild(mk('text',{x:sx(c.q)-2,y:sy(c.p)-6,'text-anchor':'middle','font-size':15,'font-weight':900,fill:'#f5a623','font-family':'Secular One'},'S'));};
+    const lblD=()=>{const[a]=seg(D.m,D.b);svg.appendChild(mk('text',{x:sx(a.q)+12,y:sy(a.p),'text-anchor':'middle','font-size':15,'font-weight':900,fill:'#0aa6e6','font-family':'Secular One'},'D'));};
+    if(opts.fast){
+      elS=curve(S.m,S.b,'#f5a623',3.5);svg.appendChild(elS);
+      elD=curve(D.m,D.b,'#0aa6e6',3.5);svg.appendChild(elD);lblS();lblD();placeEq();return;}
+    elS=curve(S.m,S.b,'#f5a623',3.5);svg.appendChild(elS);await drawPath(elS,650);lblS();await sleep(120);
+    elD=curve(D.m,D.b,'#0aa6e6',3.5);svg.appendChild(elD);await drawPath(elD,650);lblD();await sleep(120);
+    const e=placeEq();
+    elEqDot.style.transformOrigin=`${sx(e.q)}px ${sy(e.p)}px`;
+    elEqDot.animate([{transform:'scale(0)'},{transform:'scale(1.5)'},{transform:'scale(1)'}],{duration:500,easing:'cubic-bezier(.3,1.4,.4,1)'});
+  }
+  // freeze current equilibrium as E0 (hollow) before a shift
+  function freezeE0(){const e=eq();elE0dot=mk('circle',{cx:sx(e.q),cy:sy(e.p),r:6,fill:'#fff',stroke:'#9bb6c4','stroke-width':2.5});
+    elE0tag=mk('text',{x:sx(e.q)+9,y:sy(e.p)+14,'font-size':12,'font-weight':900,fill:'#9bb6c4','font-family':'Secular One'},'E₀');
+    svg.appendChild(elE0dot);svg.appendChild(elE0tag);return e;}
+  // move a curve to new intercept while keeping equilibrium markers at E0 (no eq update yet)
+  function moveCurve(which,toB,dur){return new Promise(res=>{
+    const tgt=which==='S'?S:D;const from=tgt.b;
+    if(!elGhost){elGhost=curve(tgt.m,from,which==='S'?'#f7c87a':'#7fc7e8',2.5);elGhost.setAttribute('stroke-dasharray','7 5');elGhost.style.opacity=.55;svg.insertBefore(elGhost,which==='S'?elS:elD);}
+    const t0=performance.now();
+    (function fr(t){let k=Math.min(1,(t-t0)/dur);k=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+      tgt.b=from+(toB-from)*k;(which==='S'?elS:elD).setAttribute('d',dStr(tgt.m,tgt.b));
+      if(k<1)requestAnimationFrame(fr);else res();})(performance.now());
+  });}
+  // show excess segment at price p0 on current curves
+  function showExcess(p0){
+    const qs=(p0-S.b)/S.m, qd=(p0-D.b)/D.m, y=sy(p0);
+    const lo=Math.min(qs,qd),hi=Math.max(qs,qd);
+    const supplyExcess=qs>qd;
+    const col=supplyExcess?'#22c977':'#ff6b6b';
+    elExcess=mk('line',{x1:sx(lo),y1:y,x2:sx(hi),y2:y,stroke:col,'stroke-width':7,'stroke-linecap':'round',opacity:.85});
+    svg.appendChild(elExcess);
+    elExcess.animate([{opacity:0},{opacity:.85}],{duration:300});
+    elExcessLab=mk('text',{x:sx((lo+hi)/2),y:y-9,'text-anchor':'middle','font-size':12,'font-weight':900,fill:supplyExcess?'#149656':'#d8453f','font-family':'Heebo'},supplyExcess?'עודף היצע':'עודף ביקוש');
+    svg.appendChild(elExcessLab);
+    return {supplyExcess,gap:Math.abs(qs-qd)};
+  }
+  function clearExcess(){if(elExcess){elExcess.remove();elExcess=null;}if(elExcessLab){elExcessLab.remove();elExcessLab=null;}}
+
+  return {
+    intro, eq, freezeE0, moveCurve, showExcess, clearExcess, placeEq,
+    rate(){return eq().p;}
+  };
+}
+
+/* ============================================================ SOUND */
+let audioCtx=null,muted=false;
+function tone(f,d,t,v){t=t||'sine';v=v==null?.14:v;if(muted)return;
+  try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=t;o.frequency.value=f;g.gain.value=v;
+    o.connect(g);g.connect(audioCtx.destination);o.start();g.gain.exponentialRampToValueAtTime(1e-4,audioCtx.currentTime+d);o.stop(audioCtx.currentTime+d);}catch(e){}}
+const sCorrect=()=>{tone(659,.12);setTimeout(()=>tone(880,.16),95);};
+const sWrong=()=>tone(196,.22,'triangle',.12);
+const sLevel=()=>[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,.2),i*95));
+const sClick=()=>tone(520,.05,'sine',.08);
+
+/* ============================================================ STATE */
+const LESSONS=[
+  {id:'bop',ic:'⚖️',lb:'מאזן\nהתשלומים'},
+  {id:'rate',ic:'💱',lb:'שער\nהחליפין'},
+  {id:'lab',ic:'📊',lb:'מעבדת\nהגרפים'},
+  {id:'effect',ic:'🏭',lb:'השפעות\nעל המשק'},
+  {id:'final',ic:'🏆',lb:'אתגר\nהאלוף'},
+];
+let G={user:{name:'',email:''},lesson:0,step:0,xp:0,level:1,streak:0,best:0,correct:0,answered:0,
+  lifelines:3,mastery:[false,false,false,false,false]};
+const stage=()=>$('stage');
+let currentTip='', currentHint='';
+
+function addXP(n){G.xp+=n;const nl=Math.floor(G.xp/100)+1;if(nl>G.level){G.level=nl;sLevel();toast('🎉 עלית לרמה '+G.level+'!');burst(40);}refreshChrome();}
+function correct(xp){G.correct++;G.answered++;G.streak++;G.best=Math.max(G.best,G.streak);sCorrect();addXP(xp||20);if(G.streak%3===0)burst(22);}
+function wrong(){G.answered++;G.streak=0;sWrong();refreshChrome();}
+
+function refreshChrome(){
+  if(!G.user.name){return;}
+  $('streak').textContent=G.streak;$('lvl').textContent=G.level;$('lifeCount').textContent=G.lifelines;
+  const into=G.xp%100;$('xpfill').style.width=into+'%';$('xptext').textContent=into+' / 100 XP';
+  buildNav();updateBotNav();
+}
+function buildNav(){const n=$('nav');n.innerHTML='';
+  LESSONS.forEach((l,i)=>{const d=document.createElement('div');
+    d.className='n'+(i===G.lesson?' active':'')+(G.mastery[i]?' done':'');
+    d.innerHTML=`<div class="ic">${G.mastery[i]?'✓':l.ic}</div><div class="lb">${l.lb.replace('\n','<br>')}</div>`;
+    d.onclick=()=>{sClick();G.lesson=i;G.step=0;renderStep();};n.appendChild(d);});}
+function toast(t){const e=$('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),2200);}
+
+/* nav */
+function advance(){G.step++;renderStep();}
+function renderStep(){
+  refreshChrome();currentTip='';currentHint='';hideTip();
+  const steps=STEPS[G.lesson];
+  if(G.step>=steps.length){finishLesson();return;}
+  steps[G.step](stage());
+  $('botnav').classList.remove('hidden');updateBotNav();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateBotNav(){
+  if(!G.user.name)return;
+  const steps=STEPS[G.lesson]||[];
+  $('botpos').innerHTML=`${LESSONS[G.lesson].lb.replace('\n',' ')} · שלב ${Math.min(G.step+1,steps.length)}/${steps.length}`;
+  $('prevBtn').disabled=(G.lesson===0&&G.step===0);
+}
+function prevStep(){sClick();if(G.step>0)G.step--;else if(G.lesson>0){G.lesson--;G.step=STEPS[G.lesson].length-1;}renderStep();}
+function skipStep(){sClick();G.step++;renderStep();}
+function finishLesson(){
+  if(!G.mastery[G.lesson])G.mastery[G.lesson]=true;refreshChrome();
+  if(G.lesson>=LESSONS.length-1){renderFinal();return;}
+  burst(40);sLevel();const next=LESSONS[G.lesson+1];
+  stage().innerHTML=`<div class="card fade final"><div class="trophy">🌟</div>
+    <div class="h2">כל הכבוד${G.user.name?', '+G.user.name:''}! סיימת את היחידה</div>
+    <p class="lead" style="text-align:center">שלטת ב<b>${LESSONS[G.lesson].lb.replace('\n',' ')}</b>.</p>
+    <div class="rankbadge">+30 XP בונוס</div>
+    <div class="center"><button class="btn blue" id="nx">המשך: ${next.lb.replace('\n',' ')} ${next.ic}</button></div></div>`;
+  addXP(30);$('nx').onclick=()=>{sClick();G.lesson++;G.step=0;renderStep();};
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============================================================ MASCOT */
+function showTip(txt){currentTip=txt;$('tipBody').innerHTML=txt;$('tip').classList.add('show');}
+function hideTip(){$('tip').classList.remove('show');}
+$('tipX').onclick=()=>hideTip();
+$('mascot').onclick=()=>{sClick();if($('tip').classList.contains('show')){hideTip();}else{
+  showTip(currentTip||'אני שוקי השקל! 🪙 אני כאן כדי לעזור. בכל שלב לחצו עליי לטיפ, ובחידונים יש לכם גלגלי הצלה 🛟.');}};
+
+/* ============================================================ HELPERS */
+function contBtn(label,cls){return `<div class="center"><button class="btn ${cls||'blue'}" id="cont">${label||'המשך →'}</button></div>`;}
+function wireCont(fn){const b=$('cont');if(b)b.onclick=()=>{sClick();(fn||advance)();};}
+function showFB(kind,html,btn,fn){const fb=$('fb');fb.className='fb show '+kind;
+  fb.innerHTML=html+(btn?`<div class="center" style="margin-top:11px"><button class="btn ${kind==='good'?'blue':''}" id="fbnext">${btn}</button></div>`:'');
+  const b=$('fbnext');if(b)b.onclick=()=>{sClick();(fn||advance)();};}
+
+/* generic MCQ with lifelines */
+function mcqCard(host,tag,q,opts,ci,why,o){
+  o=o||{};const xp=o.xp||20,next=o.next||'המשך →',nextFn=o.nextFn||advance;
+  currentTip=o.tip||'קראו את השאלה לאט. חשבו: מט״ח נכנס או יוצא? היצע או ביקוש? ואז — לאן נע השער?';
+  currentHint=o.hint||'';
+  const keys=['א','ב','ג','ד','ה'];
+  host.innerHTML=`<div class="card fade"><span class="steptag">${tag}</span>
+    <div class="scenario" style="clear:both">${q}</div>
+    <div class="lifelines">
+      <button class="life" id="ll50" ${G.lifelines<=0?'disabled':''}>🎯 חצי־חצי</button>
+      <button class="life" id="llHint" ${G.lifelines<=0?'disabled':''}>💡 רמז משוקי</button>
+    </div>
+    <div class="options" id="opts">
+      ${opts.map((op,i)=>`<div class="opt" data-i="${i}"><span class="key">${keys[i]}</span><span>${op}</span></div>`).join('')}
+    </div><div class="fb" id="fb"></div></div>`;
+  let locked=false;
+  $('ll50').onclick=()=>{if(G.lifelines<=0||locked)return;sClick();G.lifelines--;refreshChrome();
+    const wrongs=opts.map((_,i)=>i).filter(i=>i!==ci);wrongs.sort(()=>Math.random()-.5);
+    wrongs.slice(0,2).forEach(i=>host.querySelector(`.opt[data-i="${i}"]`).classList.add('gone'));
+    $('ll50').disabled=true;};
+  $('llHint').onclick=()=>{if(G.lifelines<=0||locked)return;sClick();G.lifelines--;refreshChrome();
+    showTip('💡 '+(currentHint||'חשבו על כיוון תזוזת העקומה ועל העודף שנוצר בשער המקורי.'));$('llHint').disabled=true;};
+  host.querySelectorAll('.opt').forEach(op=>op.onclick=()=>{
+    if(locked)return;locked=true;host.querySelectorAll('.opt').forEach(x=>x.classList.add('lock'));
+    $('ll50').disabled=true;$('llHint').disabled=true;
+    const i=+op.dataset.i;
+    if(i===ci){op.classList.add('correct');correct(xp);showFB('good','✅ נכון! '+why,next,nextFn);}
+    else{op.classList.add('wrong');host.querySelector(`.opt[data-i="${ci}"]`).classList.add('correct');wrong();
+      showFB('bad','התשובה הנכונה מסומנת בירוק. '+why,next,nextFn);}
+  });
+}
+
+/* ============================================================ LESSON 1 — BOP */
+function bop_intro(host){
+  currentTip='שאלו תמיד: מי משלם למי? אם זר משלם לנו — מט״ח נכנס. אם אנחנו משלמים לזר — מט״ח יוצא.';
+  host.innerHTML=`<div class="card fade"><span class="tag">⚖️ יחידה 1 · מאזן התשלומים</span>
+    <div class="h2">לאן זורם הכסף של המדינה?</div>
+    <p class="lead">לפני שוק המט״ח צריך מפה גדולה: <b>מאזן התשלומים</b> — הספר שמתעד כל עסקה כלכלית בין המשק לעולם.</p>
+    <div class="defbox"><div class="dt">📒 מאזן התשלומים</div><div class="dd">תיעוד מסודר של כל תנועות הכסף בין המדינה לעולם — מאיפה מט״ח <b>נכנס</b>, ולאן הוא <b>יוצא</b>.</div></div>
+    <div class="defbox"><div class="dt">1️⃣ החשבון השוטף</div><div class="dd"><b>פעילות ממשית</b> — בעיקר ייצוא ויבוא של סחורות ושירותים (וגם ריבית, דיבידנדים והעברות). הלב של היחידה.</div></div>
+    <div class="defbox"><div class="dt">2️⃣ חשבון ההון והפיננסים</div><div class="dd"><b>תנועות הון</b> — השקעות זרות אצלנו, השקעות שלנו בחו״ל, הלוואות בין־לאומיות.</div></div>
+    ${contBtn('הבנתי — בואו נתרגל!')}</div>`;wireCont();}
+function bop_table(host){
+  currentTip='טריק: ייצוא והשקעה זרה אצלנו = כסף נכנס. יבוא והשקעה שלנו בחו״ל = כסף יוצא.';
+  host.innerHTML=`<div class="card fade"><span class="tag">⚖️ יחידה 1</span>
+    <div class="h2">נכנס מול יוצא</div>
+    <p class="lead">הכלל היחיד: האם העסקה <b>מביאה</b> מט״ח לישראל, או <b>מוציאה</b> אותו?</p>
+    <table class="flowtab">
+      <tr><th class="in">⬇️ מט״ח נכנס (היצע)</th><th class="out">⬆️ מט״ח יוצא (ביקוש)</th></tr>
+      <tr><td class="in">ייצוא סחורות ושירותים</td><td class="out">יבוא סחורות ושירותים</td></tr>
+      <tr><td class="in">השקעות זרות בישראל</td><td class="out">השקעות ישראלים בחו״ל</td></tr>
+      <tr><td class="in">הלוואות נכנסות</td><td class="out">הלוואות יוצאות</td></tr>
+      <tr><td class="in">תיירות נכנסת</td><td class="out">תיירות יוצאת</td></tr>
+    </table>${contBtn('למשחק המיון →')}</div>`;wireCont();}
+const SORT=[
+  {t:'ייצוא תפוזים לאירופה',i:'🍊',d:'in'},{t:'יבוא מכוניות מגרמניה',i:'🚗',d:'out'},
+  {t:'השקעה אמריקאית במפעל בישראל',i:'🏭',d:'in'},{t:'ישראלי קונה מניות בנאסד״ק',i:'📈',d:'out'},
+  {t:'הלוואה מבנק זר לישראל',i:'🏦',d:'in'},{t:'ישראלי בחופשה בתאילנד',i:'🏝️',d:'out'},
+  {t:'ייצוא שירותי הייטק',i:'💻',d:'in'},{t:'תיירים זרים מבקרים בישראל',i:'🧳',d:'in'},
+  {t:'הלוואה ישראלית לחברה בספרד',i:'💸',d:'out'},{t:'ישראלי קונה דירה ביוון',i:'🏠',d:'out'},
+];
+function bop_sort(host){
+  currentTip='גררו אירוע לסל, או הקליקו עליו ואז על הסל. בכל אירוע שאלו: מי משלם למי?';
+  const items=[...SORT].sort(()=>Math.random()-.5);
+  host.innerHTML=`<div class="card fade"><span class="steptag">⚖️ משחק</span>
+    <div class="h2" style="clear:both">🗂️ מיון תנועות המט״ח</div>
+    <p class="lead">גררו כל אירוע לסל הנכון. עשר עסקאות!</p>
+    <div class="pool" id="pool">${items.map((it,k)=>`<div class="token" draggable="true" data-d="${it.d}" data-k="${k}"><span class="ico">${it.i}</span>${it.t}</div>`).join('')}</div>
+    <div class="bins">
+      <div class="bin in" data-a="in"><span class="ar">⬇️💰</span><h4>מט״ח נכנס</h4><div class="drop"></div></div>
+      <div class="bin out" data-a="out"><span class="ar">⬆️💸</span><h4>מט״ח יוצא</h4><div class="drop"></div></div>
+    </div><div class="fb" id="fb"></div></div>`;
+  let sel=null,done=0;const total=SORT.length;
+  const toks=host.querySelectorAll('.token'),bins=host.querySelectorAll('.bin');
+  toks.forEach(t=>{t.addEventListener('dragstart',e=>{sel=t;e.dataTransfer.setData('t','t');});
+    t.addEventListener('click',()=>{if(t.dataset.placed)return;toks.forEach(x=>x.classList.remove('sel'));sel=t;t.classList.add('sel');sClick();});});
+  bins.forEach(b=>{b.addEventListener('dragover',e=>{e.preventDefault();b.classList.add('over');});
+    b.addEventListener('dragleave',()=>b.classList.remove('over'));
+    b.addEventListener('drop',e=>{e.preventDefault();b.classList.remove('over');place(sel,b);});
+    b.addEventListener('click',()=>{if(sel)place(sel,b);});});
+  function place(t,b){if(!t||t.dataset.placed)return;const ok=t.dataset.d===b.dataset.a;t.classList.remove('sel');
+    if(ok){t.dataset.placed='1';t.draggable=false;t.style.opacity=.92;t.style.borderColor=b.dataset.a==='in'?'var(--cyan-3)':'var(--red)';
+      b.querySelector('.drop').appendChild(t);done++;correct(10);sel=null;
+      if(done===total)showFB('good','🎉 מושלם! מיינת נכון את כל עשר התנועות. אתה כבר מבחין בין כסף שנכנס למשק לכסף שיוצא — הבסיס להכל.','המשך לבדיקה →');}
+    else{t.animate([{transform:'translateX(0)'},{transform:'translateX(-7px)'},{transform:'translateX(7px)'},{transform:'translateX(0)'}],{duration:280});
+      wrong();showFB('bad','❌ לא מדויק. שאלו: האם העסקה <b>מביאה</b> דולרים לישראל או <b>מוציאה</b>? נסו שוב.');}}
+}
+function bop_check(host){
+  mcqCard(host,'⚖️ יחידה 1 · בדיקה','איזו עסקה מהווה תנועת מט״ח <b>נכנסת</b>?',
+    ['יבוא מוצרים מחו״ל','הלוואה שבנק ישראלי נתן לחברה בספרד','השקעה של חברה אמריקאית במפעל בישראל','ישראלי קונה דירה ביוון'],2,
+    'המשקיע הזר מגיע עם דולרים וממיר אותם לשקלים כדי להשקיע בארץ — מט״ח <b>נכנס</b> (נזקף לחשבון ההון). שאר החלופות מוציאות מט״ח.',
+    {hint:'חפשו את העסקה שבה זר מביא כסף לישראל, ולא ישראלי ששולח כסף החוצה.'});
+}
+
+/* ============================================================ LESSON 2 — RATE */
+function rate_intro(host){
+  currentTip='הבלבול הנפוץ: שער נמוך = שקל חזק. ככל שצריך פחות שקלים לדולר — השקל שווה יותר.';
+  host.innerHTML=`<div class="card fade"><span class="tag">💱 יחידה 2 · שער החליפין</span>
+    <div class="h2">המחיר של מטבע</div>
+    <p class="lead">שער החליפין הוא מחיר — כמה ש״ח עולה דולר אחד.</p>
+    <div class="defbox"><div class="dt">💱 שער החליפין (₪/$)</div><div class="dd"><b>שער 3.70</b> = צריך 3.70 ש״ח כדי לקנות דולר אחד.</div></div>
+    <div class="defbox"><div class="dt">📉 ייסוף (Appreciation)</div><div class="dd">השקל <b>מתחזק</b> → השער <b>יורד</b> (3.80→3.50). פחות שקלים לדולר.</div></div>
+    <div class="defbox"><div class="dt">📈 פיחות (Depreciation)</div><div class="dd">השקל <b>נחלש</b> → השער <b>עולה</b> (3.50→3.80). יותר שקלים לדולר.</div></div>
+    <div class="intuition"><span class="bulb">⚠️</span><div>שער <b>נמוך</b> = שקל <b>חזק</b> (ייסוף). שער <b>גבוה</b> = שקל <b>חלש</b> (פיחות).</div></div>
+    ${contBtn('בואו נשחק עם זה →')}</div>`;wireCont();}
+function rate_explore(host){
+  currentTip='הזיזו שמאלה לשער נמוך (ייסוף) וימינה לשער גבוה (פיחות). השלימו את שתי המשימות.';
+  const base=3.80;
+  host.innerHTML=`<div class="card fade"><span class="steptag">💱 מעבדה</span>
+    <div class="h2" style="clear:both">🎚️ חוקרים את השער</div>
+    <p class="lead">השער המקורי <b>3.80</b>. <b>המשימה:</b> צרו פעם ייסוף ופעם פיחות.</p>
+    <div class="rateExp">
+      <div class="rateHead"><span class="l">📉 ייסוף · שקל חזק</span><span class="r">שקל חלש · פיחות 📈</span></div>
+      <div class="rateVal"><span class="num" id="rnum">3.80</span> <span class="unit">₪ לדולר</span></div>
+      <input type="range" id="rng" min="3.20" max="4.40" step="0.01" value="3.80">
+      <div class="shekel"><span class="shekelEmoji" id="shkE">🪙</span><div id="shkT">השער ברמת הבסיס</div></div>
+      <div class="taskrow"><div class="taskchip" id="tIs">⬜ ליצור ייסוף</div><div class="taskchip" id="tPi">⬜ ליצור פיחות</div></div>
+    </div><div class="fb" id="fb"></div></div>`;
+  const rng=$('rng'),num=$('rnum'),shkE=$('shkE'),shkT=$('shkT');let di=false,dp=false;
+  rng.oninput=()=>{const v=parseFloat(rng.value);num.textContent=v.toFixed(2);
+    if(v<base-.02){num.style.color='var(--green-d)';shkE.style.transform='scale(1.35)';shkT.innerHTML='<b style="color:var(--green-d)">ייסוף</b> — השער ירד, השקל התחזק.';if(!di){di=true;$('tIs').className='taskchip done';$('tIs').textContent='✅ ייסוף';sClick();chk();}}
+    else if(v>base+.02){num.style.color='var(--red-d)';shkE.style.transform='scale(.7)';shkT.innerHTML='<b style="color:var(--red-d)">פיחות</b> — השער עלה, השקל נחלש.';if(!dp){dp=true;$('tPi').className='taskchip done';$('tPi').textContent='✅ פיחות';sClick();chk();}}
+    else{num.style.color='var(--sky-4)';shkE.style.transform='scale(1)';shkT.textContent='השער ברמת הבסיס (3.80)';}};
+  function chk(){if(di&&dp){correct(20);showFB('good','🎉 חווית בעצמך: <b>שער יורד = ייסוף</b>, <b>שער עולה = פיחות</b>.','המשך →');}}
+}
+function rate_check(host){
+  mcqCard(host,'💱 יחידה 2 · בדיקה','שער החליפין עבר מ־3.50 ל־3.90 ש״ח לדולר. מה קרה?',
+    ['ייסוף — השקל התחזק','פיחות — השקל נחלש','אין שינוי בערך השקל','השקל והדולר התחזקו יחד'],1,
+    'השער <b>עלה</b> (3.50→3.90) — צריך יותר שקלים לדולר, השקל <b>נחלש</b>. זהו <b>פיחות</b>.',
+    {hint:'השער עלה או ירד? עלייה בשער פירושה שצריך יותר שקלים — כלומר שקל חלש יותר.'});
+}
+function rate_check2(host){
+  mcqCard(host,'💱 יחידה 2 · אתגר','קובעים: "שער חליפין נמוך יותר משמעו שקל חלש יותר". הקביעה:',
+    ['נכונה — שער נמוך = שקל חלש','שגויה — שער נמוך = שקל חזק','נכונה רק כשהדולר חזק','אי אפשר לדעת בלי האינפלציה'],1,
+    'שגויה. שער <b>נמוך</b> פירושו שצריך <b>פחות</b> שקלים לדולר — כלומר השקל <b>חזק</b> יותר. זו טעות נפוצה!',
+    {tip:'זו בדיוק המלכודת מהשלב הקודם. חשבו כמה שקלים צריך לדולר.',hint:'אם צריך פחות שקלים כדי לקנות דולר, האם השקל חזק או חלש?'});
+}
+
+/* ============================================================ LESSON 3 — LAB */
+function lab_intro(host){
+  currentTip='ציר Y = שער החליפין. ציר X = כמות המט״ח. הצומת של S ו־D קובע את השער בפועל.';
+  host.innerHTML=`<div class="card fade"><span class="tag">📊 יחידה 3 · קריאת הגרף</span>
+    <div class="h2">שוק כמו כל שוק</div>
+    <p class="lead">בשוק המט״ח יש <b>היצע</b> ו<b>ביקוש</b>, והמחיר (שער החליפין) נקבע בשיווי המשקל.</p>
+    <div class="defbox"><div class="dt">🟠 עקומת ההיצע (S) — עולה</div><div class="dd">מט״ח ש<b>נכנס</b> (ייצוא, השקעות זרות). שער גבוה → כדאי יותר להמיר דולרים → היצע גדל.</div></div>
+    <div class="defbox"><div class="dt">🔵 עקומת הביקוש (D) — יורדת</div><div class="dd">מט״ח ש<b>יוצא</b> (יבוא, השקעות בחו״ל). שער נמוך → זול לקנות דולרים → ביקוש גדל.</div></div>
+    ${contBtn('הראו לי את הגרף →')}</div>`;wireCont();}
+function lab_reveal(host){
+  currentTip='הצומת בין העקומות = שיווי המשקל. כאן השער "נח" עד שמשהו זז.';
+  host.innerHTML=`<div class="card fade"><span class="steptag">📊 בנייה הדרגתית</span>
+    <div class="h2" style="clear:both">בניית הגרף — שלב אחר שלב</div>
+    <p class="lead">קודם הצירים, ואז ההיצע, הביקוש, ולבסוף שיווי המשקל.</p>
+    <div class="graphWrap"><svg id="g1"></svg></div>
+    <div class="legend"><span><i class="sw" style="background:#f5a623"></i> היצע S</span><span><i class="sw" style="background:#0aa6e6"></i> ביקוש D</span><span>⬤ שיווי משקל</span></div>
+    <div class="body" id="rt" style="min-height:22px"></div>
+    <div class="center" id="rb" style="display:none"><button class="btn blue" id="cont">למעבדה האינטראקטיבית →</button></div></div>`;
+  const g=makeGraph($('g1'));
+  (async()=>{const t=$('rt');t.innerHTML='✏️ משרטטים את הצירים...';await sleep(300);await g.intro();
+    t.innerHTML='⚖️ הצומת קובע את שיווי המשקל: שער <b>6.00</b> ש״ח לדולר בכמות <b>Q=8</b>. עכשיו — מה קורה כשמשהו זז?';
+    $('rb').style.display='block';wireCont();})();
+}
+const SCEN=[
+  {key:'supUp',curve:'S',to:0,e:'🏭',label:'עלייה בהיצע המט״ח',
+   cause:'השקעות זרות נכנסות (או זינוק בייצוא): הזרים מביאים דולרים → היצע המט״ח גדל, עקומת ההיצע זזה ימינה.',
+   effect:'בשער המקורי נוצר <b>עודף היצע</b> — יש יותר דולרים מהמבוקש. כדי לאזן, השער <b>יורד</b> ל־5.00 = <b>ייסוף</b>. יבוא מוזל, יצוא נפגע.'},
+  {key:'demDown',curve:'D',to:8.5,e:'📉',label:'ירידה בביקוש למט״ח',
+   cause:'הישראלים מצמצמים יבוא (או מושכים השקעות מחו״ל): הצורך בדולרים קטֵן → הביקוש יורד, העקומה זזה שמאלה.',
+   effect:'בשער המקורי נוצר <b>עודף היצע</b> → השער <b>יורד</b> ל־5.25 = <b>ייסוף</b>. השקל מתחזק.'},
+  {key:'supDown',curve:'S',to:3.5,e:'🏚️',label:'ירידה בהיצע המט״ח',
+   cause:'הייצוא צונח (מיתון עולמי): פחות דולרים נכנסים → ההיצע יורד, העקומה זזה שמאלה.',
+   effect:'בשער המקורי נוצר <b>עודף ביקוש</b> → השער <b>עולה</b> ל־6.75 = <b>פיחות</b>. יצוא משגשג, יבוא מתייקר.'},
+  {key:'demUp',curve:'D',to:11.5,e:'🛒',label:'עלייה בביקוש למט״ח',
+   cause:'גל יבוא (או ישראלים משקיעים בחו״ל): הצורך בדולרים גובר → הביקוש עולה, העקומה זזה ימינה.',
+   effect:'בשער המקורי נוצר <b>עודף ביקוש</b> → השער <b>עולה</b> ל־6.75 = <b>פיחות</b>. השקל נחלש.'},
+];
+function lab_play(host){
+  currentTip='שימו לב לרצף: העקומה זזה ← נוצר עודף בשער הישן ← העודף דוחף את השער לנקודה החדשה.';
+  host.innerHTML=`<div class="card fade"><span class="steptag">📊 מעבדה אינטראקטיבית</span>
+    <div class="h2" style="clear:both">🧪 הזיזו את השוק</div>
+    <p class="lead">בחרו תרחיש. צפו: העקומה זזה → נוצר <b>עודף</b> בשער המקורי → שיווי המשקל גולש ל־E₁. <b>נסו את כל ארבעת.</b></p>
+    <div class="graphWrap"><svg id="g2"></svg></div>
+    <div class="legend"><span><i class="sw" style="background:#f5a623"></i> היצע</span><span><i class="sw" style="background:#0aa6e6"></i> ביקוש</span><span><i class="sw" style="background:#22c977"></i> עודף היצע</span><span><i class="sw" style="background:#ff6b6b"></i> עודף ביקוש</span></div>
+    <div class="readout" id="ro" style="display:none">
+      <div class="readTop"><span class="rate-old" id="rOld"></span><span class="bigarrow" id="rArr"></span><span class="rate-new" id="rNew"></span></div>
+      <div style="text-align:center"><span class="verdict" id="rVerd"></span></div>
+      <div class="body" id="rExp" style="margin:8px 0 0;font-size:13px"></div></div>
+    <div class="scenbtns" id="scen">${SCEN.map((s,i)=>`<div class="scbtn" data-i="${i}"><span class="e">${s.e}</span>${s.label}</div>`).join('')}</div>
+    <div class="center"><button class="btn" id="cont" disabled>נסו את כל 4 כדי להמשיך</button></div></div>`;
+  const g=makeGraph($('g2'));let busy=false;const tried=new Set();
+  (async()=>{await g.intro();})();
+  host.querySelectorAll('.scbtn').forEach(b=>b.onclick=async()=>{
+    if(busy)return;busy=true;sClick();const sc=SCEN[+b.dataset.i];
+    $('ro').style.display='none';
+    await g.intro({fast:true});await sleep(100);
+    const e0=g.freezeE0();
+    await g.moveCurve(sc.curve,sc.to,850);
+    const ex=g.showExcess(e0.p);await sleep(650);
+    g.clearExcess();const e1=g.placeEq();
+    $('ro').style.display='block';$('rOld').textContent=e0.p.toFixed(2);$('rNew').textContent=e1.p.toFixed(2);
+    const down=e1.p<e0.p;$('rArr').textContent=down?'⬇️':'⬆️';$('rNew').style.color=down?'var(--green-d)':'var(--red-d)';
+    const v=$('rVerd');v.className='verdict '+(down?'down':'up');v.textContent=down?'📉 ייסוף — השקל מתחזק':'📈 פיחות — השקל נחלש';
+    $('rExp').innerHTML='<b>הסיבה:</b> '+sc.cause+'<br><br><b>המנגנון:</b> '+sc.effect;
+    if(!tried.has(sc.key)){tried.add(sc.key);b.classList.add('tried');correct(15);}
+    if(tried.size===SCEN.length){const c=$('cont');c.disabled=false;c.textContent='שלטתי בכל התרחישים — המשך →';c.classList.add('blue');}
+    busy=false;});
+  $('cont').onclick=()=>{if(!$('cont').disabled){sClick();advance();}};
+}
+/* predict-then-reveal graph question */
+function lab_predict(host){
+  currentTip='קודם נחשו לאן ינוע השער, ואז צפו במנגנון. החיזוי מחזק את ההבנה!';
+  host.innerHTML=`<div class="card fade"><span class="steptag">📊 חיזוי גרפי</span>
+    <div class="h2" style="clear:both">🔮 חיזוי לפני חשיפה</div>
+    <p class="lead"><b>תרחיש:</b> ישראלים מגבירים מאוד את היבוא. הביקוש למט״ח יעלה (העקומה תזוז ימינה). <b>לאן ינוע שער החליפין?</b></p>
+    <div class="graphWrap"><svg id="g3"></svg></div>
+    <div class="predictbtns" id="pb">
+      <button class="pbtn up">📈 השער יעלה (פיחות)</button>
+      <button class="pbtn down">📉 השער יירד (ייסוף)</button></div>
+    <div class="fb" id="fb"></div></div>`;
+  const g=makeGraph($('g3'));(async()=>{await g.intro();})();
+  let locked=false;currentHint='עלייה בביקוש = עודף ביקוש בשער הישן. עודף ביקוש דוחף את השער כלפי מעלה.';
+  host.querySelectorAll('.pbtn').forEach(btn=>btn.onclick=async()=>{
+    if(locked)return;locked=true;host.querySelectorAll('.pbtn').forEach(b=>b.style.pointerEvents='none');
+    const guessUp=btn.classList.contains('up');sClick();
+    const e0=g.freezeE0();await g.moveCurve('D',11.5,850);const ex=g.showExcess(e0.p);await sleep(600);g.clearExcess();const e1=g.placeEq();
+    const up=e1.p>e0.p; // true (6->6.75)
+    if(guessUp===up){correct(25);showFB('good','✅ צדקת! העקומה זזה ימינה → <b>עודף ביקוש</b> בשער 6.00 → השער עלה ל־6.75 = <b>פיחות</b>, השקל נחלש.','סיימת את היחידה →',finishLesson);}
+    else{wrong();showFB('bad','לא הפעם. עלייה בביקוש יוצרת <b>עודף ביקוש</b> בשער המקורי, שדוחף את השער <b>למעלה</b> (6.00→6.75) = פיחות.','סיימת את היחידה →',finishLesson);}
+  });
+}
+
+/* ============================================================ LESSON 4 — EFFECTS */
+function eff_intro(host){
+  currentTip='זכרון מהיר: ייסוף אוהב צרכנים ויבואנים. פיחות אוהב יצואנים.';
+  host.innerHTML=`<div class="card fade"><span class="tag">🏭 יחידה 4 · השפעות ריאליות</span>
+    <div class="h2">מי מרוויח ומי מפסיד?</div>
+    <p class="lead">שינוי בשער קובע מי משגשג ומי נלחץ במשק.</p>
+    <table class="flowtab">
+      <tr><th class="in">📉 ייסוף (שער יורד)</th><th class="out">📈 פיחות (שער עולה)</th></tr>
+      <tr><td class="in">יבוא <b>מוזל</b> 😀</td><td class="out">יבוא <b>מתייקר</b> 😟</td></tr>
+      <tr><td class="in">ייצוא <b>נפגע</b> 😟</td><td class="out">ייצוא <b>משגשג</b> 😀</td></tr>
+    </table>${contBtn('למחשבון היצואן →')}</div>`;wireCont();}
+function eff_calc(host){
+  currentTip='שימו לב לנקודת האיזון בשער 3.6 — מתחתיה היצואן בהפסד, מעליה ברווח.';
+  const COST=36,PRICE=10;
+  host.innerHTML=`<div class="card fade"><span class="steptag">🏭 מחשבון</span>
+    <div class="h2" style="clear:both">🧮 הדילמה של היצואן</div>
+    <p class="lead">יצואן מייצר מוצר ב־<b>36 ש״ח</b> ומוכר בחו״ל ב־<b>10 דולר</b>. גררו את השער וראו את הרווח. <b>המשימה:</b> מצאו מצב הפסד ומצב רווח.</p>
+    <div class="calc">
+      <div class="rateVal"><span class="num" id="er">4.00</span> <span class="unit">₪ לדולר</span></div>
+      <input type="range" id="rng" min="3.00" max="4.50" step="0.05" value="4.00">
+      <div class="calcgrid">
+        <div class="cbox"><div class="lab">תקבול (₪)</div><div class="v neutral" id="rec">40.0</div></div>
+        <div class="cbox"><div class="lab">רווח (₪)</div><div class="v profit-pos" id="prof">+4.0</div></div>
+      </div><div class="calcnote" id="note"></div></div><div class="fb" id="fb"></div></div>`;
+  const rng=$('rng');let sl=false,sp=false;
+  function upd(){const r=parseFloat(rng.value),rec=PRICE*r,prof=rec-COST;
+    $('er').textContent=r.toFixed(2);$('rec').textContent=rec.toFixed(1);
+    const pe=$('prof');pe.textContent=(prof>=0?'+':'')+prof.toFixed(1);pe.className='v '+(prof>0?'profit-pos':prof<0?'profit-neg':'neutral');
+    const n=$('note');
+    if(prof<-.01){n.innerHTML='<span style="color:var(--red-d)">😟 שער נמוך (<b>ייסוף</b>): התקבול '+rec.toFixed(0)+' ש״ח מתחת לעלות. הפסד! היצואן ייאלץ להעלות את המחיר הדולרי (ל־$'+(COST/r).toFixed(1)+') וייפגע בכמות.</span>';sl=true;}
+    else if(prof<.01){n.innerHTML='<span style="color:var(--sky-4)">⚖️ נקודת איזון: בשער '+r.toFixed(2)+' התקבול מכסה בדיוק את העלות.</span>';}
+    else{n.innerHTML='<span style="color:var(--green-d)">😀 שער גבוה (לכיוון <b>פיחות</b>): התקבול עולה והיצואן מרוויח. ייצוא משגשג.</span>';sp=true;}
+    if(sl&&sp&&!upd.done){upd.done=true;correct(20);showFB('good','🎯 הבנת! <b>ייסוף</b> לוחץ את היצואן (אותם $10 שווים פחות ש״ח), <b>פיחות</b> עוזר לו. נראה את הצד השני.','לצד היבואן →');}}
+  rng.oninput=()=>{sClick();upd();};upd();
+}
+function eff_importer(host){
+  currentTip='שימו לב: זה הפוך מהיצואן. ייסוף מוזיל יבוא, פיחות מייקר אותו.';
+  host.innerHTML=`<div class="card fade"><span class="steptag">🏭 הצד השני</span>
+    <div class="h2" style="clear:both">📦 וגם היבואן</div>
+    <p class="lead">יבואן קונה מוצר ב־<b>100 דולר</b>. גררו את השער. <b>המשימה:</b> ראו מצב זול ומצב יקר.</p>
+    <div class="calc"><div class="rateVal"><span class="num" id="er">4.00</span> <span class="unit">₪ לדולר</span></div>
+      <input type="range" id="rng" min="3.00" max="4.50" step="0.05" value="4.00">
+      <div class="calcgrid" style="grid-template-columns:1fr"><div class="cbox"><div class="lab">עלות יבוא (₪ ל־$100)</div><div class="v neutral" id="cost">400</div></div></div>
+      <div class="calcnote" id="note"></div></div><div class="fb" id="fb"></div></div>`;
+  const rng=$('rng');let lo=false,hi=false;
+  function upd(){const r=parseFloat(rng.value),c=100*r;$('er').textContent=r.toFixed(2);$('cost').textContent=c.toFixed(0);
+    const ce=$('cost'),n=$('note');
+    if(r<3.98){ce.className='v profit-pos';n.innerHTML='<span style="color:var(--green-d)">😀 שער נמוך (<b>ייסוף</b>): היבוא מוזל — $100 עולים רק '+c.toFixed(0)+' ש״ח. הצרכן נהנה.</span>';lo=true;}
+    else if(r>4.02){ce.className='v profit-neg';n.innerHTML='<span style="color:var(--red-d)">😟 שער גבוה (<b>פיחות</b>): היבוא מתייקר — $100 עולים '+c.toFixed(0)+' ש״ח. מתגלגל לצרכן.</span>';hi=true;}
+    else{ce.className='v neutral';n.innerHTML='<span style="color:var(--sky-4)">השער ברמת הבסיס.</span>';}
+    if(lo&&hi&&!upd.done){upd.done=true;correct(15);showFB('good','✅ בול. <b>הפוך</b> מהיצואן: ייסוף מוזיל יבוא, פיחות מייקר. אותו שינוי בשער — שני קצוות מנוגדים.','לבדיקה →');}}
+  rng.oninput=()=>{sClick();upd();};upd();
+}
+function eff_check(host){
+  mcqCard(host,'🏭 יחידה 4 · בדיקה','בעת <b>פיחות</b> של השקל, מה קורה ליבוא?',
+    ['זול יותר לייבא סחורות','אין הבדל במחיר','היבוא מתייקר במונחי השקל','רק הביקוש למט״ח מושפע, המחיר לא'],2,
+    'פיחות = עליית שער → כל דולר עולה יותר ש״ח → המוצרים המיובאים מתייקרים, והייקור מתגלגל לצרכן.',
+    {hint:'פיחות = שער עולה. אם כל דולר עולה יותר שקלים, מה קורה למחיר היבוא?'});
+}
+function eff_calc_q(host){
+  mcqCard(host,'🏭 יחידה 4 · חישוב','יצואן: עלות ייצור <b>36 ש״ח</b>, מוכר ב־<b>10 דולר</b>. בשער <b>3.0</b>, מה ההפסד על יחידה?',
+    ['רווח של 4 ש״ח','הפסד של 6 ש״ח','איזון, ללא רווח/הפסד','הפסד של 10 ש״ח'],1,
+    'התקבול = 10×3 = 30 ש״ח, מול עלות 36 → <b>הפסד של 6 ש״ח</b>. ייסוף חזק (שער נמוך) לוחץ את היצואן.',
+    {tip:'תקבול = מחיר דולרי × שער. השוו לעלות 36.',hint:'10 × 3.0 = 30 ש״ח. כמה זה פחות מ־36?'});
+}
+
+/* ============================================================ LESSON 5 — CHALLENGE */
+const CHALLENGE=[
+  {q:'מה מבטא <b>החשבון השוטף</b> במאזן התשלומים?',
+   o:['כל ההלוואות בין המדינה לחו״ל','סך ההשקעות הזרות במשק','הייצוא והיבוא של סחורות ושירותים','השינוי ביתרות המט״ח של בנק ישראל'],c:2,
+   w:'החשבון השוטף עוסק בעיקר בפעילות ממשית — ייצוא ויבוא של סחורות ושירותים.',
+   h:'איזו חלופה מתארת פעילות מסחר ממשית, ולא תנועות הון?'},
+  {q:'ריבית בנק ישראל יורדת הרבה מתחת לריבית בארה״ב, ומשקיעים מעבירים כספים לחו״ל. מה צפוי לשער?',
+   o:['השער יירד (ייסוף)','השער יעלה (פיחות)','השער לא ישתנה','השקל יתחזק מול הדולר'],c:1,
+   w:'יציאת הון = ביקוש למט״ח עולה → עודף ביקוש → השער עולה = <b>פיחות</b>.',
+   h:'כסף שיוצא לחו״ל דורש קניית דולרים. מה זה עושה לביקוש למט״ח?'},
+  {q:'השער ירד מ־4.00 ל־3.60. איזה אירוע <b>עשוי להסביר</b> זאת?',
+   o:['עלייה בהשקעות זרות בישראל','גל יבוא גדול','ירידה חדה בייצוא','ישראלים מגבירים השקעות בחו״ל'],c:0,
+   w:'ירידת שער = ייסוף. עלייה בהשקעות זרות מגדילה את היצע המט״ח → ייסוף. שאר החלופות גורמות פיחות.',
+   h:'חפשו אירוע שמגדיל היצע מט״ח או מקטין ביקוש — שניהם מורידים את השער.'},
+  {q:'במקביל קורים שניים: הייצוא עולה (היצע↑) <b>וגם</b> היבוא עולה (ביקוש↑). אם הגידול בהיצע גדול בהרבה, מה יקרה לשער?',
+   o:['השער יעלה (פיחות)','השער יירד (ייסוף)','השער בוודאות לא ישתנה','אי אפשר לדעת לעולם'],c:1,
+   w:'כששתי העקומות זזות, מנצח האפקט הגדול יותר. אם ההיצע גדל בהרבה — עודף היצע גובר → השער <b>יורד</b> = ייסוף.',
+   h:'כשגם היצע וגם ביקוש עולים, הכיוון נקבע לפי מי שזז יותר.'},
+  {q:'גל גדול של <b>תיירים זרים</b> מגיע לישראל. מה צפוי לשער החליפין?',
+   o:['השער יעלה (פיחות)','השער יירד (ייסוף)','השער לא יושפע מתיירות','רק היבוא יושפע'],c:1,
+   w:'תיירים זרים ממירים מט״ח לשקלים (כמו ייצוא שירותים) → היצע המט״ח עולה → השער יורד = <b>ייסוף</b>.',
+   h:'תיירים זרים מביאים דולרים וממירים לשקלים. זה כמו ייצוא.'},
+  {q:'באיזה שער היצואן (עלות 36 ש״ח, מחיר $10) חוזר לנקודת <b>איזון</b>?',
+   o:['בשער 3.0','בשער 3.6','בשער 4.0','בשער 4.5'],c:1,
+   w:'איזון: תקבול = עלות → 10 × שער = 36 → שער = <b>3.6</b>.',
+   h:'פתרו: 10 × שער = 36.'},
+  {q:'בנק ישראל רוצה <b>לעודד ייצוא</b>. איזה כיוון בשער יעדיף (בכל שאר התנאים שווים)?',
+   o:['ייסוף — שער נמוך','פיחות — שער גבוה','שער קבוע לחלוטין','אין קשר בין שער לייצוא'],c:1,
+   w:'פיחות (שער גבוה) הופך את המוצרים המקומיים לזולים יותר בחו״ל → הייצוא משגשג.',
+   h:'מתי מוצר ישראלי זול יותר עבור קונה זר — בשער גבוה או נמוך?'},
+  {q:'בגרף, עקומת <b>הביקוש</b> זזה <b>שמאלה</b>. מה קרה ומה התוצאה?',
+   o:['הביקוש עלה → פיחות','הביקוש ירד → ייסוף','ההיצע עלה → ייסוף','ההיצע ירד → פיחות'],c:1,
+   w:'תזוזה שמאלה של הביקוש = ירידה בביקוש למט״ח → עודף היצע בשער הישן → השער יורד = <b>ייסוף</b>.',
+   h:'שמאלה על עקומת ביקוש = פחות ביקוש. פחות ביקוש למט״ח מוריד את השער.'},
+  {q:'כאשר הביקוש למט״ח יורד, מה קורה לשער ולשקל?',
+   o:['השער עולה והשקל נחלש','השער יורד והשקל מתחזק','השער נשאר ללא שינוי','השקל נחלש אך השער יורד'],c:1,
+   w:'ירידה בביקוש → עודף היצע בשער המקורי → השער יורד → השקל מתחזק (ייסוף).',
+   h:'פחות ביקוש למט״ח → עודף היצע → לאן נדחף השער?'},
+];
+function challenge_intro(host){
+  currentTip='באתגר יש גלגלי הצלה 🛟 — חצי־חצי ורמז ממני. השתמשו בחוכמה!';
+  host.innerHTML=`<div class="card fade"><span class="tag">🏆 יחידה 5 · אתגר האלוף</span>
+    <div class="h2">הוכח שליטה${G.user.name?', '+G.user.name:''}</div>
+    <p class="lead">תשע שאלות שמשלבות הכל — כולל חישוב, קריאת גרף, וחשיבה רב־שלבית. כל תשובה נכונה = <b>25 XP</b>.</p>
+    <div class="intuition"><span class="bulb">🛟</span><div>נותרו לך <b>${G.lifelines}</b> גלגלי הצלה. אין "משחק נגמר" — טעות מובילה להסבר והמשך.</div></div>
+    ${contBtn('מתחילים את האתגר →')}</div>`;wireCont();}
+function challenge_q(idx){return function(host){const it=CHALLENGE[idx];
+  mcqCard(host,`🏆 אתגר · שאלה ${idx+1}/${CHALLENGE.length}`,it.q,it.o,it.c,it.w,
+    {xp:25,hint:it.h,next:idx<CHALLENGE.length-1?'לשאלה הבאה →':'לסיכום →'});};}
+
+/* ============================================================ FINAL */
+function renderFinal(){
+  refreshChrome();burst(80);sLevel();
+  const acc=G.answered?Math.round(G.correct/G.answered*100):100;
+  let rank,emoji;
+  if(acc>=90){rank='נגיד בנק ישראל';emoji='🏛️';}else if(acc>=75){rank='סוחר מט״ח בכיר';emoji='💼';}
+  else if(acc>=55){rank='אנליסט מתחיל';emoji='📊';}else{rank='מתלמד בשוק';emoji='🌱';}
+  stage().innerHTML=`<div class="card fade final"><div class="trophy">🏆</div>
+    <div class="h2">סיימת את אקדמיית המט״ח!</div>
+    <div class="cert"><div class="ct">תעודת סיום</div><div class="cn">${G.user.name||'לומד/ת מצטיין/ת'}</div>
+      <div style="font-size:13px;color:var(--ink-2);font-weight:600">השלים/ה בהצלחה את מסע שוק מטבע החוץ · שיעור 10</div></div>
+    <div class="bigscore">${G.xp} XP</div>
+    <div class="rankbadge">${emoji} ${rank}</div>
+    <div class="statgrid">
+      <div class="sg"><div class="v">${G.level}</div><div class="l">רמה</div></div>
+      <div class="sg"><div class="v">${acc}%</div><div class="l">דיוק</div></div>
+      <div class="sg"><div class="v">${G.best}🔥</div><div class="l">רצף שיא</div></div></div>
+    <div class="recap"><b>סיכום המסע:</b><br>
+      • <b>מט״ח נכנס</b> (ייצוא, השקעות זרות, תיירות) → היצע↑ → שער יורד → <b>ייסוף</b>.<br>
+      • <b>מט״ח יוצא</b> (יבוא, השקעות בחו״ל) → ביקוש↑ → שער עולה → <b>פיחות</b>.<br>
+      • בכל תזוזה: בשער הישן נוצר <b>עודף</b> (היצע או ביקוש) שדוחף את השער לנקודה חדשה.<br>
+      • <b>ייסוף</b>: יבוא מוזל 😀, יצוא נפגע 😟. <b>פיחות</b>: יבוא מתייקר 😟, יצוא משגשג 😀.<br>
+      • <b>החשבון השוטף</b> מתעד בעיקר ייצוא ויבוא של סחורות ושירותים.</div>
+    <div class="btnrow"><button class="btn blue" id="again">🔁 לשחק שוב</button></div></div>`;
+  $('again').onclick=()=>{sClick();const u=G.user;G={user:u,lesson:0,step:0,xp:0,level:1,streak:0,best:0,correct:0,answered:0,lifelines:3,mastery:[false,false,false,false,false]};renderStep();};
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ============================================================ STEP REGISTRY */
+const STEPS={
+  0:[bop_intro,bop_table,bop_sort,bop_check],
+  1:[rate_intro,rate_explore,rate_check,rate_check2],
+  2:[lab_intro,lab_reveal,lab_play,lab_predict],
+  3:[eff_intro,eff_calc,eff_importer,eff_check,eff_calc_q],
+  4:[challenge_intro,...CHALLENGE.map((_,i)=>challenge_q(i))],
+};
+
+/* ============================================================ EFFECTS + BOOT */
+function burst(n){const cols=['#1fe0d8','#36c4f5','#ffd34e','#22c977','#7ddcff','#0aa6e6'];
+  for(let i=0;i<n;i++){const c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'vw';
+    c.style.background=cols[(Math.random()*cols.length)|0];document.body.appendChild(c);const d=2200+Math.random()*1500;
+    c.animate([{transform:'translateY(0) rotate(0)',opacity:1},{transform:`translateY(108vh) rotate(${720+Math.random()*360}deg)`,opacity:.9}],
+      {duration:d,easing:'cubic-bezier(.3,.7,.5,1)'}).onfinish=()=>c.remove();}}
+(function(){const w=$('bubbles');for(let i=0;i<14;i++){const b=document.createElement('div');b.className='bubble';
+  const s=30+Math.random()*90;b.style.width=s+'px';b.style.height=s+'px';b.style.left=Math.random()*100+'vw';
+  b.style.animationDuration=(13+Math.random()*16)+'s';b.style.animationDelay=(-Math.random()*22)+'s';w.appendChild(b);}})();
+$('muteBtn').onclick=function(){muted=!muted;this.textContent=muted?'🔇':'🔊';if(!muted)sClick();};
+$('prevBtn').onclick=prevStep;$('skipBtn').onclick=skipStep;
+
+/* ONBOARDING */
+function onboarding(){
+  $('topChrome').style.display='none';$('botnav').classList.add('hidden');$('mascot').style.display='none';
+  stage().innerHTML=`<div class="card fade final">
+    <div style="font-size:58px" class="trophy">💱</div>
+    <div class="h2">ברוכים הבאים לאקדמיית המט״ח</div>
+    <p class="lead" style="text-align:center">מסע אינטראקטיבי בן 5 יחידות שיהפוך אתכם לאלופי שוק מטבע החוץ — גרפים חיים, מעבדות, מחשבונים, וגלגלי הצלה.</p>
+    <div style="text-align:right;max-width:420px;margin:0 auto">
+      <div class="field"><label>איך קוראים לך?</label><input id="inName" placeholder="שם מלא" autocomplete="name"><div class="err" id="errName"></div></div>
+      <div class="field"><label>כתובת מייל</label><input id="inMail" placeholder="name@example.com" autocomplete="email" inputmode="email"><div class="err" id="errMail"></div></div>
+    </div>
+    <div class="center"><button class="btn" id="startBtn">🚀 יוצאים לדרך!</button></div>
+    <div style="font-size:11px;color:var(--ink-3);margin-top:10px">הפרטים נשמרים מקומית בדפדפן בלבד ומשמשים להתאמת החוויה והתעודה.</div>
+  </div>`;
+  const go=()=>{
+    const name=$('inName').value.trim(),mail=$('inMail').value.trim();let ok=true;
+    $('errName').textContent='';$('errMail').textContent='';
+    if(name.length<2){$('errName').textContent='נא להזין שם (לפחות 2 תווים)';ok=false;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){$('errMail').textContent='נא להזין כתובת מייל תקינה';ok=false;}
+    if(!ok){sWrong();return;}
+    G.user={name,email:mail};sClick();
+    $('topChrome').style.display='';$('mascot').style.display='';
+    toast('שלום '+name+'! 🎉');showTip('שלום '+name+'! אני שוקי השקל 🪙. לחצו עליי בכל שלב לטיפ, ובחידונים נצלו את גלגלי ההצלה 🛟.');
+    setTimeout(hideTip,5200);
+    refreshChrome();renderStep();
+  };
+  $('startBtn').onclick=go;
+  $('inMail').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+}
+onboarding();
+</script>
+</body>
+</html>
