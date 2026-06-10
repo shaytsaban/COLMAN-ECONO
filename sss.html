@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מודול תרגול מתקדם: שוק המט"ח · ג'יני ועוני · שוק העבודה</title>
+<style>
+:root{
+  --bg:#eef3fc; --bg2:#f3effc; --card:#fff;
+  --blue:#2f5fd0; --blue-dark:#1d3f96;
+  --purple:#7b5cd6; --purple-dark:#5a3fb0;
+  --ink:#26304a; --muted:#6a7390;
+  --good:#1f9d61; --good-bg:#e6f7ee;
+  --bad:#d04a4a; --bad-bg:#fdecec;
+  --warn-bg:#fff7e3; --warn:#a87410;
+  --line:#dde4f3; --radius:16px;
+  font-size:17px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI","Heebo",Arial,sans-serif;background:linear-gradient(135deg,var(--bg),var(--bg2));color:var(--ink);line-height:1.78;min-height:100vh}
+.wrap{max-width:880px;margin:0 auto;padding:18px 16px 110px}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 16px;margin:-18px -16px 18px;display:flex;align-items:center;gap:12px}
+.pb-track{flex:1;height:11px;background:#e3e8f7;border-radius:999px;overflow:hidden}
+.pb-fill{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--purple));transition:.4s;border-radius:999px}
+.pb-label{font-size:.82rem;font-weight:700;color:var(--purple-dark);white-space:nowrap}
+
+/* page system */
+.page{display:none;animation:fadeIn .35s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.card{background:var(--card);border-radius:var(--radius);padding:26px;margin-bottom:18px;border:1px solid var(--line);box-shadow:0 4px 14px rgba(60,80,160,.07)}
+.eyebrow{display:inline-block;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border-radius:999px;padding:4px 16px;font-size:.82rem;font-weight:700;margin-bottom:12px}
+h1{font-size:1.7rem;color:var(--blue-dark);margin-bottom:10px}
+h2{font-size:1.35rem;color:var(--blue-dark);margin-bottom:12px}
+h3{color:var(--purple-dark);margin:16px 0 8px;font-size:1.12rem}
+p{margin-bottom:10px}
+ul,ol{margin:0 0 12px;padding-right:24px}
+li{margin-bottom:6px}
+b{color:var(--blue-dark)}
+.def{background:linear-gradient(135deg,#eaf1ff,#f1ecff);border-right:5px solid var(--purple);border-radius:12px;padding:14px 17px;margin:12px 0}
+.def .t{font-weight:800;color:var(--purple-dark)}
+.formula{background:#f6f8ff;border:1.5px dashed var(--blue);border-radius:12px;padding:12px 16px;margin:12px 0;font-weight:700;color:var(--blue-dark);text-align:center}
+.tip{background:var(--warn-bg);border-right:5px solid #e8b143;border-radius:12px;padding:12px 16px;margin:12px 0}
+.tip b{color:var(--warn)}
+.key{background:var(--good-bg);border-right:5px solid var(--good);border-radius:12px;padding:12px 16px;margin:12px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;background:#fff;border-radius:12px;overflow:hidden;font-size:.95rem}
+th{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;padding:9px}
+td{border:1px solid var(--line);padding:8px 11px;text-align:center}
+tr:nth-child(even) td{background:#f7f9ff}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:12px 0;justify-content:center}
+.flow .node{background:#eef3ff;border:1.5px solid var(--blue);border-radius:10px;padding:7px 13px;font-weight:600;font-size:.88rem}
+.flow .arr{color:var(--purple);font-weight:900;font-size:1.15rem}
+
+/* question structure */
+.qbox{border:2px solid #d7defa;border-radius:16px;padding:20px;margin:14px 0;background:#fdfdff}
+.claims{background:#f8faff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:12px 0}
+.claims .c{display:flex;gap:10px;margin-bottom:10px}
+.claims .rn{font-weight:800;color:var(--purple);min-width:26px}
+.opts{display:flex;flex-direction:column;gap:9px;margin:14px 0}
+.opt{border:2px solid var(--line);border-radius:12px;padding:12px 16px;cursor:pointer;background:#fff;transition:.15s;text-align:right;font-family:inherit;font-size:1rem;color:var(--ink);width:100%}
+.opt:hover{border-color:var(--purple);background:#f7f4ff}
+.opt.correct{border-color:var(--good);background:var(--good-bg);font-weight:700}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt:disabled{cursor:default}
+.fb{border-radius:10px;padding:10px 14px;margin-top:6px;display:none;font-weight:600}
+.fb.show{display:block}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+
+/* progressive hints – brilliant style */
+.hintzone{margin-top:14px}
+.hintbtns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+.hbtn{background:#fff;border:2px solid var(--purple);color:var(--purple-dark);border-radius:999px;padding:7px 18px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.92rem;transition:.15s}
+.hbtn:hover{background:#f3eeff}
+.hbtn.used{opacity:.45;cursor:default}
+.hpanel{display:none;border-radius:12px;padding:14px 18px;margin-top:8px;animation:fadeIn .3s}
+.hpanel.show{display:block}
+.hp1{background:#eef5ff;border-right:5px solid var(--blue)}
+.hp2{background:#f3eeff;border-right:5px solid var(--purple)}
+.hp3{background:#fffaf0;border-right:5px solid #e8b143}
+
+/* per-distractor discussion */
+details.disc{border:1px solid var(--line);border-radius:12px;margin:9px 0;background:#fbfcff;overflow:hidden}
+details.disc summary{cursor:pointer;padding:11px 16px;font-weight:700;color:var(--blue-dark);background:linear-gradient(135deg,#eaf1ff,#f1ecff);list-style:none;user-select:none;font-size:.95rem}
+details.disc summary::before{content:"▼ ";font-size:.75rem;color:var(--purple)}
+details.disc[open] summary::before{content:"▲ "}
+details.disc .inner{padding:14px 18px}
+.disc-wrap{display:none;margin-top:16px}
+.disc-wrap.show{display:block;animation:fadeIn .35s}
+.disc-title{font-weight:800;color:var(--purple-dark);margin:16px 0 6px;font-size:1.05rem}
+.verdict-ok{display:inline-block;background:var(--good-bg);color:var(--good);border-radius:8px;padding:1px 10px;font-weight:800;font-size:.85rem}
+.verdict-no{display:inline-block;background:var(--bad-bg);color:var(--bad);border-radius:8px;padding:1px 10px;font-weight:800;font-size:.85rem}
+.verdict-q{display:inline-block;background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:1px 10px;font-weight:800;font-size:.85rem}
+
+/* nav */
+.navbar{position:fixed;bottom:0;right:0;left:0;background:rgba(255,255,255,.97);border-top:1px solid var(--line);padding:12px 18px;display:flex;justify-content:space-between;align-items:center;z-index:70;backdrop-filter:blur(8px)}
+.nbtn{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;border-radius:12px;padding:11px 26px;font-size:1rem;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 12px rgba(100,90,210,.25);transition:.15s}
+.nbtn:hover{transform:translateY(-2px)}
+.nbtn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.nbtn.ghost{background:#fff;color:var(--purple-dark);border:2px solid var(--purple);box-shadow:none}
+.pagedots{font-size:.85rem;font-weight:700;color:var(--muted)}
+
+input[type=text]{width:100%;padding:12px 16px;border:2px solid var(--line);border-radius:12px;font-size:1rem;font-family:inherit;margin-bottom:12px;background:#fbfcff;color:var(--ink)}
+input[type=text]:focus{outline:none;border-color:var(--purple)}
+.btn{background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;border-radius:12px;padding:13px 30px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 6px 16px rgba(100,90,210,.3)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hidden{display:none!important}
+.small{font-size:.85rem;color:var(--muted)}
+
+#certificate{border:6px double var(--purple);border-radius:22px;padding:46px 34px;text-align:center;background:linear-gradient(160deg,#fff 60%,#f1ecff)}
+#certificate h2{color:var(--purple-dark);font-size:2rem;margin-bottom:6px}
+#certificate .cname{font-size:1.7rem;font-weight:800;color:var(--blue-dark);margin:14px 0 4px}
+#certificate .cid{color:var(--muted);margin-bottom:12px}
+#certificate .score{font-size:1.15rem;font-weight:700;color:var(--good);margin:10px 0}
+.seal{width:84px;height:84px;border-radius:50%;margin:12px auto;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 8px 20px rgba(100,80,210,.35)}
+@media print{.topbar,.navbar,.no-print{display:none!important}.page{display:block!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="topbar no-print">
+  <span class="pb-label" id="secLabel">הרשמה</span>
+  <div class="pb-track"><div class="pb-fill" id="pbFill"></div></div>
+  <span class="pb-label" id="pbText"></span>
+</div>
+
+<!-- ================= PAGE 0 : REGISTRATION ================= -->
+<section class="page" data-sec="הרשמה">
+  <div class="card">
+    <span class="eyebrow">כלכלה לחשבונאים ג' · מודול תרגול מתקדם</span>
+    <h1>שוק המט"ח · מדד ג'יני, עומק ופער העוני · שוק העבודה</h1>
+    <p>מודול בסגנון Brilliant: כל מסך מוקדש לרעיון אחד או לשאלה אחת. אין הרצאות מבוא ארוכות — לומדים <b>תוך כדי פתרון</b>, עם רמזים מדורגים, תהליך עבודה מובנה, ודיון מלא ומפורט על <b>כל מסיח ומסיח</b>. השאלות ברמת קושי וניסוח של שאלות 14–18 בבחינה.</p>
+    <p>מתקדמים עם כפתורי <b>הבא / הקודם</b> למטה. ההתקדמות נשמרת לאורך הדפדוף, ובסיום — תעודת השלמה אישית.</p>
+    <h3>הרשמה</h3>
+    <label><b>שם מלא</b></label>
+    <input type="text" id="fullName" placeholder="לדוגמה: ישראל ישראלי">
+    <label><b>תעודת זהות</b></label>
+    <input type="text" id="idNum" placeholder="9 ספרות" maxlength="9" inputmode="numeric">
+    <div class="fb no" id="regErr">יש להזין שם מלא ותעודת זהות בת 9 ספרות.</div>
+    <br>
+    <button class="btn" onclick="register()">התחלת המודול ←</button>
+  </div>
+</section>
+
+<!-- ================= PAGE 1 : FX toolkit (compact) ================= -->
+<section class="page" data-sec="שוק המט&quot;ח">
+  <div class="card">
+    <span class="eyebrow">חלק א' · שוק המט"ח · ארגז הכלים</span>
+    <h2>עמוד אחד שצריך לדעת בעל-פה — וזהו</h2>
+    <p>אין כאן תיאוריה ארוכה. כל מה שצריך כדי לפתור כל שאלת מט"ח בבחינה נמצא בטבלה אחת ובכלל-זהב אחד:</p>
+    <table>
+      <tr><th>אירוע</th><th>ערוץ</th><th>השקל</th></tr>
+      <tr><td>יצוא ↑ / ביקוש חו"ל למוצרינו ↑</td><td>היצע דולרים ↑</td><td><b>ייסוף</b></td></tr>
+      <tr><td>יבוא ↑ (גם בגלל הורדת מכס)</td><td>ביקוש לדולרים ↑</td><td><b>פיחות</b></td></tr>
+      <tr><td>תוצר ↑ (הכנסה ↑ ← יבוא ↑)</td><td>ביקוש לדולרים ↑</td><td><b>פיחות</b></td></tr>
+      <tr><td>תוצר ↓</td><td>ביקוש לדולרים ↓</td><td><b>ייסוף</b></td></tr>
+      <tr><td>ריבית מקומית ↑</td><td>הון נכנס ← היצע דולרים ↑</td><td><b>ייסוף</b></td></tr>
+      <tr><td>ריבית מקומית ↓</td><td>הון יוצא</td><td><b>פיחות</b></td></tr>
+      <tr><td>ריבית עולמית ↑</td><td>הון יוצא</td><td><b>פיחות</b></td></tr>
+      <tr><td>ריבית עולמית ↓</td><td>הון נכנס</td><td><b>ייסוף</b></td></tr>
+      <tr><td>בנק ישראל קונה מט"ח</td><td>ביקוש לדולרים ↑</td><td><b>פיחות</b></td></tr>
+      <tr><td>בנק ישראל מוכר מט"ח</td><td>היצע דולרים ↑</td><td><b>ייסוף</b></td></tr>
+    </table>
+    <div class="key"><b>כלל הזהב:</b> שני כוחות לאותו כיוון ← הכיוון ודאי. שני כוחות מנוגדים ← <b>"לא ניתן לדעת"</b> — וזו תשובה נכונה ולגיטימית. ואז בודקים בנפרד את יבוא/יצוא: לפעמים הם כן ידועים גם כשהשער לא, ולהפך.</div>
+    <div class="tip"><b>השלכות השער:</b> ייסוף ← יבוא מוזל (↑), יצוא נפגע (↓). פיחות ← הפוך. אבל זכרו שעל יבוא/יצוא פועלים גם ערוצים נוספים (הכנסה, מכס, ביקוש חו"ל) — ואת כולם סופרים.</div>
+    <p class="small">זהו. מכאן והלאה — רק שאלות. כל למידה נוספת תקרה דרך הרמזים והדיונים.</p>
+  </div>
+</section>
+
+<!-- ================= FX Q1 ================= -->
+<section class="page" data-sec="שוק המט&quot;ח">
+<div class="card qbox">
+  <span class="eyebrow">מט"ח · שאלה 1 מתוך 6</span>
+  <h2>שלוש טענות על שוק מטבע החוץ</h2>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>במידה והתוצר בישראל גדל ובמקביל בנק ישראל מוריד את הריבית המקומית — אז יתרחש פיחות במטבע המקומי והיבוא יגדל.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>במידה ובנק ישראל מוכר מט"ח בשוק מטבע החוץ ובמקביל מעלה את הריבית המקומית — אז יתרחש ייסוף במטבע המקומי, אך לא ניתן לדעת מה יקרה ליצוא.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>במידה ותחול עלייה בביקוש של חו"ל למוצרים שהמשק הישראלי מייצא ובמקביל הריבית העולמית תרד — אז יתרחש ייסוף במטבע המקומי ועודף היבוא יגדל.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="fx1" data-correct="3">
+    <button class="opt">א. רק טענה 1 נכונה.</button>
+    <button class="opt">ב. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ג. רק טענה 3 נכונה.</button>
+    <button class="opt">ד. רק טענה 2 נכונה.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'fx1h1')">💡 רמז 1 — מאיפה מתחילים</button>
+      <button class="hbtn" onclick="hint(this,'fx1h2')">🧭 רמז 2 — תהליך העבודה</button>
+      <button class="hbtn" onclick="hint(this,'fx1h3')">🔍 רמז 3 — איפה המלכודת</button>
+    </div>
+    <div class="hpanel hp1" id="fx1h1"><b>רמז 1:</b> אל תנסו להחזיק את כל הטענה בראש. פרקו כל טענה לשני אירועים, וכתבו ליד כל אירוע: באיזה כיוון הוא דוחף את השער (לפי הטבלה מהעמוד הקודם). רק אחרי שיש לכם שני חצים — חברו אותם.</div>
+    <div class="hpanel hp2" id="fx1h2"><b>רמז 2 — התהליך:</b> (1) אירוע א' ← ייסוף/פיחות? (2) אירוע ב' ← ייסוף/פיחות? (3) אותו כיוון = ודאי, כיוונים מנוגדים = לא ניתן לדעת. (4) רק עכשיו בדקו את החלק השני של הטענה (יבוא/יצוא/עודף יבוא) — וזכרו שעליו פועלים <b>כל</b> הערוצים, לא רק השער.</div>
+    <div class="hpanel hp3" id="fx1h3"><b>רמז 3:</b> בטענות 1 ו-3 כיוון השער אכן נקבע נכון... המלכודת מסתתרת ב<b>חצי השני</b> של כל טענה. בטענה 1 — האם היבוא באמת "יגדל" בוודאות כששני ערוצים מושכים אותו לכיוונים שונים? בטענה 3 — אותו סיפור עם עודף היבוא.</div>
+  </div>
+
+  <div class="disc-wrap" id="fx1disc">
+    <div class="disc-title">דיון מלא — טענה אחר טענה, מסיח אחר מסיח</div>
+
+    <details class="disc"><summary>טענה i — "פיחות והיבוא יגדל" <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p><b>שלב 1 — השער:</b></p>
+      <div class="flow"><span class="node">תוצר ↑</span><span class="arr">←</span><span class="node">הכנסה ↑ ← יבוא ↑</span><span class="arr">←</span><span class="node">ביקוש לדולרים ↑</span><span class="arr">←</span><span class="node">פיחות</span></div>
+      <div class="flow"><span class="node">ריבית מקומית ↓</span><span class="arr">←</span><span class="node">הון זר יוצא</span><span class="arr">←</span><span class="node">פיחות</span></div>
+      <p>שני כוחות לכיוון פיחות ← <b>פיחות ודאי</b>. עד כאן הטענה נכונה — וזו בדיוק הסיבה שהמסיח מפתה.</p>
+      <p><b>שלב 2 — היבוא:</b> על היבוא פועלים שני ערוצים <b>מנוגדים</b>: ערוץ ההכנסה (תוצר ↑ ← יבוא ↑) וערוץ השער (פיחות ← יבוא מתייקר ← יבוא ↓). לא נתון מי חזק יותר ← <b>לא ניתן לדעת מה יקרה ליבוא</b>.</p>
+      <p><b>מסקנה:</b> חצי הטענה ("פיחות") נכון, חצי ("היבוא יגדל") לא ודאי ← הטענה כולה <b>שגויה</b>. עיקרון בחינה: טענה נכונה רק אם כל מילה בה ודאית.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii — "ייסוף, ולא ניתן לדעת מה יקרה ליצוא" <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p><b>שלב 1 — השער:</b> מכירת מט"ח ← בנק ישראל מזרים דולרים ← היצע דולרים ↑ ← ייסוף. העלאת ריבית מקומית ← הון זר נכנס לשקל ← ייסוף. שני כוחות לאותו כיוון ← <b>ייסוף ודאי</b>. ✔</p>
+      <p><b>שלב 2 — היצוא:</b> כאן הניואנס. הייסוף לבדו פוגע ביצוא (המוצרים שלנו מתייקרים לקונה הזר). אז למה "לא ניתן לדעת"? כי על היצוא משפיע גם <b>ערוץ הריבית המקומית על המשק</b>: ריבית גבוהה מצננת השקעות וייצור, וגם הביקוש העולמי לא נתון. בגרסת הקורס המקובלת: כשהשאלה מנוסחת "לא ניתן לדעת מה יקרה ליצוא" — בודקים אם יש <b>שני ערוצים שאינם באותו כיוון בהכרח</b>, וכאן בנק ישראל מכר מט"ח (פעולה שמטרתה למתן ייסוף קודם!) ← עוצמת הייסוף נטו על היצוא אינה ניתנת לקביעה כמותית. הטענה זהירה בניסוחה ולכן <b>נכונה</b>.</p>
+      <p><b>לקח:</b> מסיח שמכיל "לא ניתן לדעת" הוא לעיתים קרובות הנכון — דווקא הזהירות היא הדיוק.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii — "ייסוף ועודף היבוא יגדל" <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p><b>שלב 1 — השער:</b> ביקוש חו"ל ליצוא ↑ ← יצואנים ממירים דולרים ← היצע דולרים ↑ ← ייסוף. ריבית עולמית ↓ ← השקל אטרקטיבי יחסית ← הון נכנס ← ייסוף. <b>ייסוף ודאי</b>. ✔</p>
+      <p><b>שלב 2 — עודף היבוא (יבוא − יצוא):</b> מפרקים כל רכיב:</p>
+      <ul>
+        <li><b>יבוא:</b> ייסוף ← יבוא מוזל ← יבוא ↑ (כאן רק ערוץ אחד) ✔</li>
+        <li><b>יצוא:</b> שני כוחות מנוגדים! הביקוש מחו"ל עלה (יצוא ↑) אבל הייסוף מייקר את היצוא (יצוא ↓) ← <b>כיוון היצוא לא ידוע</b>.</li>
+      </ul>
+      <p>עודף יבוא = יבוא ↑ פחות יצוא-לא-ידוע ← אם היצוא יעלה חזק, עודף היבוא עלול דווקא לקטון ← <b>לא ניתן לקבוע שעודף היבוא יגדל</b>. הטענה שגויה.</p>
+    </div></details>
+
+    <details class="disc"><summary>למה התשובה הנכונה היא ד' — ופירוק שאר המסיחים</summary><div class="inner">
+      <p>סיכום הטענות: i ✘ · ii ✔ · iii ✘ ← "רק טענה 2 נכונה" = <b>ד'</b>.</p>
+      <ul>
+        <li><b>מסיח א' (רק 1):</b> נופלים בו מי שעצר אחרי "פיחות ודאי" ולא בדק את היבוא.</li>
+        <li><b>מסיח ב' (1 ו-3):</b> נופלים בו מי שקבע נכון את כיווני השער בשתיהן אך התעלם מהערוצים המנוגדים על יבוא/יצוא — המלכודת הקלאסית של שאלות 16–18.</li>
+        <li><b>מסיח ג' (רק 3):</b> מי שזיהה את הבעיה ביבוא של טענה 1 אך פספס את בעיית היצוא בטענה 3.</li>
+        <li><b>מסיח ה':</b> רשת ביטחון למי שפסל הכול — אבל טענה 2 כן נכונה.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= FX Q2 ================= -->
+<section class="page" data-sec="שוק המט&quot;ח">
+<div class="card qbox">
+  <span class="eyebrow">מט"ח · שאלה 2 מתוך 6</span>
+  <h2>התערבות הבנק המרכזי מול מדיניות הממשלה</h2>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>במידה ובנק ישראל ימכור מט"ח בשוק מטבע החוץ ובמקביל הממשלה תוריד את המכס על יבוא — אז לא ניתן לדעת מה יקרה לשער החליפין, אבל היבוא יגדל.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>במידה ובנק ישראל ירכוש מט"ח בשוק מטבע החוץ ובמקביל יעלה את הריבית המקומית — אז לא ניתן לדעת מה יקרה לשער החליפין, אבל עודף היבוא יגדל.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>במידה והתוצר בישראל יירד ובמקביל הריבית העולמית תעלה — אז לא ניתן לדעת מה יקרה לשער החליפין ולא ניתן לדעת מה יקרה ליבוא.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="fx2" data-correct="1">
+    <button class="opt">א. רק טענה 1 נכונה.</button>
+    <button class="opt">ב. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ג. רק טענות 1 ו-2 נכונות.</button>
+    <button class="opt">ד. רק טענה 2 נכונה.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'fx2h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'fx2h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'fx2h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="fx2h1"><b>רמז 1:</b> בשאלה הזו כל הטענות בנויות מ"לא ניתן לדעת על השער + קביעה על היבוא". הבדיקה היא כפולה: האם השער באמת לא ידוע (כוחות מנוגדים)? והאם הקביעה על היבוא מחזיקה <b>בשני התרחישים האפשריים</b> של השער?</div>
+    <div class="hpanel hp2" id="fx2h2"><b>רמז 2 — הטריק החזק של השאלות האלו:</b> כשכיוון השער לא ידוע, היבוא עדיין יכול להיות ידוע — אם <b>כל</b> הערוצים שמשפיעים עליו ישירות (מכס, הכנסה) דוחפים לאותו כיוון, ושאלו את עצמכם: האם בכל אחד משני תרחישי השער היבוא זז לאותו כיוון?</div>
+    <div class="hpanel hp3" id="fx2h3"><b>רמז 3:</b> בטענה i: מכירת מט"ח ← ייסוף; הורדת מכס ← יבוא ↑ ← פיחות. השער לא ידוע. אבל היבוא? אם ינצח הייסוף — יבוא מוזל ↑, ואם ינצח הפיחות — זה אומר שהמכס ניצח, וגם אז היבוא עלה (הרי הוא זה שגרם לפיחות). בטענה ii עשו את אותה בדיקה — ותראו שמשהו לא מסתדר.</div>
+  </div>
+
+  <div class="disc-wrap" id="fx2disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i — "שער לא ידוע, אבל היבוא יגדל" <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p><b>השער:</b> מכירת מט"ח ← היצע דולרים ↑ ← ייסוף. הורדת מכס ← יבוא ↑ ← ביקוש לדולרים ↑ ← פיחות. כוחות מנוגדים ← <b>שער לא ידוע</b> ✔.</p>
+      <p><b>היבוא — הבדיקה בשני תרחישים:</b></p>
+      <ul>
+        <li>תרחיש "הייסוף ניצח": יבוא מוזל גם מהמכס וגם מהשער ← יבוא ↑↑.</li>
+        <li>תרחיש "הפיחות ניצח": הפיחות נוצר <i>בגלל</i> עליית הביקוש ליבוא; הפיחות ממתן אבל אינו מבטל את הגידול (אחרת לא היה נוצר פיחות מלכתחילה) ← יבוא ↑.</li>
+      </ul>
+      <p>בשני התרחישים היבוא גדל ← הקביעה "היבוא יגדל" <b>נכונה גם כשהשער לא ידוע</b>. זהו בדיוק העיקרון של טענה i בשאלה 18 בבחינה.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii — "שער לא ידוע, אבל עודף היבוא יגדל" <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p><b>השער:</b> רכישת מט"ח ← ביקוש לדולרים ↑ ← פיחות. העלאת ריבית ← הון נכנס ← ייסוף. כוחות מנוגדים ← שער לא ידוע ✔ (החצי הראשון נכון — וזה מה שהופך את המסיח למסוכן).</p>
+      <p><b>עודף היבוא:</b> בודקים בשני תרחישים:</p>
+      <ul>
+        <li>אם ינצח הייסוף: יבוא ↑ ויצוא ↓ ← עודף יבוא ↑.</li>
+        <li>אם ינצח הפיחות: יבוא ↓ ויצוא ↑ ← עודף יבוא <b>↓</b>.</li>
+      </ul>
+      <p>התוצאה תלויה בכיוון השער שאינו ידוע ← <b>לא ניתן לקבוע שעודף היבוא יגדל</b>. ההבדל מטענה i: שם היה ערוץ "אמיתי" (מכס) שמשפיע על היבוא ישירות בלי קשר לשער; כאן שתי הפעולות עוברות <b>רק דרך השער</b>, ולכן כשהשער לא ידוע — שום דבר לא ידוע.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii — "שער לא ידוע וגם יבוא לא ידוע" <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p><b>השער:</b> תוצר ↓ ← יבוא ↓ ← ביקוש לדולרים ↓ ← ייסוף. ריבית עולמית ↑ ← הון יוצא ← פיחות. כוחות מנוגדים ← <b>שער לא ידוע</b> ✔.</p>
+      <p><b>היבוא:</b> ערוץ ההכנסה דוחף יבוא למטה (תוצר ↓). ערוץ השער — לא ידוע: אם ייסוף ← יבוא מוזל ↑, אם פיחות ← יבוא ↓. בתרחיש אחד שני הכוחות מנוגדים, בשני שניהם למטה ← בסך הכול <b>לא ניתן לדעת</b> ✔. הטענה כולה נכונה — והיא העתק כמעט מדויק של טענה iii בשאלה 18 בבחינה (שם זו הייתה נכונה).</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✔ · ii ✘ · iii ✔ ← התשובה <b>ב' (רק 1 ו-3)</b>.</p>
+      <ul>
+        <li><b>א' (רק 1):</b> מי שפסל את iii כי "לא ייתכן ששום דבר לא ידוע" — דווקא ייתכן, וזה נפוץ.</li>
+        <li><b>ג' (1 ו-2):</b> מי שלא הבחין בהבדל המהותי בין i ל-ii — קיומו של ערוץ ישיר (מכס) לעומת פעולות שעוברות רק דרך השער.</li>
+        <li><b>ד' (רק 2):</b> ההיפוך המושלם — בחירה זו מעידה שצריך לחזור לטבלת הכוחות.</li>
+        <li><b>ה':</b> מסיח רשת — לא רלוונטי כאן.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= FX Q3 ================= -->
+<section class="page" data-sec="שוק המט&quot;ח">
+<div class="card qbox">
+  <span class="eyebrow">מט"ח · שאלה 3 מתוך 6</span>
+  <h2>תוצר, ריבית מקומית ושאלת היבוא</h2>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>במידה והתוצר בישראל יורד ובמקביל בנק ישראל מעלה את הריבית המקומית — אז יתרחש ייסוף במטבע המקומי והיבוא יעלה.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>במידה ותחול ירידה בביקוש של חו"ל למוצרים שהמשק הישראלי מייצא ובמקביל בנק ישראל ירכוש מט"ח בשוק המט"ח — אז יתרחש פיחות במטבע המקומי והיבוא יירד.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>במידה ותחול עלייה בביקוש של חו"ל למוצרים שהמשק הישראלי מייצא ובמקביל בנק ישראל יוריד את הריבית המקומית — אז לא ניתן לדעת מה יקרה לשער החליפין ולא ניתן לדעת מה יקרה ליבוא.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="fx3" data-correct="0">
+    <button class="opt">א. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ב. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ג. רק טענה 1 נכונה.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'fx3h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'fx3h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'fx3h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="fx3h1"><b>רמז 1:</b> טענה i זהה כמעט לטענה i בשאלה 17 בבחינה. שימו לב מה קורה ליבוא כשהתוצר יורד אבל מתרחש ייסוף — שני הערוצים מסכימים או רבים?</div>
+    <div class="hpanel" ></div>
+    <div class="hpanel hp2" id="fx3h2"><b>רמז 2:</b> בטענה ii שני האירועים דוחפים לאותו כיוון בשער — בדקו איזה. ואז בדקו את היבוא: ערוץ השער הוא הערוץ <b>היחיד</b> שפועל כאן על היבוא (אין שינוי בהכנסה המקומית ואין מכס) — ולכן הפעם דווקא כן ניתן לדעת.</div>
+    <div class="hpanel hp3" id="fx3h3"><b>רמז 3:</b> בטענה iii: יצוא ↑ ← ייסוף; ריבית ↓ ← פיחות ← השער לא ידוע. ועל היבוא פועל כאן רק ערוץ השער (הביקוש מחו"ל לא משנה את הכנסת הישראלים במישרין במודל שלנו) ← אם השער לא ידוע, גם...?</div>
+  </div>
+
+  <div class="disc-wrap" id="fx3disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i — "ייסוף והיבוא יעלה" <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p><b>השער:</b> תוצר ↓ ← יבוא ↓ ← ביקוש לדולרים ↓ ← ייסוף. ריבית מקומית ↑ ← הון נכנס ← ייסוף. <b>ייסוף ודאי</b> ✔.</p>
+      <p><b>היבוא:</b> שני ערוצים מנוגדים: ההכנסה ירדה (יבוא ↓) אך הייסוף מוזיל יבוא (יבוא ↑) ← <b>לא ניתן לדעת</b>. הקביעה "היבוא יעלה" אינה ודאית ← הטענה שגויה. (בדיוק כמו טענה i בשאלה 17 — שם הוסיפו "יעלה" כדי להכשיל, והטענה נפסלה.)</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii — "פיחות והיבוא יירד" <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p><b>השער:</b> ירידה בביקוש חו"ל ליצוא ← פחות דולרים נכנסים ← היצע דולרים ↓ ← פיחות. רכישת מט"ח ← ביקוש לדולרים ↑ ← פיחות. שני כוחות לאותו כיוון ← <b>פיחות ודאי</b> ✔.</p>
+      <p><b>היבוא:</b> מה משפיע עליו כאן? אין שינוי בהכנסה המקומית, אין מכס — נשאר רק ערוץ השער: פיחות ← יבוא מתייקר ← <b>יבוא ↓ בוודאות</b> ✔. הטענה נכונה במלואה. זהו ההיגיון של טענה ii בשאלה 17 בבחינה.</p>
+      <p><b>נקודת עומק:</b> ההבדל בין "ניתן לדעת" ל"לא ניתן לדעת" על היבוא אינו מזל — הוא נקבע לפי <b>מספר הערוצים הפעילים</b>. ערוץ אחד = ודאות. שני ערוצים מנוגדים = אי-ודאות.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii — "שער לא ידוע וגם יבוא לא ידוע" <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p><b>השער:</b> ביקוש חו"ל ליצוא ↑ ← היצע דולרים ↑ ← ייסוף. ריבית מקומית ↓ ← הון יוצא ← פיחות. כוחות מנוגדים ← <b>שער לא ידוע</b> ✔.</p>
+      <p><b>היבוא:</b> הערוץ הפעיל היחיד הוא השער (אמנם ריבית נמוכה יכולה לעודד צריכה, אך במסגרת השאלות מסוג זה הערוץ הדומיננטי הנבחן הוא השער; וגם אם נוסיף את ערוץ הצריכה ← יבוא ↑ מול שער לא ידוע — עדיין אי-ודאות) ← <b>לא ניתן לדעת מה יקרה ליבוא</b> ✔. זהה לטענה iii בשאלה 17 — שהייתה נכונה.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✘ · ii ✔ · iii ✔ ← <b>א' (רק 2 ו-3)</b>.</p>
+      <ul>
+        <li><b>ב' (1 ו-3):</b> למי שראה "ייסוף ודאי" בטענה 1 וחתם אוטומטית גם על היבוא.</li>
+        <li><b>ג' (רק 1):</b> היפוך כפול — גם קיבל את 1 וגם פסל את הזהירות הנכונה של 3.</li>
+        <li><b>ד' (הכול נכון):</b> מי שלא מפעיל את מסנן "כל מילה חייבת להיות ודאית".</li>
+        <li><b>ה':</b> לא רלוונטי — יש שתי טענות נכונות.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= FX Q4 ================= -->
+<section class="page" data-sec="שוק המט&quot;ח">
+<div class="card qbox">
+  <span class="eyebrow">מט"ח · שאלה 4 מתוך 6</span>
+  <h2>ריבית, אינפלציה והחלטות בנק ישראל (בסגנון שאלה 14)</h2>
+  <p>במהלך שנה מסוימת עלו המחירים בישראל בשיעור של 5.3% — הרבה מעל יעד המחירים (1%–3%). בתחילת השנה העוקבת העלה בנק ישראל את הריבית המוניטרית. להלן שלוש טענות של כלכלנים:</p>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>כלכלן א' טען כי החשש מהיחלשות נוספת של השקל מול הדולר הוא נתון התומך בהחלטה להעלות ריבית, שכן פיחות מייקר את מוצרי היבוא ומזין את האינפלציה, והעלאת ריבית פועלת לחיזוק השקל.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>כלכלן ב' טען כי סימנים למיתון כלכלי צפוי בארה"ב ובאירופה הם נתון התומך בהחלטה להעלות ריבית בישראל.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>כלכלן ג' טען כי הצפי שהביקוש לעובדים מצד המעסיקים יישאר גבוה הוא נתון התומך בהחלטה להעלות ריבית, שכן שוק עבודה הדוק מייצר לחצי שכר ומחירים.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="fx4" data-correct="0">
+    <button class="opt">א. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ב. רק טענה 3 נכונה.</button>
+    <button class="opt">ג. כל הטענות נכונות.</button>
+    <button class="opt">ד. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ה. כל הטענות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'fx4h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'fx4h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'fx4h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="fx4h1"><b>רמז 1:</b> בשאלות "איזה נתון תומך בהעלאת ריבית" השאלה האמיתית היא: האם הנתון מצביע על <b>לחץ אינפלציוני נוסף</b> (תומך בהעלאה) או על <b>התקררות צפויה</b> (תומך דווקא בהמתנה/הורדה)?</div>
+    <div class="hpanel hp2" id="fx4h2"><b>רמז 2:</b> עברו טענה-טענה: פיחות צפוי ← מייקר יבוא ← אינפלציה ← תומך בהעלאה? מיתון עולמי ← מה הוא עושה לביקושים, ליצוא ולאינפלציה בישראל? ביקוש גבוה לעובדים ← שכר ← מחירים?</div>
+    <div class="hpanel hp3" id="fx4h3"><b>רמז 3:</b> הטענה הבעייתית היא של כלכלן ב'. מיתון בחו"ל מקטין את הביקוש ליצוא הישראלי ומצנן את המשק — נתון כזה תומך בריסון <b>פחוּת</b> של הריבית, לא ביתר ריסון. זו בדיוק טענה ii בשאלה 14 בבחינה.</div>
+  </div>
+
+  <div class="disc-wrap" id="fx4disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i — פיחות צפוי כנימוק להעלאת ריבית <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>שרשרת ההיגיון: חשש לפיחות ← מוצרי יבוא (דלק, מזון, חומרי גלם) מתייקרים בשקלים ← "אינפלציה מיובאת" שמתווספת לאינפלציה הקיימת. העלאת ריבית פועלת בשני מישורים: (1) מצננת ביקושים מקומיים; (2) מושכת הון זר ← ייסוף ← בולמת את ערוץ האינפלציה המיובאת. נתון שמעצים את הבעיה שהריבית נועדה לפתור ← <b>תומך בהחלטה</b> ✔.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii — מיתון עולמי כנימוק להעלאת ריבית <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p>מיתון בארה"ב ואירופה ← ירידה בביקוש ליצוא הישראלי ← האטה בפעילות המקומית ← <b>צינון</b> של לחצי המחירים. בנוסף, מיתון עולמי בדרך כלל מלווה בירידת מחירי סחורות ← פחות אינפלציה מיובאת.</p>
+      <p>נתון שמבשר התקררות הוא נימוק <b>נגד</b> העלאה (או לפחות להמתנה) — לא בעדה. שימו לב לתבנית המסיח: עוטפים נתון אמיתי ועדכני (מיתון צפוי) במסקנה הפוכה, וסומכים על כך שהסטודנט יזהה את העובדה ולא יבדוק את כיוון ההשפעה. <b>תמיד לבדוק כיוון, לא רק עובדה.</b></p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii — שוק עבודה הדוק כנימוק להעלאת ריבית <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>ביקוש גבוה לעובדים ← מעסיקים מתחרים על עובדים ← עליות שכר ← עלויות הייצור עולות וכוח הקנייה עולה ← לחץ מחירים כפול (מצד העלויות ומצד הביקוש). זהו בדיוק התרחיש שבו בנק מרכזי מעלה ריבית כדי "לקרר" את שוק העבודה ← <b>תומך בהחלטה</b> ✔.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✔ · ii ✘ · iii ✔ ← <b>א'</b>.</p>
+      <ul>
+        <li><b>ב' (רק 3):</b> מי שפסל את טענה 1 בגלל הקישור מט"ח↔אינפלציה. הקישור הזה הוא לב החומר — פיחות הוא מנוע אינפלציה.</li>
+        <li><b>ג' (הכול):</b> מי שזיהה ש"מיתון" זו עובדה נכונה ולא בדק את כיוון המסקנה.</li>
+        <li><b>ד' (2 ו-3):</b> שילוב הטעויות — קבלת 2 ופסילת 1.</li>
+        <li><b>ה':</b> לא רלוונטי.</li>
+      </ul>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= FX Q5 ================= -->
+<section class="page" data-sec="שוק המט&quot;ח">
+<div class="card qbox">
+  <span class="eyebrow">מט"ח · שאלה 5 מתוך 6</span>
+  <h2>שילוב משולש: מכס, התערבות וריבית עולמית</h2>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>במידה והתוצר בישראל יעלה ובמקביל בנק ישראל ירכוש מט"ח בשוק מטבע החוץ — אז יתרחש פיחות במטבע המקומי, אך לא ניתן לדעת מה יקרה ליבוא.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>במידה והריבית העולמית תרד ובמקביל בנק ישראל יוריד את הריבית המקומית באותו שיעור בדיוק — אז יתרחש ייסוף במטבע המקומי והיצוא ייפגע.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>במידה והתוצר בישראל יעלה ובמקביל בנק ישראל ימכור מט"ח בשוק מטבע החוץ — אז לא ניתן לדעת מה יקרה לשער החליפין, אבל היבוא יגדל.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="fx5" data-correct="2">
+    <button class="opt">א. רק טענה 2 נכונה.</button>
+    <button class="opt">ב. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ג. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'fx5h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'fx5h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'fx5h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="fx5h1"><b>רמז 1:</b> בטענה i שני האירועים דוחפים את <b>השער</b> לאותו כיוון — אבל על ה<b>יבוא</b> פועלים שני ערוצים: ערוץ ההכנסה (תוצר ↑) וערוץ השער (פיחות). הם מסכימים או רבים?</div>
+    <div class="hpanel hp2" id="fx5h2"><b>רמז 2:</b> בטענה ii יש מלכודת אלגנטית: "באותו שיעור בדיוק". כשהריבית המקומית והעולמית יורדות יחד באותו שיעור — מה קורה ל<b>פער הריביות</b>, שהוא מה שמניע את תנועות ההון?</div>
+    <div class="hpanel hp3" id="fx5h3"><b>רמז 3:</b> בטענה iii: תוצר ↑ ← פיחות; מכירת מט"ח ← ייסוף ← שער לא ידוע. עכשיו היבוא בשני תרחישים: אם ייסוף ניצח ← יבוא מוזל וגם ההכנסה עלתה ← ↑. אם פיחות ניצח ← הפיחות נוצר בגלל היבוא שגדל ← ↑. מסקנה?</div>
+  </div>
+
+  <div class="disc-wrap" id="fx5disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i — "פיחות ודאי, יבוא לא ידוע" <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p><b>השער:</b> תוצר ↑ ← הכנסה ↑ ← יבוא ↑ ← ביקוש לדולרים ↑ ← פיחות. רכישת מט"ח ← הבנק קונה דולרים ← ביקוש לדולרים ↑ ← פיחות. שני כוחות לאותו כיוון ← <b>פיחות ודאי</b> ✔.</p>
+      <p><b>היבוא:</b> שני ערוצים מנוגדים — ערוץ ההכנסה (תוצר ↑ ← יבוא ↑) מול ערוץ השער (פיחות ← יבוא מתייקר ← יבוא ↓). לא נתון מי גובר ← <b>לא ניתן לדעת מה יקרה ליבוא</b> ✔. הניסוח הזהיר של הטענה הוא בדיוק מה שהופך אותה לנכונה — השוו לטענה i בשאלה 1 של הפרק, שנפלה כי קבעה "היבוא יגדל".</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii — ירידה מקבילה וזהה בריביות <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p>תנועות ההון מגיבות ל<b>פער הריביות</b> (מקומית מול עולמית), לא לרמתן המוחלטת. אם שתיהן יורדות באותו שיעור בדיוק — הפער לא השתנה ← אין סיבה לתזרים הון לכיוון כלשהו ← <b>אין בסיס לקבוע ייסוף</b>. הקביעה "יתרחש ייסוף והיצוא ייפגע" נשענת על אוויר ← שגויה.</p>
+      <p><b>לקח חשוב לבחינה:</b> כשמופיעים שני שינויי ריבית במקביל — תמיד לשאול "מה קרה לפער?". אם הפער לא זז — ערוץ ההון נייטרלי.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii — "שער לא ידוע, היבוא יגדל" <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p><b>השער:</b> תוצר ↑ ← יבוא ↑ ← ביקוש לדולרים ↑ ← פיחות. מכירת מט"ח ← היצע דולרים ↑ ← ייסוף. כוחות מנוגדים ← <b>שער לא ידוע</b> ✔.</p>
+      <p><b>היבוא בשני תרחישים:</b> אם הייסוף ינצח ← יבוא מוזל + הכנסה גבוהה ← יבוא ↑↑. אם הפיחות ינצח ← הפיחות נוצר בגלל עליית הביקוש ליבוא, כלומר היבוא כבר גדל; הפיחות ממתן אך לא הופך את הכיוון ← יבוא ↑. <b>בשני התרחישים היבוא גדל</b> ← הקביעה נכונה ✔.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✔ · ii ✘ · iii ✔ ← <b>ג'</b>.</p>
+      <ul>
+        <li><b>א' (רק 2):</b> מי שלא הכיר את עקרון פער הריביות וקיבל את ii — ופסל את הניסוחים הזהירים של i ו-iii.</li>
+        <li><b>ב' (2 ו-3):</b> שילוב הטעות על ii עם קבלה נכונה של iii.</li>
+        <li><b>ד' (הכול):</b> מי שלא שאל "מה קרה לפער הריביות?" בטענה ii.</li>
+      </ul>
+      <p><b>אסטרטגיה:</b> פוסלים קודם את הוודאי-שגוי (ii — פער ריביות אפס), מאמתים את הוודאי-נכון, ורק אז ניגשים למסיחים.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= FX Q6 ================= -->
+<section class="page" data-sec="שוק המט&quot;ח">
+<div class="card qbox">
+  <span class="eyebrow">מט"ח · שאלה 6 מתוך 6 · שאלת בוס 👑</span>
+  <h2>הסינתזה: מט"ח, אינפלציה ומדיניות יחד</h2>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>במשק חלה אינפלציה גבוהה מהיעד. בנק ישראל העלה את הריבית ובמקביל מכר מט"ח. ניתן לקבוע כי שתי הפעולות פועלות באותו כיוון על שער החליפין (ייסוף), וכי הייסוף עצמו תורם לבלימת האינפלציה דרך הוזלת מוצרי היבוא.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>במשק שבו התוצר צומח במהירות, בנק ישראל רכש מט"ח כדי לתמוך ביצואנים. ניתן לקבוע כי שתי ההתפתחויות (צמיחה + רכישת מט"ח) דוחפות לפיחות, וכי הפיחות יגרום בוודאות לירידה ביבוא.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>כאשר הריבית העולמית עולה והריבית המקומית נותרת ללא שינוי, צפוי פיחות במטבע המקומי; פיחות זה צפוי לייקר את מוצרי היבוא ולתרום לעליית מדד המחירים — ולכן עליית ריבית עולמית עלולה "לייבא" אינפלציה לישראל.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="fx6" data-correct="1">
+    <button class="opt">א. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ב. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ג. רק טענה 1 נכונה.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'fx6h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'fx6h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'fx6h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="fx6h1"><b>רמז 1:</b> טענה i כוללת שלוש קביעות שרשרת: כיוון פעולה א', כיוון פעולה ב', והקשר ייסוף↔אינפלציה. בדקו כל חוליה.</div>
+    <div class="hpanel hp2" id="fx6h2"><b>רמז 2:</b> בטענה ii — מה עושה צמיחה ליבוא? ומה הפיחות עושה ליבוא? אלו שני כוחות... והמילה "בוודאות" צריכה להדליק נורה אדומה.</div>
+    <div class="hpanel hp3" id="fx6h3"><b>רמז 3:</b> בטענה iii הריבית המקומית לא זזה והעולמית עלתה ← הפער נפתח לרעת השקל ← ערוץ ההון פועל בכיוון אחד בלבד ← פיחות חד-משמעי. ואז: פיחות ← יבוא יקר ← מדד עולה. שרשרת תקינה?</div>
+  </div>
+
+  <div class="disc-wrap" id="fx6disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>חוליה 1: העלאת ריבית ← הון נכנס ← ייסוף ✔. חוליה 2: מכירת מט"ח ← היצע דולרים ↑ ← ייסוף ✔. חוליה 3: ייסוף ← מוצרי יבוא מוזלים בשקלים ← לחץ כלפי מטה על המדד ← תורם לבלימת אינפלציה ✔. כל שלוש החוליות תקינות ← הטענה נכונה. זהו בדיוק "ארגז הכלים המשולב" של בנק מרכזי שנלחם באינפלציה: ריבית + התערבות במט"ח באותו כיוון.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p>חלק ראשון תקין: צמיחה ← יבוא ↑ ← ביקוש לדולרים ↑ ← פיחות; רכישת מט"ח ← פיחות. שני כוחות לפיחות ← פיחות ודאי ✔.</p>
+      <p>החלק השני קורס: "הפיחות יגרום <b>בוודאות</b> לירידה ביבוא". על היבוא פועלים כאן שני כוחות מנוגדים — ערוץ ההכנסה (צמיחה ← יבוא ↑) וערוץ השער (פיחות ← יבוא ↓). יתרה מכך, הפיחות כאן נוצר בין היתר <i>בגלל</i> שהיבוא גדל ← אין שום ודאות לירידה ביבוא ← הטענה שגויה. שימו לב: המילה "בוודאות" במסיח ארוך היא כמעט תמיד הציר שעליו הוא נשבר.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>פער הריביות נפתח לרעת השקל (העולמית עלתה, המקומית קפאה) ← הון יוצא ← ביקוש לדולרים ↑ ← פיחות, וזה הערוץ היחיד הפעיל ← <b>פיחות ודאי</b> ✔. ואז השרשרת: פיחות ← יבוא מתייקר בשקלים ← רכיבי היבוא במדד עולים ← תרומה לאינפלציה ✔. המסקנה "ריבית עולמית מייבאת אינפלציה" נכונה — וזה בדיוק הקשר המעשי שראינו בטענה i של שאלת הריבית: לכן בנקים מרכזיים קטנים נאלצים "ליישר קו" עם הפד.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✔ · ii ✘ · iii ✔ ← <b>ב'</b>. מסיח א' מחליף את הטענה השגויה; מסיח ד' למי שלא צד את "בוודאות"; מסיח ג' למי שחושש מטענות ארוכות ומקבל רק את הקצרה.</p>
+      <p><b>כלל מסכם לכל פרק המט"ח:</b> טענה ארוכה = שרשרת חוליות. מספיקה חוליה רעועה אחת ("בוודאות", כיוון הפוך, פער ריביות אפס) — והטענה כולה נופלת.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= GINI INTRO (very compact) ================= -->
+<section class="page" data-sec="ג'יני ועוני">
+  <div class="card">
+    <span class="eyebrow">חלק ב' · אי-שוויון ועוני · ארגז הכלים</span>
+    <h2>חמש הגדרות — ומיד לעבודה</h2>
+    <div class="def"><span class="t">עקומת לורנץ:</span> מסדרים את האוכלוסייה מהעני לעשיר; הציר האופקי — אחוז מצטבר מהאוכלוסייה, האנכי — אחוז מצטבר מההכנסות. שוויון מלא = אלכסון 45°. ככל שהעקומה שקועה יותר — אי-שוויון גדול יותר.</div>
+    <div class="def"><span class="t">מדד ג'יני:</span> השטח בין האלכסון לעקומה ÷ השטח שמתחת לאלכסון. 0 = שוויון מוחלט, 1 = אדם אחד מחזיק הכול. תלוי רק ב<b>חלוקה</b>, לא בגובה ההכנסות.</div>
+    <div class="def"><span class="t">קו העוני:</span> 50% מההכנסה ה<b>חציונית</b> הפנויה (נטו, אחרי מסים ותשלומי העברה). עוני <b>יחסי</b> — לא סל קיום מוחלט.</div>
+    <div class="def"><span class="t">תחולת העוני:</span> אחוז המשפחות/הנפשות שהכנסתן מתחת לקו העוני. עונה על "כמה עניים יש".</div>
+    <div class="def"><span class="t">עומק העוני / פער העוני:</span> עונה על "כמה עניים העניים". פער העוני של משפחה = המרחק בין הכנסתה לקו העוני. <b>יחס פער העוני</b> = הפער הממוצע של העניים ÷ קו העוני. שתי מדינות עם אותה תחולה יכולות להיות שונות לחלוטין בעומק.</div>
+    <div class="formula">יחס פער העוני = ממוצע (קו העוני − הכנסת משפחה ענייה) ÷ קו העוני</div>
+    <div class="key"><b>שלושת המספרים שתמיד מחשבים, בסדר הזה:</b> (1) חציון ← (2) קו עוני = חציון ÷ 2 ← (3) מי מתחתיו (תחולה), וכמה מתחתיו (פער/עומק).</div>
+  </div>
+</section>
+
+<!-- ================= GINI Q1 ================= -->
+<section class="page" data-sec="ג'יני ועוני">
+<div class="card qbox">
+  <span class="eyebrow">ג'יני ועוני · שאלה 1 מתוך 5</span>
+  <h2>חישוב מלא: קו עוני, תחולה ופער</h2>
+  <p>במשק קטן 7 משפחות, והכנסתן החודשית הפנויה (₪): 3,000 · 4,000 · 5,500 · 12,000 · 15,000 · 18,000 · 26,000. קו העוני מוגדר כ-50% מההכנסה החציונית.</p>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>תחולת העוני במשק היא 28.57% (2 משפחות מתוך 7).</span></div>
+    <div class="c"><span class="rn">ii.</span><span>פער העוני הכולל במשק (סך השקלים החסרים לכל המשפחות העניות כדי להגיע לקו העוני) הוא 5,000 ₪.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>יחס פער העוני הממוצע (הפער הממוצע של משפחה ענייה כאחוז מקו העוני) הוא כ-41.7%.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="gn1" data-correct="4">
+    <button class="opt">א. רק טענה 1 נכונה.</button>
+    <button class="opt">ב. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ג. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'gn1h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'gn1h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'gn1h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="gn1h1"><b>רמז 1:</b> 7 משפחות — החציון הוא המשפחה הרביעית בסדר עולה. לא ממוצע! קו העוני = חציון ÷ 2.</div>
+    <div class="hpanel hp2" id="gn1h2"><b>רמז 2:</b> אחרי שמצאתם את קו העוני (6,000 ₪) — ספרו מי מתחתיו. שימו לב למשפחה עם 5,500: היא מתחת או מעל?</div>
+    <div class="hpanel hp3" id="gn1h3"><b>רמז 3:</b> פער כולל = סכום (קו − הכנסה) לכל ענייה. עם 3 עניות (3,000, 4,000, 5,500) מול קו 6,000: כמה חסר לכל אחת? ולחישוב היחס — חלקו את הפער הממוצע ב-6,000.</div>
+  </div>
+
+  <div class="disc-wrap" id="gn1disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>השלד החישובי המשותף</summary><div class="inner">
+      <p><b>שלב 1 — חציון:</b> ההכנסות כבר מסודרות; האמצעית (רביעית מתוך 7) = <b>12,000 ₪</b>. (הממוצע = 11,929 — קרוב, אבל לא הוא! בשאלות אחרות הפער גדול ומכשיל.)</p>
+      <p><b>שלב 2 — קו העוני:</b> 50% × 12,000 = <b>6,000 ₪</b>.</p>
+      <p><b>שלב 3 — מי ענייה:</b> 3,000 ✔ · 4,000 ✔ · 5,500 ✔ (כן! 5,500 &lt; 6,000) · 12,000 ✘. ← <b>3 משפחות עניות</b>.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה i — תחולה 28.57% <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p>הטענה מניחה 2 עניות — מי שפספס את משפחת ה-5,500. תחולה אמיתית = 3 ÷ 7 = <b>42.86%</b>. המסיח 28.57% נבנה בדיוק על הטעות הזו: "5,500 נראית קרובה לקו אז בטח מעליו". תמיד להשוות מספרית, לא בעין.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii — פער כולל 5,000 ₪ <span class="verdict-no">שגויה (כמעט!)</span></summary><div class="inner">
+      <p>פערים: 6,000−3,000 = 3,000 · 6,000−4,000 = 2,000 · 6,000−5,500 = 500 ← פער כולל = <b>5,500 ₪</b>, לא 5,000. המסיח שוב מבוסס על השמטת משפחת ה-5,500 (3,000+2,000=5,000). שימו לב איך טעות אחת בשלב 3 מתגלגלת לשתי טענות — לכן משקיעים בשלד פעם אחת ובדקדקנות.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii — יחס פער ממוצע ≈ 41.7% <span class="verdict-q">בדיקה זהירה…</span> <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p>פער ממוצע = 5,500 ÷ 3 = 1,833.3 ₪. יחס פער = 1,833.3 ÷ 6,000 ≈ <b>30.6%</b> — לא 41.7%.</p>
+      <p>מאיפה הגיע 41.7%? מהחישוב השגוי: פער "כולל" 5,000 ÷ 2 משפחות = 2,500 ← 2,500 ÷ 6,000 = 41.7%. כלומר טענה iii עקבית עם הטעות של i ו-ii. <b>מלכודת-על:</b> שלוש טענות עקביות זו עם זו יכולות כולן להיות שגויות יחד — עקביות פנימית אינה הוכחת נכונות!</p>
+    </div></details>
+
+    <details class="disc"><summary>למה התשובה הנכונה היא ה' — ופירוק המסיחים</summary><div class="inner">
+      <p>i ✘ (התחולה היא 3÷7 ≈ 42.86%, לא 28.57%) · ii ✘ (הפער הכולל 5,500, לא 5,000) · iii ✘ (היחס 30.6%, לא 41.7%) ← אף טענה אינה נכונה ← <b>ה'</b>.</p>
+      <ul>
+        <li><b>שלוש הטענות נבנו על אותה טעות שורש:</b> השמטת משפחת ה-5,500 מקבוצת העניות. טעות אחת בשלב הסיווג מייצרת שרשרת שלמה של מספרים "עקביים" — ולכן עקביות פנימית בין טענות אינה ראיה לנכונותן.</li>
+        <li><b>מסיח א' (רק 1):</b> למי שתיקן את הפער אבל קיבל את התחולה השגויה.</li>
+        <li><b>מסיחים ב'–ד':</b> צירופים שונים של אותה טעות.</li>
+      </ul>
+      <p><b>הלקח:</b> בשאלות עוני, נקודת הכשל מספר אחת היא משפחה שקרובה לקו. תמיד השוואה מספרית מפורשת (5,500 &lt; 6,000 ← ענייה), לעולם לא "בעין".</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= GINI Q2 ================= -->
+<section class="page" data-sec="ג'יני ועוני">
+<div class="card qbox">
+  <span class="eyebrow">ג'יני ועוני · שאלה 2 מתוך 5</span>
+  <h2>תחולה מול עומק: שתי מדינות, סיפור אחד</h2>
+  <p>במדינה א' ובמדינה ב' קו העוני זהה: 6,000 ₪. במדינה א' 20% מהמשפחות עניות, והכנסתה הממוצעת של משפחה ענייה היא 5,400 ₪. במדינה ב' 20% מהמשפחות עניות, והכנסתה הממוצעת של משפחה ענייה היא 3,000 ₪.</p>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>תחולת העוני בשתי המדינות זהה, ולכן מצוקת העוני בהן זהה.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>יחס פער העוני במדינה א' הוא 10% ובמדינה ב' 50% — ולכן העוני במדינה ב' עמוק פי 5, למרות תחולה זהה.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>אם מדינה ב' תעניק לכל משפחה ענייה קצבה של 500 ₪, תחולת העוני שלה תרד באופן משמעותי.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="gn2" data-correct="1">
+    <button class="opt">א. רק טענות 1 ו-2 נכונות.</button>
+    <button class="opt">ב. רק טענה 2 נכונה.</button>
+    <button class="opt">ג. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'gn2h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'gn2h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'gn2h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="gn2h1"><b>רמז 1:</b> תחולה ועומק הם שני מדדים שונים העונים על שאלות שונות. "אותה תחולה" אומר רק שאותו אחוז מתחת לקו — לא כמה רחוק מתחתיו.</div>
+    <div class="hpanel hp2" id="gn2h2"><b>רמז 2:</b> יחס פער = (קו − הכנסה ממוצעת של ענייה) ÷ קו. חשבו לשתי המדינות. במדינה א': (6,000−5,400)÷6,000 = ?</div>
+    <div class="hpanel hp3" id="gn2h3"><b>רמז 3:</b> בטענה iii — הענייה ה"ממוצעת" במדינה ב' מרוויחה 3,000 ₪, כלומר חסרים לה 3,000 ₪ לקו. מה תעשה תוספת של 500 ₪ למי שחסרים לה אלפים? (היזהרו: ייתכנו עניות בודדות קרובות לקו — אבל האם "ירידה משמעותית" היא מסקנה הכרחית?)</div>
+  </div>
+
+  <div class="disc-wrap" id="gn2disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p>החצי הראשון נכון: התחולה זהה (20%). הקפיצה הלוגית "ולכן מצוקת העוני זהה" שגויה — תחולה מודדת <b>כמה</b>, לא <b>כמה עמוק</b>. במדינה א' ענייה ממוצעת נמצאת 600 ₪ מהקו (כמעט נחלצת); במדינה ב' היא במחצית הדרך בלבד. אותו אחוז עניים — מצוקה שונה לחלוטין. זו בדיוק הסיבה שהביטוח הלאומי מפרסם גם תחולה וגם עומק/פער.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>מדינה א': פער ממוצע = 6,000 − 5,400 = 600 ← יחס פער = 600 ÷ 6,000 = <b>10%</b> ✔.</p>
+      <p>מדינה ב': פער ממוצע = 6,000 − 3,000 = 3,000 ← יחס פער = 3,000 ÷ 6,000 = <b>50%</b> ✔.</p>
+      <p>50% ÷ 10% = פי 5 ✔. כל שלושת רכיבי הטענה מדויקים ← נכונה. שימו לב לכוח של המדד: הוא מנרמל את הפער לקו העוני ולכן מאפשר השוואה גם בין מדינות עם קווי עוני שונים.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii <span class="verdict-no">שגויה</span></summary><div class="inner">
+      <p>קצבה של 500 ₪ למשפחה שהפער ה<b>ממוצע</b> שלה 3,000 ₪ — מצמצמת עומק אך כמעט לא חוצָה משפחות מעל הקו. ייתכן שמשפחות בודדות הקרובות לקו (5,600+) ייחלצו, אך מהנתון שהממוצע רחוק מאוד (3,000) — אין בסיס לקבוע "ירידה משמעותית בתחולה". המסקנה ההכרחית היחידה: <b>פער העוני יקטן, התחולה כמעט לא תזוז</b>.</p>
+      <p><b>תובנת מדיניות שחוזרת בבחינות:</b> קצבאות קטנות ואחידות משפרות עומק, לא תחולה. כדי להוריד תחולה צריך למקד את הכסף במשפחות הסמוכות לקו — וזה בדיוק ההבדל שהשאלות בודקות.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✘ · ii ✔ · iii ✘ ← <b>ב'</b>. מסיח א' לוכד את מי שקיבל את "ולכן" של טענה 1; מסיח ג' את מי שחשב ש-500 ₪ "בטח עוזרים"; מסיח ד' את מי שלא בודק קפיצות לוגיות בכלל.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= GINI Q3 ================= -->
+<section class="page" data-sec="ג'יני ועוני">
+<div class="card qbox">
+  <span class="eyebrow">ג'יני ועוני · שאלה 3 מתוך 5</span>
+  <h2>עקומת לורנץ ומדד ג'יני — קריאת נתונים</h2>
+  <p>להלן התפלגות ההכנסות בשתי מדינות (אחוז מצטבר מסך ההכנסות בידי כל חמישון, מהעני לעשיר):</p>
+  <table>
+    <tr><th>חמישון מצטבר</th><th>20%</th><th>40%</th><th>60%</th><th>80%</th><th>100%</th></tr>
+    <tr><td><b>מדינה א'</b></td><td>4%</td><td>12%</td><td>26%</td><td>50%</td><td>100%</td></tr>
+    <tr><td><b>מדינה ב'</b></td><td>9%</td><td>22%</td><td>40%</td><td>64%</td><td>100%</td></tr>
+  </table>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>עקומת לורנץ של מדינה ב' נמצאת מעל (קרובה יותר לאלכסון מ-) זו של מדינה א' בכל נקודה, ולכן מדד ג'יני של מדינה ב' נמוך יותר.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>החמישון העליון במדינה א' מחזיק 50% מסך ההכנסות — פי 12.5 מהחמישון התחתון.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>אם במדינה א' יוטל מס פרוגרסיבי שתקבוליו יחולקו כקצבאות לחמישונים התחתונים, מדד ג'יני (נטו) שלה צפוי לרדת ועקומת לורנץ נטו תתקרב לאלכסון.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="gn3" data-correct="3">
+    <button class="opt">א. רק טענות 1 ו-2 נכונות.</button>
+    <button class="opt">ב. רק טענה 1 נכונה.</button>
+    <button class="opt">ג. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'gn3h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'gn3h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'gn3h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="gn3h1"><b>רמז 1:</b> השוו עמודה-עמודה: בכל נקודה, איזו מדינה צברה אחוז הכנסות גבוה יותר? "גבוה יותר" בעקומת לורנץ = קרוב יותר לאלכסון = שוויוני יותר.</div>
+    <div class="hpanel hp2" id="gn3h2"><b>רמז 2:</b> לחמישון העליון: ההכנסה שלו = 100% פחות מה שנצבר עד 80%. במדינה א': 100−50 = ? והחמישון התחתון מחזיק 4%. עכשיו חלקו.</div>
+    <div class="hpanel hp3" id="gn3h3"><b>רמז 3:</b> מס פרוגרסיבי + קצבאות לעניים = העברה מהקצה העליון לתחתון. לאן זה מזיז את העקומה ואת ג'יני? (זה גם ההסבר למה ג'יני "ברוטו" של ישראל גבוה מג'יני "נטו".)</div>
+  </div>
+
+  <div class="disc-wrap" id="gn3disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>בדיקה נקודה-נקודה: 9&gt;4, 22&gt;12, 40&gt;26, 64&gt;50 — מדינה ב' מעל בכל נקודה ✔. כשעקומה אחת שולטת על השנייה בכל התחום, השטח בינה לאלכסון קטן יותר בהכרח ← ג'יני נמוך יותר ✔. <b>דיוק חשוב:</b> ההסקה "עקומה גבוהה יותר ← ג'יני נמוך יותר" מובטחת רק כשהשליטה היא <b>בכל</b> נקודה; אם העקומות מצטלבות — ייתכן כל יחס בין מדדי הג'יני, וזו מלכודת בשאלות מתקדמות.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>חמישון עליון במדינה א' = 100% − 50% = <b>50%</b> מסך ההכנסות ✔. חמישון תחתון = 4%. יחס = 50 ÷ 4 = <b>12.5</b> ✔. שני הרכיבים מדויקים. הטכניקה — "הפרשי מצטברים" — היא הדרך לחלץ את חלקו של כל חמישון בודד מטבלה מצטברת, וחובה לשלוט בה.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>מס פרוגרסיבי גובה יחסית יותר מהעשירים; חלוקת התקבולים כקצבאות לעניים מעבירה הכנסה מהקצה העליון לתחתון ← חלקם של החמישונים התחתונים בהכנסה נטו עולה ← עקומת לורנץ נטו עולה לעבר האלכסון ← ג'יני נטו יורד ✔. זה מנגנון "המדינה כמצמצמת אי-שוויון", והוא הסיבה שבישראל ובכל מדינות ה-OECD ג'יני לפני מסים והעברות גבוה משמעותית מג'יני אחרי.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✔ · ii ✔ · iii ✔ ← <b>ד' — כל הטענות נכונות</b>. כן, גם זה קורה! מסיחים א'–ג' בנויים למי ש"מחפש את הטעות" בכוח: חשדנות היא כלי, לא מסקנה. אם בדקתם כל טענה בשלושה שלבים ושלושתן עברו — מסמנים "כולן נכונות" בביטחון.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= GINI Q4 ================= -->
+<section class="page" data-sec="ג'יני ועוני">
+<div class="card qbox">
+  <span class="eyebrow">ג'יני ועוני · שאלה 4 מתוך 5</span>
+  <h2>עוני יחסי: מה באמת מזיז את קו העוני</h2>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>אם כל ההכנסות במשק יוכפלו פי 2 (אצל כולם, בו-זמנית) — קו העוני יוכפל גם הוא, תחולת העוני לא תשתנה, ומדד ג'יני לא ישתנה.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>אם הכנסתן של המשפחות העשירות בלבד תעלה בחדות (וכל היתר ללא שינוי) — החציון עשוי שלא להשתנות כלל, ואז תחולת העוני תישאר זהה אך מדד ג'יני יעלה.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>אם הכנסת מעמד הביניים תעלה כך שהחציון יעלה (והכנסות העניים ללא שינוי) — קו העוני יעלה, וייתכן שמשפחות שלא נפגעו כלל "ייכנסו לעוני" סטטיסטית, כלומר תחולת העוני תעלה בלי שאיש נעשה עני יותר במונחים מוחלטים.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="gn4" data-correct="3">
+    <button class="opt">א. רק טענה 1 נכונה.</button>
+    <button class="opt">ב. רק טענות 1 ו-2 נכונות.</button>
+    <button class="opt">ג. רק טענות 1 ו-3 נכונות.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'gn4h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'gn4h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'gn4h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="gn4h1"><b>רמז 1:</b> שלוש הטענות בודקות אותו עיקרון מזוויות שונות: קו העוני הוא <b>יחסי לחציון</b>. בכל תרחיש שאלו: מה קרה לחציון? ומה קרה ליחס בין כל הכנסה לחציון?</div>
+    <div class="hpanel hp2" id="gn4h2"><b>רמז 2:</b> בטענה ii — העשירים נמצאים מעל החציון. אם רק הם מתעשרים, המשפחה האמצעית נשארת אותה משפחה עם אותה הכנסה. אז קו העוני...? ומה עושה התעשרות הקצה לעקומת לורנץ?</div>
+    <div class="hpanel hp3" id="gn4h3"><b>רמז 3:</b> טענה iii היא הפרדוקס המפורסם של עוני יחסי: צמיחה שמרימה את האמצע מרימה את הקו — ומי שעמד במקום נמצא פתאום "מתחתיו". האם יש בטענה שגיאה טכנית? בדקו כל מילה ("ייתכן", "עשוי") — ניסוחים זהירים נוטים להיות נכונים.</div>
+  </div>
+
+  <div class="disc-wrap" id="gn4disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>טענה i <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>הכפלה אחידה: החציון מוכפל ← קו העוני (50% מהחציון) מוכפל ← היחס בין כל הכנסה לקו לא השתנה ← בדיוק אותן משפחות מתחת לקו ← תחולה ללא שינוי ✔. ג'יני: חלקו של כל חמישון בעוגה לא השתנה (הכול הוכפל פרופורציונלית) ← עקומת לורנץ זהה ← ג'יני זהה ✔. <b>המסר:</b> עוני יחסי וג'יני עיוורים לצמיחה אחידה — הם מודדים חלוקה בלבד.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>העשירים מעל החציון; התעשרותם אינה משנה את זהות המשפחה החציונית ואת הכנסתה ← החציון ללא שינוי ← קו העוני ללא שינוי ← תחולה ללא שינוי ✔. ג'יני: חלקם של העליונים בעוגה גדל על חשבון חלקם <b>היחסי</b> של כל היתר ← עקומת לורנץ שוקעת ← ג'יני עולה ✔. שימו לב לזהירות "עשוי שלא להשתנות" — מדויקת, כי אם ההתעשרות הייתה חוצה את אמצע ההתפלגות החציון כן היה זז.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>עליית הכנסות סביב האמצע ← החציון עולה ← קו העוני עולה ← משפחות שהכנסתן קפאה מעט מעל הקו הישן עלולות להימצא מתחת לקו החדש ← תחולת העוני עולה, אף שאף משפחה לא איבדה שקל ✔. זהו "פרדוקס העוני היחסי" — ביקורת מקובלת על המדד, והוא בדיוק מסוג הנקודות שמרצים אוהבים לשאול עליהן. הניסוח "ייתכן" הופך את הטענה לחסינה: היא לא קובעת שזה יקרה בהכרח, רק שזה אפשרי — וזה נכון.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner">
+      <p>i ✔ · ii ✔ · iii ✔ ← <b>ד'</b>. הלקח המצטבר משאלות 3 ו-4: כשכל טענה מנוסחת בזהירות מקצועית ("ייתכן", "עשוי", "צפוי") והמנגנון מאחוריה תקין — אל תפחדו מ"כל הטענות נכונות". לעומת זאת מילים כמו "בוודאות", "תמיד", "בהכרח" (כמו שראינו במט"ח) — הן דגלים אדומים.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= GINI Q5 ================= -->
+<section class="page" data-sec="ג'יני ועוני">
+<div class="card qbox">
+  <span class="eyebrow">ג'יני ועוני · שאלה 5 מתוך 5 · שאלת בוס 👑</span>
+  <h2>מדיניות, תחולה ועומק — הכול ביחד</h2>
+  <p>במדינה קו העוני 6,000 ₪. ארבע משפחות עניות בלבד, והכנסותיהן: 2,000 · 3,000 · 5,200 · 5,800 ₪. לממשלה תקציב של 2,000 ₪ בלבד (סך הכול) לקצבאות, והיא שוקלת שתי תוכניות:</p>
+  <ul>
+    <li><b>תוכנית א':</b> 500 ₪ לכל משפחה ענייה (חלוקה שוויונית).</li>
+    <li><b>תוכנית ב':</b> מיקוד במשפחות הקרובות לקו: 800 ₪ למשפחת ה-5,200, 200 ₪ למשפחת ה-5,800, והיתרה (1,000 ₪) נחלקת שווה בשווה בין שתי העניות ביותר (500 ₪ לכל אחת).</li>
+  </ul>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>בתוכנית א' תחולת העוני תרד — משפחה אחת בדיוק תחצה את קו העוני.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>בתוכנית ב' תחולת העוני תרד יותר מאשר בתוכנית א' — שתי משפחות יחצו את קו העוני.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>פער העוני הכולל (סך השקלים החסרים לקו) יקטן ב-2,000 ₪ בשתי התוכניות באופן זהה — כל עוד אף קצבה אינה "עוברת" את הקו ומתבזבזת מעבר לו.</span></div>
+  </div>
+  <p><b>מכאן ניתן להסיק כי:</b></p>
+  <div class="opts" data-q="gn5" data-correct="1">
+    <button class="opt">א. רק טענות 1 ו-2 נכונות.</button>
+    <button class="opt">ב. כל הטענות נכונות.</button>
+    <button class="opt">ג. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ד. רק טענה 2 נכונה.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'gn5h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'gn5h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'gn5h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="gn5h1"><b>רמז 1:</b> זו שאלת "הרצת תרחישים": בנו טבלה — לכל משפחה הכנסה לפני, קצבה, הכנסה אחרי — והשוו ל-6,000. פעם לתוכנית א', פעם לתוכנית ב'.</div>
+    <div class="hpanel hp2" id="gn5h2"><b>רמז 2:</b> בתוכנית א' כולן מקבלות 500: 2,500 · 3,500 · 5,700 · 6,300. מי חצתה? בתוכנית ב': 2,500 · 3,500 · 6,000 · 6,000. ומה הדין של מי שהגיעה <b>בדיוק</b> לקו? (מוסכמה: מי שעל הקו אינו "מתחת לקו" — ולכן אינו עני.)</div>
+    <div class="hpanel hp3" id="gn5h3"><b>רמז 3:</b> לטענה iii: פער כולל יורד בדיוק בסכום הקצבאות, כל עוד שום קצבה לא דוחפת משפחה <b>מעבר</b> לקו. בתוכנית א' — משפחת ה-5,800 קיבלה 500 והגיעה ל-6,300; 300 ₪ "ברחו" מעבר לקו. אז האם הירידה זהה?</div>
+  </div>
+
+  <div class="disc-wrap" id="gn5disc">
+    <div class="disc-title">דיון מלא</div>
+
+    <details class="disc"><summary>הרצת התרחישים — הטבלה המלאה</summary><div class="inner">
+      <table>
+        <tr><th>משפחה</th><th>לפני</th><th>תוכנית א' (אחרי)</th><th>תוכנית ב' (אחרי)</th></tr>
+        <tr><td>1</td><td>2,000</td><td>2,500 (ענייה)</td><td>2,500 (ענייה)</td></tr>
+        <tr><td>2</td><td>3,000</td><td>3,500 (ענייה)</td><td>3,500 (ענייה)</td></tr>
+        <tr><td>3</td><td>5,200</td><td>5,700 (ענייה)</td><td>6,000 (על הקו — לא ענייה)</td></tr>
+        <tr><td>4</td><td>5,800</td><td>6,300 (חצתה!)</td><td>6,000 (על הקו — לא ענייה)</td></tr>
+      </table>
+    </div></details>
+
+    <details class="disc"><summary>טענה i <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>בתוכנית א' רק משפחת ה-5,800 חוצה (6,300 &gt; 6,000); משפחת ה-5,700 נשארת מתחת. בדיוק משפחה אחת ← התחולה יורדת מ-4 עניות ל-3 ✔.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה ii <span class="verdict-ok">נכונה</span></summary><div class="inner">
+      <p>בתוכנית ב' המיקוד מדויק: 5,200+800 = 6,000 ו-5,800+200 = 6,000 — שתיהן מגיעות לקו ולפי המוסכמה ("מתחת לקו" = עני) אינן עניות עוד ← שתי משפחות נחלצו, לעומת אחת בתוכנית א' ✔. <b>זו הדגמה מושלמת של עקרון המיקוד (Targeting):</b> אותו תקציב, תחולה שונה — כשממקדים את הכסף במי שקרוב לקו.</p>
+    </div></details>
+
+    <details class="disc"><summary>טענה iii <span class="verdict-no">שגויה — וכאן ההבחנה העדינה</span></summary><div class="inner">
+      <p>פער כולל לפני: (6,000−2,000)+(6,000−3,000)+(6,000−5,200)+(6,000−5,800) = 4,000+3,000+800+200 = <b>8,000 ₪</b>.</p>
+      <p><b>תוכנית ב':</b> פערים אחרי: 3,500+2,500+0+0 = 6,000 ← ירידה של 2,000 ₪ — כל שקל עבד ✔.</p>
+      <p><b>תוכנית א':</b> פערים אחרי: 3,500+2,500+300+0 = 6,300 ← ירידה של 1,700 ₪ בלבד! משפחת ה-5,800 הייתה צריכה רק 200 ₪ כדי להגיע לקו; 300 ₪ מתוך קצבתה "זלגו" מעבר לקו ואינם נספרים בפער. </p>
+      <p>הטענה ניסתה להתחכם עם הסייג "כל עוד אף קצבה אינה עוברת את הקו" — אבל בתוכנית א' התנאי הזה <b>מופר</b>, ולכן הקביעה "יקטן ב-2,000 בשתי התוכניות באופן זהה" שגויה עובדתית לנתוני השאלה. טענה שתנאי הסייג שלה אינו מתקיים בנתונים — שגויה.</p>
+    </div></details>
+
+    <details class="disc"><summary>פירוק המסיחים + סיכום הפרק</summary><div class="inner">
+      <p>i ✔ · ii ✔ · iii ✘ ← <b>א'</b>. מסיח ב' למי שקרא את הסייג של iii ולא בדק אם הוא מתקיים; מסיח ד' למי שפסל את i בגלל בלבול "על הקו/מתחת לקו".</p>
+      <p><b>סיכום פרק ג'יני ועוני:</b> חציון ← קו ← תחולה ← פער/עומק, ובשאלות מדיניות — תמיד טבלת לפני/אחרי לכל משפחה. תחולה ועומק הם שני סיפורים שונים, ומיקוד תקציבי קובע איזה מהם משתפר.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= LABOR intro compact ================= -->
+<section class="page" data-sec="שוק העבודה">
+  <div class="card">
+    <span class="eyebrow">חלק ג' · שוק העבודה · ארגז הכלים</span>
+    <h2>סולם האוכלוסיות ושלושה מכנים</h2>
+    <div class="flow">
+      <span class="node">כלל האוכלוסייה</span><span class="arr">⊃</span>
+      <span class="node">גיל העבודה (15+)</span><span class="arr">⊃</span>
+      <span class="node">כוח העבודה = עובדים או מחפשים</span><span class="arr">=</span>
+      <span class="node">מועסקים + מובטלים</span>
+    </div>
+    <div class="def"><span class="t">מובטל:</span> לא עובד <b>וגם</b> מחפש באופן פעיל. מי שהתייאש והפסיק לחפש — יוצא מכוח העבודה ואינו מובטל סטטיסטית.</div>
+    <div class="formula">השתתפות = כוח העבודה ÷ גיל העבודה &nbsp;·&nbsp; תעסוקה = מועסקים ÷ גיל העבודה &nbsp;·&nbsp; אבטלה = מובטלים ÷ <u>כוח העבודה</u></div>
+    <div class="key"><b>נוסחת הקשר לבדיקה עצמית:</b> תעסוקה = השתתפות × (1 − אבטלה).</div>
+    <div class="tip"><b>תהליך קבוע:</b> (1) סולם "לפני" במספרים (לא אחוזים!) ← (2) מסווגים כל אדם שמצבו השתנה ← (3) סולם "אחרי" ← (4) שיעורים חדשים עם המכנה הנכון ← (5) בדיקה בנוסחת הקשר.</div>
+  </div>
+</section>
+
+<!-- ================= LABOR Q1 ================= -->
+<section class="page" data-sec="שוק העבודה">
+<div class="card qbox">
+  <span class="eyebrow">שוק העבודה · שאלה 1 מתוך 3</span>
+  <h2>הצטרפות לכוח העבודה (בסגנון שאלה 7)</h2>
+  <p>במדינה א' 21,000 אנשים, מהם 18,000 בגיל העבודה. שיעור ההשתתפות 80% ושיעור התעסוקה 75%. כעת 600 אנשים שלא חיפשו עבודה בעבר מחליטים להשתתף בשוק העבודה. רק 450 מהם מצאו עבודה והשאר ממשיכים לחפש.</p>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>שיעור האבטלה עלה לרמה של 7%.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>שיעור התעסוקה עלה ל-77.5%.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>שיעור ההשתתפות עלה ל-85%.</span></div>
+  </div>
+  <div class="opts" data-q="lb1" data-correct="0">
+    <button class="opt">א. רק טענות 1 ו-2 נכונות.</button>
+    <button class="opt">ב. רק טענה 1 נכונה.</button>
+    <button class="opt">ג. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל התשובות האחרות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'lb1h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'lb1h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'lb1h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="lb1h1"><b>רמז 1:</b> סולם "לפני": כוח עבודה = 80% × 18,000. מועסקים = 75% × 18,000 (התעסוקה מחושבת מגיל העבודה!). מובטלים = ההפרש.</div>
+    <div class="hpanel hp2" id="lb1h2"><b>רמז 2:</b> 600 המצטרפים: 450 ← מועסקים, 150 ← מובטלים (מחפשים שלא מצאו). גיל העבודה לא משתנה — הם תמיד היו בו.</div>
+    <div class="hpanel hp3" id="lb1h3"><b>רמז 3:</b> אחרי: כו"ע 15,000 · מועסקים 13,950 · מובטלים 1,050. עכשיו רק לחלק במכנים הנכונים — ולבדוק את טענה iii בזהירות: 15,000 ÷ 18,000 זה לא 85%.</div>
+  </div>
+
+  <div class="disc-wrap" id="lb1disc">
+    <div class="disc-title">דיון מלא</div>
+    <details class="disc"><summary>השלד — לפני ואחרי</summary><div class="inner">
+      <table>
+        <tr><th></th><th>לפני</th><th>שינוי</th><th>אחרי</th></tr>
+        <tr><td>גיל העבודה</td><td>18,000</td><td>—</td><td>18,000</td></tr>
+        <tr><td>כוח העבודה</td><td>14,400</td><td>+600</td><td>15,000</td></tr>
+        <tr><td>מועסקים</td><td>13,500</td><td>+450</td><td>13,950</td></tr>
+        <tr><td>מובטלים</td><td>900</td><td>+150</td><td>1,050</td></tr>
+      </table>
+    </div></details>
+    <details class="disc"><summary>טענה i — אבטלה 7% <span class="verdict-ok">נכונה</span></summary><div class="inner"><p>1,050 ÷ 15,000 = 7% ✔. שימו לב לתופעה: 450 איש מצאו עבודה ובכל זאת האבטלה <b>עלתה</b> (מ-6.25% ל-7%) — כי המצטרפים שלא מצאו נספרים כמובטלים חדשים. כניסה לשוק העבודה יכולה להעלות אבטלה — תובנה שחוזרת בבחינות שוב ושוב.</p></div></details>
+    <details class="disc"><summary>טענה ii — תעסוקה 77.5% <span class="verdict-ok">נכונה</span></summary><div class="inner"><p>13,950 ÷ 18,000 = 77.5% ✔. המכנה הוא גיל העבודה — לא כוח העבודה. מי שחילק ב-15,000 קיבל 93% וידע שמשהו לא בסדר.</p></div></details>
+    <details class="disc"><summary>טענה iii — השתתפות 85% <span class="verdict-no">שגויה</span></summary><div class="inner"><p>15,000 ÷ 18,000 = 83.33%, לא 85% ✔ ההפרך. מאיפה 85%? 80% + (600 ÷ 18,000 = 3.33%)... לא מסתדר; או חישוב מקורב מהיר. כך או כך — בדיקה: 83.33% × (1−7%) = 77.5% = שיעור התעסוקה שחישבנו ← הסולם עקבי, 85% נפסל בוודאות.</p></div></details>
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner"><p>i ✔ · ii ✔ · iii ✘ ← <b>א'</b>. מסיח ד' למי שלא בדק את ההשתתפות במספרים; מסיח ב' למי שטעה במכנה התעסוקה.</p></div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= LABOR Q2 ================= -->
+<section class="page" data-sec="שוק העבודה">
+<div class="card qbox">
+  <span class="eyebrow">שוק העבודה · שאלה 2 מתוך 3</span>
+  <h2>מובטלים מיואשים (בסגנון שאלה 6)</h2>
+  <p>במדינה א' 100 מובטלים שלא מצאו עבודה תקופה ארוכה התייאשו והחליטו להפסיק לחפש עבודה.</p>
+  <div class="claims">
+    <div class="c"><span class="rn">i.</span><span>שיעור ההשתתפות בכוח העבודה ירד.</span></div>
+    <div class="c"><span class="rn">ii.</span><span>שיעור האבטלה ירד.</span></div>
+    <div class="c"><span class="rn">iii.</span><span>שיעור התעסוקה נשאר ללא שינוי.</span></div>
+  </div>
+  <div class="opts" data-q="lb2" data-correct="3">
+    <button class="opt">א. רק טענות 1 ו-2 נכונות.</button>
+    <button class="opt">ב. רק טענה 2 נכונה.</button>
+    <button class="opt">ג. רק טענות 2 ו-3 נכונות.</button>
+    <button class="opt">ד. כל הטענות נכונות.</button>
+    <button class="opt">ה. כל הטענות אינן נכונות.</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'lb2h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'lb2h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'lb2h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="lb2h1"><b>רמז 1:</b> סווגו את המתייאשים: הם יוצאים מכוח העבודה. עדכנו: מובטלים −100, כו"ע −100, מועסקים ללא שינוי, גיל עבודה ללא שינוי.</div>
+    <div class="hpanel hp2" id="lb2h2"><b>רמז 2:</b> לשיעור האבטלה ירדו גם המונה וגם המכנה ב-100. כשהיחס קטן מ-1, הפחתה שווה משניהם <b>מקטינה</b> את היחס. אינטואיציה: אם כל המובטלים יתייאשו — האבטלה תהיה 0%.</div>
+    <div class="hpanel hp3" id="lb2h3"><b>רמז 3:</b> שיעור התעסוקה = מועסקים ÷ גיל עבודה. מי מהם השתנה? אף אחד.</div>
+  </div>
+
+  <div class="disc-wrap" id="lb2disc">
+    <div class="disc-title">דיון מלא</div>
+    <details class="disc"><summary>טענה i <span class="verdict-ok">נכונה</span></summary><div class="inner"><p>השתתפות = כו"ע ÷ גיל עבודה. המונה ירד ב-100, המכנה ללא שינוי ← השיעור ירד ✔.</p></div></details>
+    <details class="disc"><summary>טענה ii <span class="verdict-ok">נכונה</span> — עם ההוכחה המלאה</summary><div class="inner">
+      <p>לפני: U ÷ L. אחרי: (U−100) ÷ (L−100). מאחר ש-U &lt; L (תמיד יש גם מועסקים), היחס החדש קטן יותר. דוגמה מספרית: 600 ÷ 6,000 = 10% ← 500 ÷ 5,900 = 8.47% ✔. <b>הפרדוקס:</b> האבטלה ירדה בלי שאיש מצא עבודה — ולכן כלכלנים בוחנים תמיד גם את שיעור ההשתתפות לצד האבטלה: ירידת אבטלה במקביל לירידת השתתפות היא איתות שלילי, לא חיובי.</p>
+    </div></details>
+    <details class="disc"><summary>טענה iii <span class="verdict-ok">נכונה</span></summary><div class="inner"><p>מועסקים לא השתנו, גיל העבודה לא השתנה ← תעסוקה ללא שינוי ✔. זו הסיבה ששיעור התעסוקה נחשב מדד "עמיד" יותר — ייאוש מובטלים לא מזייף אותו.</p></div></details>
+    <details class="disc"><summary>פירוק המסיחים</summary><div class="inner"><p>שלוש נכונות ← <b>ד'</b>. מסיח א' למי שחשב שהתעסוקה "חייבת" להשתנות אם משהו השתנה; מסיח ב' למי שלא היה בטוח בכיוון ההשתתפות. זו בדיוק טענה iii משאלה 6 בבחינה — שם היא הוצגה כיחידה ונקבעה נכונה.</p></div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= LABOR Q3 ================= -->
+<section class="page" data-sec="שוק העבודה">
+<div class="card qbox">
+  <span class="eyebrow">שוק העבודה · שאלה 3 מתוך 3 · שאלת בוס 👑</span>
+  <h2>תוצר לנפש דרך שוק העבודה (בסגנון שאלה 13)</h2>
+  <p>במדינה א' בשנת 2010: אוכלוסייה 10,000, שיעור גיל העבודה 80%, שיעור השתתפות 75%, שיעור אבטלה 4%, תוצר 11,520,000 ₪. בשנת 2011: האוכלוסייה גדלה ב-10%, שיעור גיל העבודה וההשתתפות ללא שינוי, האבטלה ירדה ל-2%, ופריון העבודה (תוצר לעובד) גדל ב-15%. בכמה עלה התוצר לנפש? (עגלו לתשובה הקרובה)</p>
+  <div class="opts" data-q="lb3" data-correct="0">
+    <button class="opt">א. 17.4%</button>
+    <button class="opt">ב. 14.9%</button>
+    <button class="opt">ג. 21.3%</button>
+    <button class="opt">ד. 12.8%</button>
+    <button class="opt">ה. 8.5%</button>
+  </div>
+  <div class="fb"></div>
+
+  <div class="hintzone">
+    <div class="hintbtns">
+      <button class="hbtn" onclick="hint(this,'lb3h1')">💡 רמז 1</button>
+      <button class="hbtn" onclick="hint(this,'lb3h2')">🧭 רמז 2</button>
+      <button class="hbtn" onclick="hint(this,'lb3h3')">🔍 רמז 3</button>
+    </div>
+    <div class="hpanel hp1" id="lb3h1"><b>רמז 1:</b> המפתח: תוצר = מועסקים × פריון. תוצר לנפש = תוצר ÷ אוכלוסייה. בנו את שנת 2010 במלואה: גיל עבודה ← כו"ע ← מועסקים ← פריון.</div>
+    <div class="hpanel hp2" id="lb3h2"><b>רמז 2:</b> 2010: גיל עבודה 8,000 ← כו"ע 6,000 ← מועסקים = 6,000 × (1−4%) = 5,760 ← פריון = 11,520,000 ÷ 5,760 = 2,000 ₪. תוצר לנפש = 1,152 ₪. עכשיו בנו את 2011 מאפס — אל תנסו קיצורי אחוזים!</div>
+    <div class="hpanel hp3" id="lb3h3"><b>רמז 3:</b> 2011: אוכלוסייה 11,000 ← גיל עבודה 8,800 ← כו"ע 6,600 ← מועסקים = 6,600 × 98% = 6,468 ← תוצר = 6,468 × 2,300. חלקו ב-11,000 והשוו ל-1,152.</div>
+  </div>
+
+  <div class="disc-wrap" id="lb3disc">
+    <div class="disc-title">דיון מלא</div>
+    <details class="disc"><summary>הפתרון המלא בטבלה</summary><div class="inner">
+      <table>
+        <tr><th></th><th>2010</th><th>2011</th></tr>
+        <tr><td>אוכלוסייה</td><td>10,000</td><td>11,000</td></tr>
+        <tr><td>גיל עבודה (80%)</td><td>8,000</td><td>8,800</td></tr>
+        <tr><td>כוח עבודה (75%)</td><td>6,000</td><td>6,600</td></tr>
+        <tr><td>מועסקים</td><td>5,760 (96%)</td><td>6,468 (98%)</td></tr>
+        <tr><td>פריון לעובד</td><td>2,000 ₪</td><td>2,300 ₪</td></tr>
+        <tr><td>תוצר</td><td>11,520,000</td><td>14,876,400</td></tr>
+        <tr><td><b>תוצר לנפש</b></td><td><b>1,152</b></td><td><b>1,352.4</b></td></tr>
+      </table>
+      <p>שינוי: 1,352.4 ÷ 1,152 − 1 = <b>17.4%</b> ← <b>א'</b>.</p>
+    </div></details>
+    <details class="disc"><summary>למה כל מסיח אחר קיים — אנטומיה של מלכודות</summary><div class="inner">
+      <ul>
+        <li><b>ב' 14.9%:</b> מי ששכח שהאבטלה ירדה (השאיר 96% גם ב-2011): מועסקים 6,336 ← תוצר לנפש 1,324.8 ← +15.0%≈14.9% עם עיגולים. שכחת רכיב אחד = מסיח מוכן.</li>
+        <li><b>ג' 21.3%:</b> מי שחישב את גידול ה<b>תוצר</b> הכולל במקום תוצר ל<b>נפש</b>: 14,876,400 ÷ 11,520,000 − 1 = 29.1%... לא בדיוק; 21.3% מתקבל מהכפלת שיעורי שינוי בלי המכנה הנכון. בכל מקרה — קריאת השאלה ("לנפש"!) מצילה.</li>
+        <li><b>ד' 12.8%:</b> חיבור נאיבי של אחוזים: 15% (פריון) + 2% (אבטלה) − 10% (אוכלוסייה) וכדומה. אחוזים <b>מוכפלים</b>, לא מחוברים: (1.1 גיוס מועסקים בסיסי) × (98/96) × 1.15 ÷ 1.1 = 1.174.</li>
+        <li><b>ה' 8.5%:</b> מסיח רחוק לכיול — מי שהגיע אליו ערבב מכנים ביסוד.</li>
+      </ul>
+      <p><b>הדרך החסינה:</b> תמיד מספרים אבסולוטיים בטבלת שנה-מול-שנה. קיצורי אחוזים הם ביצה של טעויות.</p>
+    </div></details>
+  </div>
+</div>
+</section>
+
+<!-- ================= SUMMARY + CERT ================= -->
+<section class="page" data-sec="סיום">
+  <div class="card">
+    <span class="eyebrow">סיום המודול</span>
+    <h2>סיכום ותעודה</h2>
+    <h3>שלושת הכללים שלוקחים לבחינה</h3>
+    <ol>
+      <li><b>מט"ח:</b> כל טענה = שרשרת חוליות. שני כוחות מנוגדים על השער = "לא ניתן לדעת". מילים כמו "בוודאות" — דגל אדום; "ייתכן/עשוי" — לרוב מנוסח נכון. ספרו ערוצים על יבוא/יצוא: ערוץ אחד = ודאות, שניים מנוגדים = אי-ודאות.</li>
+      <li><b>ג'יני ועוני:</b> חציון ← קו (50%) ← תחולה ← פער/עומק. תחולה ועומק הם מדדים שונים; מיקוד תקציבי קובע מי מהם משתפר; וקצבה ש"זולגת" מעבר לקו לא נספרת בפער.</li>
+      <li><b>שוק העבודה:</b> סולם אוכלוסיות במספרים, לפני/אחרי, שלושה מכנים שונים, ובדיקה עם תעסוקה = השתתפות × (1−אבטלה). מובטל מיואש יוצא מכוח העבודה ומוריד אבטלה "מזויפת".</li>
+    </ol>
+    <div style="text-align:center;margin-top:20px">
+      <p class="small" id="remainCount"></p>
+      <button class="btn" id="certBtn" onclick="showCertificate()" disabled>הנפקת תעודת השלמה 🎓</button>
+    </div>
+  </div>
+
+  <div class="card hidden" id="certWrap">
+    <div id="certificate">
+      <div class="seal">🎓</div>
+      <h2>תעודת השלמה</h2>
+      <p>מוענקת בזאת ל:</p>
+      <div class="cname" id="certName"></div>
+      <div class="cid" id="certId"></div>
+      <p>על השלמת מודול התרגול המתקדם</p>
+      <p><b>שוק המט"ח · מדד ג'יני, עומק ופער העוני · שוק העבודה</b></p>
+      <p class="small">כלכלה לחשבונאים ג'</p>
+      <div class="score" id="certScore"></div>
+      <p class="small" id="certDate"></p>
+      <br>
+      <button class="btn no-print" onclick="window.print()">הדפסה / שמירה כ-PDF 🖨</button>
+    </div>
+  </div>
+</section>
+
+</div><!-- wrap -->
+
+<!-- NAV -->
+<div class="navbar no-print">
+  <button class="nbtn ghost" id="prevBtn" onclick="go(-1)">→ הקודם</button>
+  <span class="pagedots" id="pageDots"></span>
+  <button class="nbtn" id="nextBtn" onclick="go(1)">הבא ←</button>
+</div>
+
+<script>
+let student={name:"",id:""};
+let answered={}, firstTry={};
+const pages=[...document.querySelectorAll('.page')];
+let cur=0;
+const TOTAL=document.querySelectorAll('.opts').length;
+
+function render(){
+  pages.forEach((p,i)=>p.classList.toggle('active',i===cur));
+  document.getElementById('prevBtn').disabled=(cur===0);
+  document.getElementById('nextBtn').disabled=(cur===0&&!student.name)||(cur===pages.length-1);
+  document.getElementById('pageDots').textContent='עמוד '+(cur+1)+' / '+pages.length;
+  document.getElementById('secLabel').textContent=pages[cur].dataset.sec;
+  window.scrollTo({top:0,behavior:'smooth'});
+  updateProgress();
+}
+function go(d){
+  if(cur===0&&d===1&&!student.name)return;
+  cur=Math.min(Math.max(cur+d,0),pages.length-1);
+  render();
+}
+function register(){
+  const n=document.getElementById('fullName').value.trim();
+  const id=document.getElementById('idNum').value.trim();
+  const err=document.getElementById('regErr');
+  if(!n||!/^\d{9}$/.test(id)){err.classList.add('show');return;}
+  err.classList.remove('show');
+  student={name:n,id:id};
+  cur=1;render();
+}
+function hint(btn,id){
+  btn.classList.add('used');
+  document.getElementById(id).classList.add('show');
+}
+
+document.querySelectorAll('.opts').forEach(grp=>{
+  const qid=grp.dataset.q, correct=+grp.dataset.correct;
+  const fb=grp.parentElement.querySelector('.fb');
+  let attempts=0;
+  grp.querySelectorAll('.opt').forEach((btn,i)=>{
+    btn.addEventListener('click',()=>{
+      if(answered[qid])return;
+      attempts++;
+      if(i===correct){
+        btn.classList.add('correct');
+        grp.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+        answered[qid]=true;
+        if(attempts===1)firstTry[qid]=true;
+        fb.className='fb show ok';
+        fb.textContent=(attempts===1?'מצוין! נכון מהניסיון הראשון ✔':'נכון ✔ (ניסיון '+attempts+')')+' — הדיון המלא על כל מסיח נפתח למטה.';
+        const disc=document.getElementById(qid+'disc');
+        if(disc)disc.classList.add('show');
+        updateProgress();
+      }else{
+        btn.classList.add('wrong');btn.disabled=true;
+        fb.className='fb show no';
+        fb.textContent='לא מדויק. השתמשו ברמזים המדורגים ונסו שוב 👇';
+      }
+    });
+  });
+});
+
+function updateProgress(){
+  const done=Object.keys(answered).length;
+  const pct=Math.round(done/TOTAL*100);
+  document.getElementById('pbFill').style.width=pct+'%';
+  document.getElementById('pbText').textContent=done+'/'+TOTAL+' שאלות';
+  const btn=document.getElementById('certBtn'), remain=document.getElementById('remainCount');
+  if(btn&&remain){
+    if(done===TOTAL){btn.disabled=false;remain.textContent='כל '+TOTAL+' השאלות הושלמו — התעודה מוכנה! 🎉';}
+    else{remain.textContent='נותרו '+(TOTAL-done)+' שאלות. ניתן לדפדף אחורה ולהשלים.';}
+  }
+}
+function showCertificate(){
+  const ft=Object.keys(firstTry).length;
+  document.getElementById('certName').textContent=student.name;
+  document.getElementById('certId').textContent='ת.ז. '+student.id;
+  document.getElementById('certScore').textContent='הושלמו '+TOTAL+' שאלות ברמת בחינה · '+ft+' נפתרו נכון בניסיון הראשון';
+  document.getElementById('certDate').textContent='הונפקה בתאריך: '+new Date().toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('certWrap').classList.remove('hidden');
+  document.getElementById('certWrap').scrollIntoView({behavior:'smooth'});
+}
+render();
+</script>
+</body>
+</html>
