@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שוק מט״ח – מאפס למאה (חלק ב׳)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --navy: #1a2744;
+    --navy-light: #243460;
+    --gold: #c9a84c;
+    --bg-color: #f0f4f8;
+    --white: #ffffff;
+    --gray: #555;
+    --gray-light: #e0e0e0;
+    --blue: #2980b9;
+    --orange: #d35400;
+    --green: #27ae60;
+    --red: #c0392b;
+    --purple: #8e44ad;
+    --teal: #16a085;
+    --shadow: 0 10px 40px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg-color);
+    color: #333;
+    line-height: 1.7;
+  }
+
+  /* ─── HEADER & NAV ─── */
+  header {
+    background: linear-gradient(135deg, var(--teal) 0%, var(--navy) 100%);
+    color: var(--white);
+    padding: 3rem 2rem 4rem;
+    text-align: center;
+    border-bottom: 5px solid var(--gold);
+  }
+  header .badge {
+    display: inline-block; background: var(--gold); color: var(--navy);
+    padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;
+    margin-bottom: 15px; letter-spacing: 1px;
+  }
+  header h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; }
+  header p { font-size: 1.3rem; opacity: 0.9; font-weight: 300; }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: -25px;
+    position: relative;
+    z-index: 20;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    background: var(--white);
+    color: var(--navy);
+    border: 2px solid var(--gray-light);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: var(--transition);
+  }
+  .nav-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-btn:hover:not(.active) { border-color: var(--navy); transform: translateY(-2px); }
+
+  main {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  /* ─── SECTIONS ─── */
+  .chapter { display: none; animation: fadeIn 0.5s ease forwards; }
+  .chapter.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+  .intro-box {
+    background: #fff; border-right: 5px solid var(--teal); padding: 25px;
+    border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 30px;
+  }
+  .intro-box h2 { color: var(--navy); margin-bottom: 15px; }
+  .intro-box p { font-size: 1.1rem; margin-bottom: 10px; }
+  .highlight { background: #e8f8f5; padding: 2px 6px; border-radius: 4px; font-weight: 600; color: var(--teal); }
+
+  /* ─── INTERACTIVE LAYOUT ─── */
+  .interactive-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr;
+    gap: 30px;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+  }
+  @media (max-width: 950px) { .interactive-grid { grid-template-columns: 1fr; } }
+
+  /* ─── CONTROLS & LOGIC ─── */
+  .controls-col { display: flex; flex-direction: column; gap: 15px; }
+  .step-btn {
+    background: #f8f9fa; border: 2px solid #e9ecef; padding: 16px 20px;
+    border-radius: 12px; text-align: right; cursor: pointer;
+    font-size: 1.1rem; font-weight: 700; color: var(--navy);
+    transition: var(--transition);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .step-btn:hover:not(:disabled) { border-color: var(--teal); background: #f0fbf8; }
+  .step-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .step-btn.completed { background: var(--teal); color: var(--white); border-color: var(--teal); }
+
+  .logic-panel {
+    background: #fdfdfe; border: 1px solid #e1e5eb; border-radius: 12px;
+    padding: 20px; margin-top: 5px; margin-bottom: 10px; display: none;
+    animation: slideDown 0.4s ease forwards;
+  }
+  .logic-panel.visible { display: block; }
+  
+  .logic-chain { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .logic-item { background: #fff; padding: 12px 15px; border-radius: 8px; border: 1px solid #eee; font-weight: 500; display: flex; align-items: center; gap: 10px;}
+  .logic-arrow-down { text-align: center; color: var(--gray); font-size: 1.5rem; margin: -5px 0; font-weight: bold; }
+
+  /* ─── LOGIC ANIMATION & NEXT BUTTON ─── */
+  .logic-step-hidden { display: none !important; }
+  .logic-step-anim { animation: fadeInDown 0.4s ease forwards; }
+  @keyframes fadeInDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+  
+  .btn-logic-next {
+    background: var(--gold); color: var(--navy); border: none; padding: 12px 16px; 
+    border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; width: 100%; 
+    transition: 0.2s; font-size: 1.05rem; display: flex; justify-content: center; align-items: center; gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .btn-logic-next:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  .summary-table-container { display: none; margin-top: 10px; margin-bottom: 15px; animation: fadeIn 0.6s ease forwards;}
+  .summary-table-container.visible { display: block; }
+  table.summary { width: 100%; border-collapse: collapse; text-align: right; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;}
+  table.summary th { background: var(--navy); color: white; padding: 12px; }
+  table.summary td { padding: 12px; border-bottom: 1px solid #eee; }
+  table.summary tr:last-child td { border-bottom: none; }
+  .dir-up { color: var(--green); font-weight: bold; }
+  .dir-down { color: var(--red); font-weight: bold; }
+
+  /* ─── GRAPH COL ─── */
+  .graph-col { position: relative; background: #fafafa; border-radius: 12px; border: 2px solid #eee; padding: 15px; display:flex; align-items:center; }
+  canvas { width: 100%; height: 500px; display: block; }
+
+  /* ─── EXAM SIMULATOR UI ─── */
+  .exam-question {
+    background: #fff; border: 2px solid var(--navy); border-radius: 12px; padding: 25px; margin-bottom: 30px;
+  }
+  .exam-q-text { font-size: 1.2rem; font-weight: bold; color: var(--navy); margin-bottom: 20px; line-height: 1.5; }
+  .exam-options { display: flex; gap: 15px; margin-bottom: 20px; }
+  .exam-btn { 
+    flex: 1; padding: 15px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer;
+    border: 2px solid #ddd; background: #fafafa; transition: 0.2s;
+  }
+  .exam-btn:hover { border-color: var(--navy); }
+  .exam-btn.selected-true { background: var(--green); color: white; border-color: var(--green); }
+  .exam-btn.selected-false { background: var(--red); color: white; border-color: var(--red); }
+  
+  .exam-feedback { display: none; margin-top: 20px; padding: 20px; border-radius: 8px; background: #eaf8f5; border: 2px solid var(--teal); }
+  .exam-feedback.visible { display: block; animation: fadeInDown 0.5s ease; }
+
+  .btn-reset { margin-top: auto; padding: 12px; background: #eee; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.05rem;}
+  .btn-reset:hover { background: #ddd; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">חלק ב׳ – רמת מבחן</div>
+  <h1>שוק המט״ח למתקדמים</h1>
+  <p>השפעות הכלכלה העולמית, התנגשות כוחות וסימולטור מבחן</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="switchTab(1)">פרק 1: הכלכלה העולמית</button>
+  <button class="nav-btn" onclick="switchTab(2)">פרק 2: התנגשות כוחות</button>
+  <button class="nav-btn" style="background:#f39c12; color:#fff; border:none;" onclick="switchTab(3)">פרק 3: סימולטור מבחן 🎓</button>
+</nav>
+
+<main>
+
+  <!-- ==========================================
+       CHAPTER 1: GLOBAL ECONOMY (Y_w, r_w)
+       ========================================== -->
+  <section id="chap1" class="chapter active">
+    <div class="intro-box">
+      <h2>🌍 פרק 1: השפעות הכלכלה העולמית</h2>
+      <p>עד כה דיברנו על שינויים שקורים <strong>בתוך ישראל</strong> (תוצר מקומי, ריבית מקומית). כעת נבחן איך שינויים <strong>בעולם</strong> משפיעים על שוק המט"ח המקומי שלנו.</p>
+    </div>
+
+    <!-- Case 1A: World GDP UP -->
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">תרחיש א': התוצר העולמי גדל (Yw ↑)</h3>
+        <p style="font-size:0.95rem; margin-bottom:15px;">אזרחי העולם עשירים יותר. כיצד זה משפיע עלינו?</p>
+
+        <button class="step-btn" id="c1a-btn1" onclick="runChap1AStep(1)">1. תגובת היצואנים <span>+</span></button>
+        <div class="logic-panel" id="c1a-log1">
+          <div class="logic-chain" id="chain-c1a-1">
+            <div class="logic-item">🌍 התוצר העולמי עולה ← הביקוש למוצרים ישראליים בעולם גדל.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📦 היצואנים מנצלים את ההזדמנות ומייצאים יותר סחורות.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 היצואנים מקבלים יותר דולרים, ולכן <strong>היצע המט"ח גדל</strong> (זז ימינה).</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c1a-1" onclick="nextLogic('chain-c1a-1', this, () => {
+             graph1a.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S1 (עקב תוצר עולמי)'));
+             graph1a.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+             document.getElementById('c1a-btn2').disabled = false;
+          })">המשך לוגיקה ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c1a-btn2" onclick="runChap1AStep(2)" disabled>2. התוצאה והטבלה <span>✓</span></button>
+        <div class="logic-panel" id="c1a-log2">
+          <strong>נקודה B: שיווי משקל חדש</strong>
+          <p>השוק מוצף בדולרים מייצוא, ולכן מחיר הדולר יורד (ייסוף).</p>
+        </div>
+        <div class="summary-table-container" id="c1a-tab2">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-down">↓ יורד (ייסוף)</td>
+              <td>גידול בהיצע הדולרים מוריד את מחירם.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>זהו הגורם שיצר את השינוי! למרות ששע"ח ירד, ההשפעה של התוצר העולמי חזקה יותר.</td>
+            </tr>
+            <tr>
+              <td>ייבוא (IM)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>הדולר זול יותר, ולכן ליבואנים שווה לקנות יותר (תנועה על העקומה הכחולה).</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap1A()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap1a"></canvas>
+      </div>
+    </div>
+
+    <!-- Case 1B: World Interest Rate DOWN -->
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">תרחיש ב': הריבית העולמית יורדת (rw ↓)</h3>
+        <p style="font-size:0.95rem; margin-bottom:15px;">הבנק המרכזי בארה"ב מוריד ריבית. כיצד יגיב ההון העולמי?</p>
+
+        <button class="step-btn" id="c1b-btn1" onclick="runChap1BStep(1)">1. תנועות ההון <span>+</span></button>
+        <div class="logic-panel" id="c1b-log1">
+          <div class="logic-chain" id="chain-c1b-1">
+            <div class="logic-item">📉 ריבית בארה"ב יורדת ← פחות משתלם להשקיע שם.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🌍 משקיעים בעולם מחפשים אלטרנטיבות ומוצאים שהריבית בישראל כעת אטרקטיבית יותר <strong>באופן יחסי</strong>.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💵 נוצרת <strong>תנועת הון נכנסת</strong> לישראל ← ההיצע הכולל של מט"ח גדל.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c1b-1" onclick="nextLogic('chain-c1b-1', this, () => {
+             graph1b.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S_total'));
+             graph1b.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+             document.getElementById('c1b-btn2').disabled = false;
+          })">המשך לוגיקה ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c1b-btn2" onclick="runChap1BStep(2)" disabled>2. התוצאה והפער האופקי <span>✓</span></button>
+        <div class="logic-panel" id="c1b-log2">
+          <div class="logic-chain" id="chain-c1b-2">
+            <div class="logic-item">📉 שער החליפין ירד (נקודה B).</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🏭 היצואנים סופגים מכה: הדולר זול ולכן הם מקטינים ייצוא (נקודה C על העקומה המקורית).</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#eafaf1; border-color:#27ae60;">💡 <strong>הפער:</strong> המרחק בין C (היצוא) ל-B (היבוא) הוא בדיוק גודל ההון הנכנס מחו"ל שכיסה על הגירעון.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c1b-2" onclick="nextLogic('chain-c1b-2', this, () => {
+             graph1b.addElement(pointDraw(6, 4, 'Q_total', 'e1', 'B', '#27ae60', true));
+             graph1b.addElement(pointDraw(4, 4, 'Q_export', '', 'C', '#d35400', true));
+             graph1b.addElement(horizontalBraceDraw(4, 6, 4, 'הון נכנס זר', '#8e44ad'));
+             document.getElementById('c1b-tab2').classList.add('visible');
+          })">הצג בגרף 📊</button>
+        </div>
+        <div class="summary-table-container" id="c1b-tab2">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-down">↓ יורד (ייסוף)</td>
+              <td>זרם הדולרים של המשקיעים מוריד את מחיר הדולר.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-down">↓ יורד</td>
+              <td>מחיר הדולר נמוך, ולכן פחות משתלם לייצא.</td>
+            </tr>
+            <tr>
+              <td>פער (EX-IM)</td>
+              <td class="dir-down">גירעון מסחרי</td>
+              <td>ייבוא (B) גדול מייצוא (C).</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap1B()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap1b"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       CHAPTER 2: ADVANCED COMBINED SCENARIOS
+       ========================================== -->
+  <section id="chap2" class="chapter">
+    <div class="intro-box">
+      <h2>⚔️ פרק 2: התנגשות כוחות מתקדמת</h2>
+      <p>שילוב של אירוע בעולם יחד עם אירוע מקומי (התערבות בנק ישראל). ננתח את שני הכוחות צעד אחר צעד.</p>
+    </div>
+
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">תוצר עולמי גדל + בנק ישראל קונה דולרים</h3>
+        
+        <button class="step-btn" id="c2-btn1" onclick="runChap2Step(1)">1. כוח ראשון: תוצר עולמי עולה <span>+</span></button>
+        <div class="logic-panel" id="c2-log1">
+          <div class="logic-chain" id="chain-c2-1">
+            <div class="logic-item">🌍 כפי שראינו בפרק 1: זה מגדיל ייצוא.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 היצע המט"ח זז ימינה.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#eafaf1; border-color:#27ae60;">💡 <strong>מסקנת ביניים:</strong> הכוח הזה דוחף את שער החליפין <strong>כלפי מטה</strong> (לנקודה B).</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2-1" onclick="nextLogic('chain-c2-1', this, () => {
+             graph2.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S1 (תוצר עולמי)'));
+             graph2.addElement(pointDraw(6, 4, '', '', 'B', '#27ae60', false));
+             graph2.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+             document.getElementById('c2-btn2').disabled = false;
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <button class="step-btn" id="c2-btn2" onclick="runChap2Step(2)" disabled>2. כוח שני: בנק ישראל קונה <span>+</span></button>
+        <div class="logic-panel" id="c2-log2">
+          <div class="logic-chain" id="chain-c2-2">
+            <div class="logic-item">🏦 בנק ישראל מצטרף ליבואנים כקונה נוסף.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 הביקוש הכולל בשוק זז ימינה.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#f8d7da; border-color:#c0392b;">💡 <strong>מסקנת ביניים:</strong> הכוח הזה, מנקודה B, דוחף את שער החליפין בחזרה <strong>כלפי מעלה</strong>.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2-2" onclick="nextLogic('chain-c2-2', this, () => {
+             graph2.addElement(curveDraw(2,10, 10,2, '#8e44ad', 'D_total (כולל בנק ישראל)'));
+             graph2.addElement(shiftArrowDraw(6, 4, 7, 5, '#8e44ad'));
+             document.getElementById('c2-btn3').disabled = false;
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <button class="step-btn" id="c2-btn3" onclick="runChap2Step(3)" disabled>3. ניתוח התוצאה הסופית <span>✓</span></button>
+        <div class="logic-panel" id="c2-log3">
+          <strong>נקודה C: מה אפשר לדעת בוודאות?</strong>
+          <p>המחיר ירד ואז עלה, ולכן אי אפשר לדעת מה קרה ל-e. אבל שימו לב לייצוא: מ-A ל-B הוא גדל (תזוזת עקומה), ומ-B ל-C הוא גדל שוב (טיפוס על העקומה בגלל עליית המחיר). ולכן <strong>הייצוא בוודאות גדל</strong>!</p>
+        </div>
+        <div class="summary-table-container" id="c2-tab3">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-down" style="color:#f39c12">? לא ידוע</td>
+              <td>כוחות מנוגדים (היצע הוריד, ביקוש העלה).</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-up">↑ עולה בוודאות</td>
+              <td>גם התוצר העולמי וגם עליית המחיר בשלב השני תרמו להגדלת הייצוא.</td>
+            </tr>
+            <tr>
+              <td>ייבוא (IM)</td>
+              <td class="dir-down" style="color:#f39c12">? לא ידוע</td>
+              <td>נקבע רק לפי שער החליפין הסופי, שאותו איננו יודעים.</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap2()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap2"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       CHAPTER 3: EXAM SIMULATOR
+       ========================================== -->
+  <section id="chap3" class="chapter">
+    <div class="intro-box" style="border-color:#f39c12;">
+      <h2 style="color:#e67e22;">🎓 פרק 3: סימולטור שאלות ממבחנים</h2>
+      <p>כעת נעמיד את הידע שלכם למבחן! קראו את הטענה המורכבת (לקוחה ממבחני עבר), החליטו אם היא נכונה, ואז חשפו את ההוכחה הגרפית צעד-אחר-צעד.</p>
+    </div>
+
+    <!-- Exam Question 1 -->
+    <div class="exam-question" id="exam-q1">
+      <div class="exam-q-text">
+        "במידה והתוצר בישראל גדל, ובמקביל בנק ישראל מוריד את הריבית המקומית, אז יתרחש פיחות במטבע המקומי (שע"ח יעלה) והייבוא בוודאות יגדל."
+      </div>
+      <div class="exam-options">
+        <button class="exam-btn" onclick="answerExam(1, true)">✅ הטענה נכונה</button>
+        <button class="exam-btn" onclick="answerExam(1, false)">❌ הטענה שגויה</button>
+      </div>
+
+      <div class="exam-feedback" id="exam-feed1">
+        <h3 id="exam-res-title1" style="margin-bottom:10px;"></h3>
+        <p>בואו נוכיח את זה בגרף! נבצע את השלבים שלמדנו:</p>
+        
+        <div class="logic-chain" id="chain-exam-1" style="margin-top:15px; margin-bottom:15px;">
+          <div class="logic-item">💰 <strong>כוח 1 (תוצר גדל):</strong> מגדיל את הביקוש לייבוא ← העקומה הכחולה זזה ימינה. המחיר (e) <strong>עולה</strong>.</div>
+          <div class="logic-step-anim logic-step-hidden">
+            <div class="logic-arrow-down">↓</div>
+            <div class="logic-item">📉 <strong>כוח 2 (ריבית יורדת):</strong> הון בורח לחו"ל ← העקומה הכתומה (היצע) זזה שמאלה. הופס! חסר דולרים בשוק, ולכן המחיר (e) <strong>עולה עוד יותר</strong>.</div>
+          </div>
+          <div class="logic-step-anim logic-step-hidden">
+            <div class="logic-arrow-down">↓</div>
+            <div class="logic-item">💡 <strong>מסקנה לגבי e:</strong> שני הכוחות דחפו למעלה, לכן <strong>התרחש פיחות בוודאות (e עלה)</strong>. עד כאן הטענה צדקה.</div>
+          </div>
+          <div class="logic-step-anim logic-step-hidden">
+            <div class="logic-arrow-down">↓</div>
+            <div class="logic-item" style="background:#f8d7da; border-color:#c0392b;">🚨 <strong>הקאטצ' לגבי ייבוא:</strong> התוצר המקומי דחף את היבואנים לקנות יותר. אבל התייקרות הדולר (e עלה מאוד) גרמה לייבוא להיות יקר ומקטינה את הרצון לקנות! אלו כוחות מנוגדים. לא ניתן לדעת בוודאות שהייבוא יגדל! ולכן <strong>הטענה שגויה</strong>.</div>
+          </div>
+        </div>
+        <button class="btn-logic-next" id="btn-nxt-exam-1" onclick="nextLogic('chain-exam-1', this, () => {
+           drawExam1Graph();
+        })">המשך לוגיקה ⬇</button>
+
+        <div style="height:400px; margin-top:20px; border:2px solid #ddd; border-radius:12px; background:#fff; position:relative;">
+           <canvas id="canvas-exam1"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+  // ==========================================
+  // OOP GRAPHING ENGINE (Reused & Isolated for Part 2)
+  // ==========================================
+  class ForexGraph {
+    constructor(canvasId) {
+      this.canvas = document.getElementById(canvasId);
+      if(!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.pad = { t: 40, r: 40, b: 60, l: 60 };
+      this.elements = []; 
+      
+      this.resize();
+      window.addEventListener('resize', () => this.resize());
+    }
+
+    resize() {
+      if(!this.canvas || !this.canvas.parentElement) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = this.canvas.parentElement.getBoundingClientRect();
+      this.canvas.width = rect.width * dpr;
+      this.canvas.height = rect.height * dpr;
+      this.ctx.scale(dpr, dpr);
+      this.canvas.style.width = `${rect.width}px`;
+      this.canvas.style.height = `${rect.height}px`;
+      
+      this.W = rect.width;
+      this.H = rect.height;
+      this.chartW = this.W - this.pad.l - this.pad.r;
+      this.chartH = this.H - this.pad.t - this.pad.b;
+      
+      this.draw();
+    }
+
+    getX(val) { return this.pad.l + (val / 10) * this.chartW; }
+    getY(val) { return this.H - this.pad.b - (val / 10) * this.chartH; }
+
+    clear() { this.elements = []; this.draw(); }
+    addElement(drawFn) { this.elements.push(drawFn); this.draw(); }
+
+    draw() {
+      if(!this.ctx) return;
+      this.ctx.clearRect(0, 0, this.W, this.H);
+      this.drawAxes();
+      this.elements.forEach(fn => fn(this.ctx, this));
+    }
+
+    drawAxes() {
+      const ctx = this.ctx;
+      ctx.strokeStyle = '#2c3e50';
+      ctx.lineWidth = 2.5;
+      
+      ctx.beginPath();
+      ctx.moveTo(this.pad.l, this.pad.t);
+      ctx.lineTo(this.pad.l, this.H - this.pad.b);
+      ctx.lineTo(this.W - this.pad.r, this.H - this.pad.b);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(this.pad.l - 6, this.pad.t + 10); ctx.lineTo(this.pad.l, this.pad.t); ctx.lineTo(this.pad.l + 6, this.pad.t + 10);
+      ctx.moveTo(this.W - this.pad.r - 10, this.H - this.pad.b - 6); ctx.lineTo(this.W - this.pad.r, this.H - this.pad.b); ctx.lineTo(this.W - this.pad.r - 10, this.H - this.pad.b + 6);
+      ctx.stroke();
+
+      ctx.fillStyle = '#2c3e50';
+      ctx.font = 'bold 16px Heebo';
+      ctx.textAlign = 'center';
+      ctx.fillText('כמות הדולרים (Q)', this.W / 2, this.H - 15);
+      
+      ctx.textAlign = 'left';
+      ctx.fillText('מחיר הדולר', this.pad.l + 15, this.pad.t);
+      ctx.fillText('בשקלים (e)', this.pad.l + 15, this.pad.t + 22);
+    }
+
+    drawMathText(text, x, y, align = 'center', color = '#333', font = 'bold 18px Heebo') {
+      this.ctx.save();
+      this.ctx.fillStyle = color;
+      this.ctx.font = font;
+      this.ctx.textAlign = align;
+      this.ctx.direction = 'ltr'; 
+      this.ctx.fillText(text, x, y);
+      this.ctx.restore();
+    }
+  }
+
+  // Draw Functions
+  const curveDraw = (x1, y1, x2, y2, color, label, isDashed=false) => (ctx, g) => {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    if(isDashed) ctx.setLineDash([8,6]);
+    const px1 = g.getX(x1), py1 = g.getY(y1), px2 = g.getX(x2), py2 = g.getY(y2);
+    ctx.moveTo(px1, py1); ctx.lineTo(px2, py2); ctx.stroke();
+    ctx.setLineDash([]);
+    if(label) {
+      const align = 'right';
+      const offsetX = -15;
+      const offsetY = (y2 > y1) ? 25 : -10; 
+      g.drawMathText(label, px2 + offsetX, py2 + offsetY, align, color, 'bold 18px Heebo');
+    }
+  };
+
+  const pointDraw = (x, y, labelX, labelY, labelPoint, color='#e74c3c', isHighlight=false) => (ctx, g) => {
+    ctx.beginPath(); ctx.setLineDash([5, 5]); ctx.strokeStyle = '#95a5a6'; ctx.lineWidth = 2;
+    ctx.moveTo(g.getX(x), g.getY(y)); ctx.lineTo(g.getX(x), g.getY(0));
+    ctx.moveTo(g.getX(x), g.getY(y)); ctx.lineTo(g.getX(0), g.getY(y));
+    ctx.stroke(); ctx.setLineDash([]);
+    if(isHighlight) {
+      ctx.beginPath(); ctx.arc(g.getX(x), g.getY(y), 15, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(241, 196, 15, 0.4)'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(g.getX(x), g.getY(y), isHighlight ? 8 : 6, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    g.drawMathText(labelPoint, g.getX(x) - 18, g.getY(y) - 18, 'center', color, isHighlight ? 'bold 24px Heebo' : 'bold 20px Heebo');
+    if(labelX) g.drawMathText(labelX, g.getX(x), g.getY(0) + 25, 'center', '#34495e');
+    if(labelY) g.drawMathText(labelY, g.getX(0) - 15, g.getY(y) + 6, 'right', '#34495e');
+  };
+
+  const shiftArrowDraw = (x1, y1, x2, y2, color='#2c3e50') => (ctx, g) => {
+    const px1 = g.getX(x1), py1 = g.getY(y1), px2 = g.getX(x2), py2 = g.getY(y2);
+    const headlen = 14; const angle = Math.atan2(py2 - py1, px2 - px1);
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.setLineDash([6, 4]);
+    ctx.moveTo(px1, py1); ctx.lineTo(px2, py2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.fillStyle = color;
+    ctx.moveTo(px2, py2);
+    ctx.lineTo(px2 - headlen * Math.cos(angle - Math.PI / 6), py2 - headlen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(px2 - headlen * Math.cos(angle + Math.PI / 6), py2 - headlen * Math.sin(angle + Math.PI / 6));
+    ctx.fill();
+  };
+
+  const horizontalBraceDraw = (xStart, xEnd, y, label, color) => (ctx, g) => {
+    const py = g.getY(y), px1 = g.getX(xStart), px2 = g.getX(xEnd);
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 3;
+    ctx.moveTo(px1, py); ctx.lineTo(px2, py);
+    ctx.moveTo(px1, py - 8); ctx.lineTo(px1, py + 8);
+    ctx.moveTo(px2, py - 8); ctx.lineTo(px2, py + 8);
+    ctx.stroke();
+    g.drawMathText(label, (px1+px2)/2, py - 12, 'center', color, 'bold 16px Heebo');
+  };
+
+  // Shared Logic Logic
+  function nextLogic(chainId, btn, onComplete) {
+    const chain = document.getElementById(chainId);
+    if(!chain) return;
+    const hiddenSteps = chain.querySelectorAll('.logic-step-hidden');
+    if (hiddenSteps.length > 0) {
+      hiddenSteps[0].classList.remove('logic-step-hidden');
+      if (hiddenSteps.length === 1) {
+        btn.innerHTML = 'הצג תוצאה בגרף 📊';
+        btn.style.background = 'var(--teal)'; btn.style.color = 'white';
+      }
+    } else {
+      btn.style.display = 'none';
+      if(onComplete) onComplete();
+    }
+  }
+
+  function resetLogicChain(chainId, btnId) {
+    const chain = document.getElementById(chainId);
+    if(chain) {
+      const steps = chain.querySelectorAll('.logic-step-anim');
+      steps.forEach(s => s.classList.add('logic-step-hidden'));
+    }
+    const btn = document.getElementById(btnId);
+    if(btn) {
+      btn.style.display = 'flex';
+      btn.innerHTML = 'המשך לוגיקה ⬇';
+      btn.style.background = 'var(--gold)'; btn.style.color = 'var(--navy)';
+    }
+  }
+
+  // ==========================================
+  // CHAPTER 1A (World GDP UP)
+  // ==========================================
+  const graph1a = new ForexGraph('canvas-chap1a');
+  function initChap1A() {
+    graph1a.resize(); graph1a.clear();
+    graph1a.addElement(curveDraw(0,0, 10,10, '#d35400', 'S0'));
+    graph1a.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D0'));
+    graph1a.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+  }
+  function runChap1AStep(step) {
+    document.getElementById(`c1a-btn${step}`).classList.add('completed');
+    document.getElementById(`c1a-log${step}`).classList.add('visible');
+    if(step === 2) {
+      graph1a.addElement(pointDraw(6, 4, 'Q1', 'e1', 'B', '#27ae60', true));
+      document.getElementById('c1a-tab2').classList.add('visible');
+    }
+  }
+  function resetChap1A() {
+    initChap1A();
+    [1,2].forEach(i => {
+      let b = document.getElementById(`c1a-btn${i}`);
+      if(b) { b.classList.remove('completed'); if(i>1) b.disabled = true; }
+      let l = document.getElementById(`c1a-log${i}`); if(l) l.classList.remove('visible');
+    });
+    let tab = document.getElementById('c1a-tab2'); if(tab) tab.classList.remove('visible');
+    document.getElementById('btn-nxt-c1a-1').onclick = function() {
+      nextLogic('chain-c1a-1', this, () => {
+         graph1a.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S1 (עקב תוצר)'));
+         graph1a.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+         document.getElementById('c1a-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c1a-1', 'btn-nxt-c1a-1');
+  }
+
+  // ==========================================
+  // CHAPTER 1B (World Interest Rate DOWN)
+  // ==========================================
+  const graph1b = new ForexGraph('canvas-chap1b');
+  function initChap1B() {
+    graph1b.resize(); graph1b.clear();
+    graph1b.addElement(curveDraw(0,0, 10,10, '#d35400', 'S_export', true));
+    graph1b.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D0'));
+    graph1b.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+  }
+  function runChap1BStep(step) {
+    document.getElementById(`c1b-btn${step}`).classList.add('completed');
+    document.getElementById(`c1b-log${step}`).classList.add('visible');
+  }
+  function resetChap1B() {
+    initChap1B();
+    [1,2].forEach(i => {
+      let b = document.getElementById(`c1b-btn${i}`);
+      if(b) { b.classList.remove('completed'); if(i>1) b.disabled = true; }
+      let l = document.getElementById(`c1b-log${i}`); if(l) l.classList.remove('visible');
+    });
+    let tab = document.getElementById('c1b-tab2'); if(tab) tab.classList.remove('visible');
+    
+    document.getElementById('btn-nxt-c1b-1').onclick = function() {
+      nextLogic('chain-c1b-1', this, () => {
+         graph1b.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S_total'));
+         graph1b.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+         document.getElementById('c1b-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c1b-1', 'btn-nxt-c1b-1');
+
+    document.getElementById('btn-nxt-c1b-2').onclick = function() {
+      nextLogic('chain-c1b-2', this, () => {
+         graph1b.addElement(pointDraw(6, 4, 'Q_total', 'e1', 'B', '#27ae60', true));
+         graph1b.addElement(pointDraw(4, 4, 'Q_export', '', 'C', '#d35400', true));
+         graph1b.addElement(horizontalBraceDraw(4, 6, 4, 'הון נכנס זר', '#8e44ad'));
+         document.getElementById('c1b-tab2').classList.add('visible');
+      });
+    };
+    resetLogicChain('chain-c1b-2', 'btn-nxt-c1b-2');
+  }
+
+  // ==========================================
+  // CHAPTER 2 (World GDP UP + BOI Buys)
+  // ==========================================
+  const graph2 = new ForexGraph('canvas-chap2');
+  function initChap2() {
+    graph2.resize(); graph2.clear();
+    graph2.addElement(curveDraw(0,0, 10,10, '#d35400', 'S0'));
+    graph2.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D_public'));
+    graph2.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+  }
+  function runChap2Step(step) {
+    document.getElementById(`c2-btn${step}`).classList.add('completed');
+    document.getElementById(`c2-log${step}`).classList.add('visible');
+    if(step === 3) {
+      graph2.addElement(pointDraw(7, 5, 'Q_new', 'e_new', 'C', '#8e44ad', true));
+      document.getElementById('c2-tab3').classList.add('visible');
+    }
+  }
+  function resetChap2() {
+    initChap2();
+    [1,2,3].forEach(i => {
+      let b = document.getElementById(`c2-btn${i}`);
+      if(b) { b.classList.remove('completed'); if(i>1) b.disabled = true; }
+      let l = document.getElementById(`c2-log${i}`); if(l) l.classList.remove('visible');
+    });
+    let tab = document.getElementById('c2-tab3'); if(tab) tab.classList.remove('visible');
+
+    document.getElementById('btn-nxt-c2-1').onclick = function() {
+      nextLogic('chain-c2-1', this, () => {
+         graph2.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S1 (תוצר עולמי)'));
+         graph2.addElement(pointDraw(6, 4, '', '', 'B', '#27ae60', false));
+         graph2.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+         document.getElementById('c2-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c2-1', 'btn-nxt-c2-1');
+
+    document.getElementById('btn-nxt-c2-2').onclick = function() {
+      nextLogic('chain-c2-2', this, () => {
+         graph2.addElement(curveDraw(2,10, 10,2, '#8e44ad', 'D_total (כולל בנק ישראל)'));
+         graph2.addElement(shiftArrowDraw(6, 4, 7, 5, '#8e44ad'));
+         document.getElementById('c2-btn3').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c2-2', 'btn-nxt-c2-2');
+  }
+
+  // ==========================================
+  // EXAM SIMULATOR
+  // ==========================================
+  let exam1Graph;
+  function answerExam(qId, isTrue) {
+    const section = document.getElementById('exam-q' + qId);
+    const btns = section.querySelectorAll('.exam-btn');
+    
+    // The specific logic for Q1 (from PDF): The statement is FALSE.
+    const correctAnswer = false; 
+    const isSuccess = (isTrue === correctAnswer);
+    
+    btns[0].disabled = true;
+    btns[1].disabled = true;
+    
+    if(isTrue) btns[0].classList.add('selected-true');
+    else btns[1].classList.add('selected-false');
+    
+    const feedback = document.getElementById('exam-feed' + qId);
+    const title = document.getElementById('exam-res-title' + qId);
+    
+    if(isSuccess) {
+      title.innerHTML = "✨ יפה מאוד! הטענה אכן שגויה.";
+      title.style.color = "var(--green)";
+    } else {
+      title.innerHTML = "❌ טעות. הטענה שגויה, אבל טוב שניסית!";
+      title.style.color = "var(--red)";
+      feedback.style.borderColor = "var(--red)";
+      feedback.style.background = "#fdf0f0";
+    }
+    
+    feedback.classList.add('visible');
+
+    // Initialize graph inside the visible container
+    if(!exam1Graph) {
+       setTimeout(() => {
+          exam1Graph = new ForexGraph('canvas-exam1');
+          exam1Graph.addElement(curveDraw(0,0, 10,10, '#d35400', 'S0'));
+          exam1Graph.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D0'));
+          exam1Graph.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+       }, 50);
+    }
+  }
+
+  function drawExam1Graph() {
+     // Force 1: GDP UP -> D shifts right (from A to temporary B)
+     exam1Graph.addElement(curveDraw(2,10, 10,2, '#2980b9', 'D1 (תוצר)'));
+     exam1Graph.addElement(pointDraw(6, 6, '', '', 'B', '#2980b9', false));
+     exam1Graph.addElement(shiftArrowDraw(5, 5, 6, 6, '#2980b9'));
+
+     // Force 2: Interest DOWN -> S shifts left (from temporary B to C)
+     setTimeout(() => {
+       exam1Graph.addElement(curveDraw(-2,2, 6,10, '#c0392b', 'S1 (ריבית)'));
+       exam1Graph.addElement(pointDraw(5, 7, 'Q_new', 'e_new', 'C', '#8e44ad', true));
+       exam1Graph.addElement(shiftArrowDraw(6, 6, 5, 7, '#c0392b'));
+     }, 1000);
+  }
+
+
+  // ==========================================
+  // NAVIGATION
+  // ==========================================
+  function switchTab(tabId) {
+    document.querySelectorAll('.chapter').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(`chap${tabId}`).classList.add('active');
+    document.querySelectorAll('.nav-btn')[tabId-1].classList.add('active');
+    
+    setTimeout(() => {
+      if(tabId === 1) { resetChap1A(); resetChap1B(); }
+      if(tabId === 2) resetChap2();
+    }, 50);
+  }
+
+  setTimeout(() => switchTab(1), 100);
+
+</script>
+</body>
+</html>
