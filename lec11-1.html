@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שוק מט״ח – מאפס למאה (חלק א׳)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --navy: #1a2744;
+    --navy-light: #243460;
+    --gold: #c9a84c;
+    --bg-color: #f4f7f6;
+    --white: #ffffff;
+    --gray: #555;
+    --gray-light: #e0e0e0;
+    --blue: #2980b9;
+    --orange: #d35400;
+    --green: #27ae60;
+    --red: #c0392b;
+    --purple: #8e44ad;
+    --shadow: 0 10px 40px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg-color);
+    color: #333;
+    line-height: 1.7;
+  }
+
+  /* ─── HEADER & NAV ─── */
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+    color: var(--white);
+    padding: 3rem 2rem 4rem;
+    text-align: center;
+    border-bottom: 5px solid var(--gold);
+  }
+  header h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; }
+  header p { font-size: 1.3rem; opacity: 0.9; font-weight: 300; }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: -25px;
+    position: relative;
+    z-index: 20;
+  }
+  .nav-btn {
+    background: var(--white);
+    color: var(--navy);
+    border: 2px solid var(--gray-light);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: var(--transition);
+  }
+  .nav-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-btn:hover:not(.active) { border-color: var(--navy); }
+
+  main {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  /* ─── SECTIONS ─── */
+  .chapter { display: none; animation: fadeIn 0.5s ease forwards; }
+  .chapter.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+  .intro-box {
+    background: #fff; border-right: 5px solid var(--gold); padding: 25px;
+    border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 30px;
+  }
+  .intro-box h2 { color: var(--navy); margin-bottom: 15px; }
+  .intro-box p { font-size: 1.1rem; margin-bottom: 10px; }
+  .highlight { background: #fff3cd; padding: 2px 6px; border-radius: 4px; font-weight: 600; color: #856404; }
+
+  /* ─── INTERACTIVE LAYOUT ─── */
+  .interactive-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 30px;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+  }
+  @media (max-width: 900px) { .interactive-grid { grid-template-columns: 1fr; } }
+
+  /* ─── CONTROLS & LOGIC ─── */
+  .controls-col { display: flex; flex-direction: column; gap: 15px; }
+  .step-btn {
+    background: #f8f9fa; border: 2px solid #e9ecef; padding: 16px 20px;
+    border-radius: 12px; text-align: right; cursor: pointer;
+    font-size: 1.1rem; font-weight: 700; color: var(--navy);
+    transition: var(--transition);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .step-btn:hover:not(:disabled) { border-color: var(--navy); background: #f1f4f8; }
+  .step-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .step-btn.completed { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+  .logic-panel {
+    background: #fdfdfe; border: 1px solid #e1e5eb; border-radius: 12px;
+    padding: 20px; margin-top: 10px; display: none;
+    animation: slideDown 0.4s ease forwards;
+  }
+  .logic-panel.visible { display: block; }
+  
+  .logic-chain { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .logic-item { background: #fff; padding: 10px 15px; border-radius: 8px; border: 1px solid #eee; font-weight: 500; display: flex; align-items: center; gap: 10px;}
+  .logic-arrow-down { text-align: center; color: var(--gray); font-size: 1.5rem; margin: -5px 0; font-weight: bold; }
+
+  .summary-table-container { display: none; margin-top: 20px; animation: fadeIn 0.6s ease forwards;}
+  .summary-table-container.visible { display: block; }
+  table.summary { width: 100%; border-collapse: collapse; text-align: right; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;}
+  table.summary th { background: var(--navy); color: white; padding: 12px; }
+  table.summary td { padding: 12px; border-bottom: 1px solid #eee; }
+  table.summary tr:last-child td { border-bottom: none; }
+  .dir-up { color: var(--green); font-weight: bold; }
+  .dir-down { color: var(--red); font-weight: bold; }
+
+  /* ─── GRAPH COL ─── */
+  .graph-col { position: relative; background: #fafafa; border-radius: 12px; border: 2px solid #eee; padding: 15px; }
+  canvas { width: 100%; height: 500px; display: block; }
+
+  /* ─── LOGIC ANIMATION & NEXT BUTTON ─── */
+  .logic-step-hidden { display: none !important; }
+  .logic-step-anim { animation: fadeInDown 0.4s ease forwards; }
+  .btn-logic-next {
+    background: var(--gold); color: var(--navy); border: none; padding: 10px 16px; 
+    border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; width: 100%; 
+    transition: 0.2s; font-size: 1.05rem; display: flex; justify-content: center; align-items: center; gap: 8px;
+  }
+  .btn-logic-next:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  /* ─── MINI QUIZ ─── */
+  .quiz-section { background: #eafaf1; border: 2px solid #27ae60; padding: 25px; border-radius: 12px; margin-top: 20px; display: none; }
+  .quiz-section.visible { display: block; animation: slideDown 0.5s ease; }
+  .quiz-section h3 { color: #1e8449; margin-bottom: 15px; }
+  .quiz-opt { background: #fff; border: 1px solid #a9dfbf; padding: 12px; margin-bottom: 10px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-weight: 500;}
+  .quiz-opt:hover { background: #d4edda; }
+  .quiz-opt.correct { background: #27ae60; color: white; border-color: #27ae60; }
+  .quiz-opt.wrong { background: #e74c3c; color: white; border-color: #e74c3c; }
+  .quiz-feedback { margin-top: 15px; font-weight: bold; display: none; }
+
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  .btn-reset { margin-top: 20px; padding: 10px; background: #eee; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%;}
+  .btn-reset:hover { background: #ddd; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>שוק המט״ח – צעד אחר צעד</h1>
+  <p>מבינים כלכלה: מהבסיס ועד למקרים המורכבים ביותר</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="switchTab(1)">פרק 1: הבסיס</button>
+  <button class="nav-btn" onclick="switchTab(2)">פרק 2: שינויים בביקוש</button>
+  <button class="nav-btn" onclick="switchTab(3)">פרק 3: תנועות הון (ריבית)</button>
+</nav>
+
+<main>
+
+  <!-- ==========================================
+       CHAPTER 1: THE BASICS
+       ========================================== -->
+  <section id="chap1" class="chapter active">
+    <div class="intro-box">
+      <h2>👋 נעים להכיר: אנלוגיית העגבניות</h2>
+      <p>כדי להבין את שוק המט״ח (מטבע חוץ), דמיינו שוק של עגבניות. במקום עגבנייה, המוצר שאנחנו קונים ומוכרים הוא <span class="highlight">שטר של 1 דולר</span>.</p>
+      <ul style="margin-right: 20px; margin-top: 10px; font-size: 1.1rem;">
+        <li><strong dir="ltr">Q (Quantity)</strong> – <strong>כמות:</strong> כמה עגבניות (דולרים) החליפו ידיים בשוק. נמצא על הציר האופקי למטה.</li>
+        <li><strong dir="ltr">e (Exchange Rate)</strong> – <strong>מחיר:</strong> כמה שקלים עולה דגבנייה (דולר) אחת. זהו <em>שער החליפין</em>. נמצא על הציר האנכי.</li>
+      </ul>
+      <div style="background:#e8f4f8; padding:12px 16px; border-radius:8px; margin-top:18px; border-right:4px solid var(--blue);">
+        <strong>💡 הנחת עבודה לשלבים הראשונים: משק ללא תנועות הון</strong><br>
+        במציאות, דולרים נכנסים ויוצאים גם בגלל משקיעים (תנועות הון). כדי ללמוד את הבסיס צעד-אחר-צעד, נניח כרגע שאין תנועות הון בכלל. כלומר, המסחר בדולרים נובע <strong>אך ורק</strong> מקנייה ומכירה של סחורות (ייבוא וייצוא). בפרק 3 נסיר את ההנחה הזו.
+      </div>
+    </div>
+
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <button class="step-btn" id="c1-btn1" onclick="runChap1Step(1)">1. מי מציע דולרים לשוק? <span>+</span></button>
+        <div class="logic-panel" id="c1-log1">
+          <strong>במשק ללא תנועות הון, עקומת ההיצע (Supply / S) נובעת מהיצואנים בלבד.</strong>
+          <div class="logic-chain" id="chain-c1-1">
+            <div class="logic-item">📦 יצואן מוכר סחורה לחו"ל</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💵 מקבל דולרים, אך צריך שקלים בארץ</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 לכן הוא <strong>מוכר</strong> (מציע) דולרים בשוק.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c1-1" onclick="nextLogic('chain-c1-1', this, () => {
+             graph1.addElement(curveDraw(0,0, 10,10, '#d35400', 'S'));
+             document.getElementById('c1-btn2').disabled = false;
+             document.getElementById('c1-note1').style.display = 'block';
+          })">המשך לוגיקה ⬇</button>
+          <p id="c1-note1" style="margin-top: 10px; font-size:0.9rem; display:none;">* ככל שהדולר יקר יותר, הוא מקבל יותר שקלים -> כדאי לו לייצא יותר -> העקומה עולה.</p>
+        </div>
+
+        <button class="step-btn" id="c1-btn2" onclick="runChap1Step(2)" disabled>2. מי מבקש לקנות דולרים? <span>+</span></button>
+        <div class="logic-panel" id="c1-log2">
+          <strong>במשק ללא תנועות הון, עקומת הביקוש (Demand / D) נובעת מהיבואנים בלבד.</strong>
+          <div class="logic-chain" id="chain-c1-2">
+            <div class="logic-item">🛒 יבואן רוצה לקנות סחורה מחו"ל</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💴 היצרן בחו"ל דורש דולרים</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📉 לכן הוא <strong>קונה</strong> (מבקש) דולרים בשוק.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c1-2" onclick="nextLogic('chain-c1-2', this, () => {
+             graph1.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D'));
+             document.getElementById('c1-btn3').disabled = false;
+             document.getElementById('c1-note2').style.display = 'block';
+          })">המשך לוגיקה ⬇</button>
+          <p id="c1-note2" style="margin-top: 10px; font-size:0.9rem; display:none;">* ככל שהדולר זול יותר -> כדאי לו לייבא יותר -> העקומה יורדת.</p>
+        </div>
+
+        <button class="step-btn" id="c1-btn3" onclick="runChap1Step(3)" disabled>3. המפגש (שיווי משקל) <span>✓</span></button>
+        <div class="logic-panel" id="c1-log3">
+          <strong>נקודה A: שיווי משקל</strong>
+          <p style="margin-top:5px;">המקום שבו כמות הדולרים שהיצואנים רוצים למכור <strong>שווה בדיוק</strong> לכמות הדולרים שהיבואנים רוצים לקנות.</p>
+          <ul style="margin-right:20px; margin-top:5px;">
+            <li><strong dir="ltr">e*</strong> = מחיר הדולר שנקבע בשוק (למשל 3.70 ₪).</li>
+            <li><strong dir="ltr">Q*</strong> = כמות הדולרים שהחליפה ידיים.</li>
+          </ul>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap1()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap1"></canvas>
+      </div>
+    </div>
+
+    <!-- Checkpoint 1 -->
+    <div class="quiz-section" id="quiz-chap1">
+      <h3>🛑 שאלת וידוא הבנה</h3>
+      <p>לפני שנמשיך, ודאו שהבנתם: מתי לדעתכם עקומת הביקוש כולה תזוז <strong>ימינה ולמעלה</strong>?</p>
+      <div id="q1-opts">
+        <div class="quiz-opt" onclick="checkQ1(this, false)">א. כאשר מחיר הדולר יורד (תנועה על העקומה).</div>
+        <div class="quiz-opt" onclick="checkQ1(this, true)">ב. כאשר משהו גורם לאזרחים לרצות לייבא יותר, בלי קשר למחיר הדולר (למשל, התעשרו).</div>
+        <div class="quiz-opt" onclick="checkQ1(this, false)">ג. כאשר היצואנים רוצים למכור יותר סחורה.</div>
+      </div>
+      <div class="quiz-feedback" id="q1-feed">
+        ✨ מעולה! הבחנה חשובה: שינוי במחיר הדולר גורם לתנועה <strong>על</strong> העקומה. אבל אם היבואנים פתאום צריכים יותר דולרים בגלל סיבה חיצונית - העקומה כולה תזוז! בואו נראה את זה בפרק 2.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================
+       CHAPTER 2: DEMAND SHIFTS
+       ========================================== -->
+  <section id="chap2" class="chapter">
+    <div class="intro-box">
+      <h2>📈 פרק 2: כשהביקוש משתנה</h2>
+      <p>כעת נראה מה קורה כשאירוע חיצוני (כמו צמיחה כלכלית או בנק ישראל) גורם לביקוש להשתנות. ננתח שני מקרי מבחן קלאסיים.</p>
+    </div>
+
+    <!-- Case 2A: GDP Growth -->
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">תרחיש א': התוצר המקומי גדל</h3>
+        <p style="font-size:0.95rem; margin-bottom:15px;">המשק הישראלי צומח, משכורות עולות. מה יקרה בשוק המט״ח?</p>
+
+        <button class="step-btn" id="c2a-btn1" onclick="runChap2AStep(1)">1. הפעלת הלוגיקה <span>+</span></button>
+        <div class="logic-panel" id="c2a-log1">
+          <div class="logic-chain" id="chain-c2a-1">
+            <div class="logic-item">💰 התוצר המקומי עלה (אנשים עשירים יותר)</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🚗 הם קונים יותר מוצרים, כולל מוצרים מיובאים</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💳 היבואנים זקוקים ליותר דולרים כדי לשלם לחו"ל</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 הביקוש לדולרים <strong>עולה</strong> (זז ימינה למעלה)</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2a-1" onclick="nextLogic('chain-c2a-1', this, () => {
+             graph2a.addElement(curveDraw(2,10, 10,2, '#27ae60', 'D1'));
+             graph2a.addElement(shiftArrowDraw(6, 4, 8, 4, '#27ae60')); // Arrow
+             graph2a.addElement(legendDraw([
+               {color: '#d35400', text: 'S: היצע'},
+               {color: '#2980b9', text: 'D0: ביקוש מקורי'},
+               {color: '#27ae60', text: 'D1: ביקוש חדש (עלה)'}
+             ]));
+             document.getElementById('c2a-btn2').disabled = false;
+          })">המשך ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c2a-btn2" onclick="runChap2AStep(2)" disabled>2. מציאת שיווי המשקל החדש <span>+</span></button>
+        <div class="logic-panel" id="c2a-log2">
+          <strong>נקודה B: תוצאות המפגש</strong>
+          <p>הביקוש העולה דחף את מחיר הדולר כלפי מעלה לאורך עקומת ההיצע הקיימת.</p>
+        </div>
+
+        <button class="step-btn" id="c2a-btn3" onclick="runChap2AStep(3)" disabled>3. הצג טבלת סיכום <span>✓</span></button>
+        <div class="summary-table-container" id="c2a-log3">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-up">↑ עולה (פיחות)</td>
+              <td>ביקוש גבוה מייקר את הדולר. השקל נחלש (פיחות).</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>שע״ח גבוה יותר → כדאי לייצא יותר (תנועה על עקומת ההיצע).</td>
+            </tr>
+            <tr>
+              <td>ייבוא (IM)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>במשק ללא תנועות הון, הייבוא חייב להיות שווה לייצוא (EX=IM). העלייה בתוצר כיסתה את התייקרות הדולר.</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap2A()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap2a"></canvas>
+      </div>
+    </div>
+
+    <!-- Case 2B: BOI Buys -->
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">תרחיש ב': בנק ישראל קונה מט״ח</h3>
+        <p style="font-size:0.95rem; margin-bottom:15px; color:var(--red); font-weight:bold;">⚠️ תרחיש מתקדם: שמים לב לפער האופקי!</p>
+
+        <button class="step-btn" id="c2b-btn1" onclick="runChap2BStep(1)">1. בנק ישראל נכנס לשוק <span>+</span></button>
+        <div class="logic-panel" id="c2b-log1">
+          <div class="logic-chain" id="chain-c2b-1">
+            <div class="logic-item">🏦 בנק ישראל מחליט לקנות דולרים ליתרות שלו</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🛒 הוא מצטרף ליבואנים (הציבור) כקונה נוסף</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 הביקוש <strong>הכולל</strong> בשוק זז ימינה <br>(D_total = D_public + BOI)</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2b-1" onclick="nextLogic('chain-c2b-1', this, () => {
+             graph2b.addElement(curveDraw(3,10, 10,3, '#8e44ad', 'D_total'));
+             graph2b.addElement(shiftArrowDraw(6, 4, 9, 4, '#8e44ad'));
+             graph2b.addElement(legendDraw([
+               {color: '#d35400', text: 'S: היצע (יצואנים)'},
+               {color: '#2980b9', text: 'D_public: ביקוש ציבור'},
+               {color: '#8e44ad', text: 'D_total: הציבור + בנק ישראל'}
+             ]));
+             document.getElementById('c2b-btn2').disabled = false;
+          })">המשך ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c2b-btn2" onclick="runChap2BStep(2)" disabled>2. שיווי המשקל החדש (B) <span>+</span></button>
+        <div class="logic-panel" id="c2b-log2">
+          <strong>נקודה B: המחיר החדש</strong>
+          <p>הקנייה של הבנק העלתה את שע״ח בשוק. Q_total היא סך הכמות שנמכרה לכולם (יבואנים + בנק ישראל).</p>
+        </div>
+
+        <button class="step-btn" id="c2b-btn3" onclick="runChap2BStep(3)" disabled>3. תגובת הציבור (הפער האופקי) <span>🔍</span></button>
+        <div class="logic-panel" id="c2b-log3">
+          <div class="logic-chain" id="chain-c2b-3">
+            <div class="logic-item">📈 הדולר כעת יקר יותר (בגלל בנק ישראל).</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🛒 האזרח (היבואן), שנשאר על עקומת הביקוש הכחולה, מגיב למחיר.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📉 יקר לו לייבא! לכן הוא מצמצם קניות לנקודה C (כמות Q_public בלבד).</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#f8d7da; border-color:#c0392b;">🤔 <strong>אז מי קנה את השאר?</strong> הפער מ-C (מה שהציבור קנה) עד ל-B (סך מה שנמכר) הוא בדיוק הכמות שבנק ישראל רכש.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2b-3" onclick="nextLogic('chain-c2b-3', this, () => {
+             graph2b.addElement(pointDraw(3.5, 6.5, 'Q_public', '', 'C', '#2980b9', true));
+             graph2b.addElement(horizontalBraceDraw(3.5, 6.5, 6.5, 'קניית בנק ישראל', '#c0392b'));
+             document.getElementById('c2b-btn4').disabled = false;
+          })">המשך לוגיקה ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c2b-btn4" onclick="runChap2BStep(4)" disabled>4. טבלת סיכום סופית <span>✓</span></button>
+        <div class="summary-table-container" id="c2b-log4">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-up">↑ עולה (פיחות)</td>
+              <td>הביקוש הכולל בשוק גדל, ולכן מחיר הדולר עולה.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>הדולר התייקר, ולכן ליצואנים (על עקומת ההיצע) שווה יותר לייצא.</td>
+            </tr>
+            <tr>
+              <td>ייבוא הציבור (IM)</td>
+              <td class="dir-down">↓ יורד</td>
+              <td>הציבור (נקודה C) משלם מחיר גבוה יותר ולכן מצמצם קניות.</td>
+            </tr>
+            <tr>
+              <td>פער (EX - IM)</td>
+              <td class="dir-up">עודף ייצוא</td>
+              <td>הייצוא גדל והייבוא קטן. ההפרש הוא בדיוק סכום הקנייה של בנק ישראל.</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap2B()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap2b"></canvas>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ==========================================
+       CHAPTER 3: CAPITAL FLOWS (INTEREST RATES)
+       ========================================== -->
+  <section id="chap3" class="chapter">
+    <div class="intro-box">
+      <h2>💸 פרק 3: תנועות הון (השפעת הריבית)</h2>
+      <p>בעולם המודרני, רוב הכסף שעובר בין מדינות הוא לא עבור קניית עגבניות או רכבים (ייבוא/ייצוא), אלא <strong>כסף של משקיעים</strong> שמחפש את הריבית הגבוהה ביותר.</p>
+      <p>כאשר הריבית במדינה משתנה, כסף זר נכנס אליה או בורח ממנה. זה משפיע מידית על עקומת <strong>ההיצע הכולל</strong> של המט"ח.</p>
+    </div>
+
+    <!-- Case 3A: Interest Rate UP -->
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">תרחיש א': הריבית בישראל עולה</h3>
+        <p style="font-size:0.95rem; margin-bottom:15px;">בנק ישראל מעלה את הריבית. איך יגיבו המשקיעים הזרים מחו"ל?</p>
+
+        <button class="step-btn" id="c3a-btn1" onclick="runChap3AStep(1)">1. כניסת משקיעים זרים <span>+</span></button>
+        <div class="logic-panel" id="c3a-log1">
+          <div class="logic-chain" id="chain-c3a-1">
+            <div class="logic-item">📈 הריבית בישראל עולה (תשואה גבוהה יותר)</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🌍 משקיעים זרים רוצים להשקיע בישראל</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💵 הם מביאים דולרים כדי להמיר לשקלים</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 ההיצע <strong>הכולל</strong> של הדולרים בשוק גדל (זז ימינה)</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c3a-1" onclick="nextLogic('chain-c3a-1', this, () => {
+             graph3a.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S_total'));
+             graph3a.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+             graph3a.addElement(legendDraw([
+               {color: '#2980b9', text: 'D: ביקוש'},
+               {color: '#d35400', text: 'S_export: ייצוא בלבד'},
+               {color: '#27ae60', text: 'S_total: ייצוא + הון נכנס'}
+             ]));
+             document.getElementById('c3a-btn2').disabled = false;
+          })">המשך ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c3a-btn2" onclick="runChap3AStep(2)" disabled>2. שיווי המשקל החדש (B) <span>+</span></button>
+        <div class="logic-panel" id="c3a-log2">
+          <strong>נקודה B: הדולר צונח!</strong>
+          <p>הצפת השוק בדולרים של המשקיעים גורמת למחיר הדולר ליפול (ייסוף השקל). Q_total מייצג את כלל הדולרים שנמכרו בשוק.</p>
+        </div>
+
+        <button class="step-btn" id="c3a-btn3" onclick="runChap3AStep(3)" disabled>3. תגובת היצואנים (הפער האופקי) <span>🔍</span></button>
+        <div class="logic-panel" id="c3a-log3">
+          <div class="logic-chain" id="chain-c3a-3">
+            <div class="logic-item">📉 מחיר הדולר בשוק צנח.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🏭 היצואן (על העקומה הכתומה) מרוויח עכשיו פחות שקלים על כל דולר.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📉 כדאי לו לייצא פחות, והוא מקטין את הכמות שהוא מציע לנקודה C (רק Q_export).</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#f0f7ff; border-color:#2980b9;">🤔 <strong>מאיפה הגיעו שאר הדולרים?</strong> הפער מ-C (מה שהיצואנים מכרו) עד ל-B (סך מה שהשוק קנה) הוא <strong>ההון הנכנס</strong> של המשקיעים.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c3a-3" onclick="nextLogic('chain-c3a-3', this, () => {
+             graph3a.addElement(pointDraw(4, 4, 'Q_export', '', 'C', '#d35400', true));
+             graph3a.addElement(horizontalBraceDraw(4, 6, 4, 'הון נכנס זר', '#8e44ad'));
+             document.getElementById('c3a-btn4').disabled = false;
+          })">המשך לוגיקה ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c3a-btn4" onclick="runChap3AStep(4)" disabled>4. טבלת סיכום סופית <span>✓</span></button>
+        <div class="summary-table-container" id="c3a-log4">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-down">↓ יורד (ייסוף)</td>
+              <td>המשקיעים הזרים מציפים את השוק בדולרים, והמחיר קורס.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-down">↓ יורד</td>
+              <td>הדולר הפך לזול, ולכן ליצואנים (נקודה C) כבר לא כדאי לייצא.</td>
+            </tr>
+            <tr>
+              <td>ייבוא הציבור (IM)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>הדולר זול, לכן משתלם יותר לציבור לייבא מחו"ל (הם קונים את כל Q_total).</td>
+            </tr>
+            <tr>
+              <td>פער (EX - IM)</td>
+              <td class="dir-down">גירעון מסחרי</td>
+              <td>הייבוא גדול מהייצוא. ה"גירעון" ממומן על ידי הדולרים של המשקיעים הזרים.</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap3A()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap3a"></canvas>
+      </div>
+    </div>
+
+    <!-- Case 3B: Interest Rate DOWN -->
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <h3 style="color:var(--navy); margin-bottom:10px;">תרחיש ב': הריבית בישראל יורדת</h3>
+        <p style="font-size:0.95rem; margin-bottom:15px;">הריבית בארץ נמוכה, ומשתלם יותר להשקיע בארה"ב. מה עושים הישראלים?</p>
+
+        <button class="step-btn" id="c3b-btn1" onclick="runChap3BStep(1)">1. בריחת הון לחו"ל <span>+</span></button>
+        <div class="logic-panel" id="c3b-log1">
+          <div class="logic-chain" id="chain-c3b-1">
+            <div class="logic-item">📉 הריבית בישראל יורדת</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">✈️ ישראלים רוצים להשקיע בחו"ל (היכן שהריבית גבוהה)</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💳 הם לוקחים את השקלים שלהם וקונים דולרים</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📉 זה נחשב ל"הון יוצא", שמקטין את ההיצע <strong>הכולל</strong> בשוק (העקומה זזה שמאלה ולמעלה).</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c3b-1" onclick="nextLogic('chain-c3b-1', this, () => {
+             graph3b.addElement(curveDraw(0,2, 8,10, '#c0392b', 'S_total'));
+             graph3b.addElement(shiftArrowDraw(6, 6, 4, 6, '#c0392b'));
+             graph3b.addElement(legendDraw([
+               {color: '#2980b9', text: 'D: ביקוש'},
+               {color: '#d35400', text: 'S_export: ייצוא בלבד'},
+               {color: '#c0392b', text: 'S_total: בניכוי הון יוצא'}
+             ]));
+             document.getElementById('c3b-btn2').disabled = false;
+          })">המשך ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c3b-btn2" onclick="runChap3BStep(2)" disabled>2. שיווי המשקל החדש (B) <span>+</span></button>
+        <div class="logic-panel" id="c3b-log2">
+          <strong>נקודה B: הדולר מזנק!</strong>
+          <p>המחסור בדולרים (כי כולם לוקחים אותם לחו"ל) גורם למחיר הדולר לעלות בחדות (פיחות השקל). השוק מתייצב על כמות קטנה יותר (Q_total).</p>
+        </div>
+
+        <button class="step-btn" id="c3b-btn3" onclick="runChap3BStep(3)" disabled>3. תגובת היצואנים (הפער האופקי) <span>🔍</span></button>
+        <div class="logic-panel" id="c3b-log3">
+          <div class="logic-chain" id="chain-c3b-3">
+            <div class="logic-item">📈 מחיר הדולר בשוק זינק (נקודה B).</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🏭 היצואנים (על העקומה הכתומה) חוגגים! המחיר מצדיק להגדיל ייצוא.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 הם מספקים כמות עצומה של דולרים לשוק - עד נקודה C (Q_export).</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#eafaf1; border-color:#27ae60;">🤔 <strong>אז לאן נעלמו הדולרים?</strong> היצואנים מכרו המון (C), אבל לשוק נשאר קצת (B). הפער מ-B ל-C הוא בדיוק ה<strong>הון שברח לחו"ל</strong>.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c3b-3" onclick="nextLogic('chain-c3b-3', this, () => {
+             graph3b.addElement(pointDraw(6, 6, 'Q_export', '', 'C', '#d35400', true));
+             graph3b.addElement(horizontalBraceDraw(4, 6, 6, 'הון יוצא לחו"ל', '#8e44ad'));
+             document.getElementById('c3b-btn4').disabled = false;
+          })">המשך לוגיקה ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c3b-btn4" onclick="runChap3BStep(4)" disabled>4. טבלת סיכום סופית <span>✓</span></button>
+        <div class="summary-table-container" id="c3b-log4">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-up">↑ עולה (פיחות)</td>
+              <td>ישראלים מוציאים כסף לחו"ל, יש מחסור בדולרים ולכן המחיר עולה.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>הדולר יקר, חגיגה ליצואנים (נקודה C) שמגדילים פעילות.</td>
+            </tr>
+            <tr>
+              <td>ייבוא הציבור (IM)</td>
+              <td class="dir-down">↓ יורד</td>
+              <td>הדולר יקר, לכן הציבור (הקונים בנקודה B) מצמצם רכישות מחו"ל.</td>
+            </tr>
+            <tr>
+              <td>פער (EX - IM)</td>
+              <td class="dir-up">עודף מסחרי</td>
+              <td>הייצוא גדול מהייבוא. הדולרים ה"עודפים" האלה הם בדיוק מה שבורח לחו"ל להשקעה.</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap3B()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap3b"></canvas>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+  // ==========================================
+  // OOP GRAPHING ENGINE
+  // ==========================================
+  class ForexGraph {
+    constructor(canvasId) {
+      this.canvas = document.getElementById(canvasId);
+      this.ctx = this.canvas.getContext('2d');
+      this.pad = { t: 40, r: 40, b: 60, l: 60 };
+      this.elements = []; // stores functions to draw curves, points, etc.
+      
+      this.resize();
+      window.addEventListener('resize', () => this.resize());
+    }
+
+    resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = this.canvas.parentElement.getBoundingClientRect();
+      this.canvas.width = rect.width * dpr;
+      this.canvas.height = 500 * dpr;
+      this.ctx.scale(dpr, dpr);
+      this.canvas.style.width = `${rect.width}px`;
+      this.canvas.style.height = `500px`;
+      
+      this.W = rect.width;
+      this.H = 500;
+      this.chartW = this.W - this.pad.l - this.pad.r;
+      this.chartH = this.H - this.pad.t - this.pad.b;
+      
+      this.draw();
+    }
+
+    // Coord mapping (X: 0 to 10, Y: 0 to 10)
+    getX(val) { return this.pad.l + (val / 10) * this.chartW; }
+    getY(val) { return this.H - this.pad.b - (val / 10) * this.chartH; }
+
+    clear() { this.elements = []; this.draw(); }
+    
+    addElement(drawFn) { this.elements.push(drawFn); this.draw(); }
+
+    draw() {
+      this.ctx.clearRect(0, 0, this.W, this.H);
+      this.drawAxes();
+      // Draw all elements
+      this.elements.forEach(fn => fn(this.ctx, this));
+    }
+
+    drawAxes() {
+      const ctx = this.ctx;
+      ctx.strokeStyle = '#2c3e50';
+      ctx.lineWidth = 2.5;
+      
+      // X & Y Axis lines
+      ctx.beginPath();
+      ctx.moveTo(this.pad.l, this.pad.t);
+      ctx.lineTo(this.pad.l, this.H - this.pad.b);
+      ctx.lineTo(this.W - this.pad.r, this.H - this.pad.b);
+      ctx.stroke();
+
+      // Arrows
+      ctx.beginPath();
+      ctx.moveTo(this.pad.l - 6, this.pad.t + 10); ctx.lineTo(this.pad.l, this.pad.t); ctx.lineTo(this.pad.l + 6, this.pad.t + 10);
+      ctx.moveTo(this.W - this.pad.r - 10, this.H - this.pad.b - 6); ctx.lineTo(this.W - this.pad.r, this.H - this.pad.b); ctx.lineTo(this.W - this.pad.r - 10, this.H - this.pad.b + 6);
+      ctx.stroke();
+
+      // Labels (Hebrew LTR forced for math variables)
+      ctx.fillStyle = '#2c3e50';
+      ctx.font = 'bold 16px Heebo';
+      ctx.textAlign = 'center';
+      ctx.fillText('כמות הדולרים (Q)', this.W / 2, this.H - 15);
+      
+      ctx.textAlign = 'left';
+      ctx.fillText('מחיר הדולר', this.pad.l + 15, this.pad.t);
+      ctx.fillText('בשקלים (e)', this.pad.l + 15, this.pad.t + 22);
+    }
+
+    // Helper to draw text with absolute LTR for math symbols (like e*, Q1)
+    drawMathText(text, x, y, align = 'center', color = '#333', font = 'bold 18px Heebo') {
+      this.ctx.save();
+      this.ctx.fillStyle = color;
+      this.ctx.font = font;
+      this.ctx.textAlign = align;
+      this.ctx.direction = 'ltr'; // CRITICAL: forces e* to render with * on the right
+      this.ctx.fillText(text, x, y);
+      this.ctx.restore();
+    }
+  }
+
+  // Element Factories
+  const curveDraw = (x1, y1, x2, y2, color, label, isDashed=false) => (ctx, g) => {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    if(isDashed) ctx.setLineDash([8,6]);
+    
+    const px1 = g.getX(x1);
+    const py1 = g.getY(y1);
+    const px2 = g.getX(x2);
+    const py2 = g.getY(y2);
+    
+    ctx.moveTo(px1, py1);
+    ctx.lineTo(px2, py2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    if(label) {
+      const isSupply = y2 > y1; 
+      const align = 'right'; // Anchors to right, expands left (so it doesn't clip right bounds)
+      const offsetX = -15; // padding from the right edge
+      const offsetY = isSupply ? 25 : -10; // Supply (goes up) label below line, Demand (goes down) label above line
+      g.drawMathText(label, px2 + offsetX, py2 + offsetY, align, color, 'bold 18px Heebo');
+    }
+  };
+
+  const pointDraw = (x, y, labelX, labelY, labelPoint, color='#e74c3c', isHighlight=false) => (ctx, g) => {
+    // Dashes to axes
+    ctx.beginPath();
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = '#95a5a6';
+    ctx.lineWidth = 2;
+    ctx.moveTo(g.getX(x), g.getY(y)); ctx.lineTo(g.getX(x), g.getY(0));
+    ctx.moveTo(g.getX(x), g.getY(y)); ctx.lineTo(g.getX(0), g.getY(y));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    if(isHighlight) {
+      ctx.beginPath();
+      ctx.arc(g.getX(x), g.getY(y), 15, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(241, 196, 15, 0.4)'; // Glow effect
+      ctx.fill();
+    }
+
+    // The dot
+    ctx.beginPath();
+    ctx.arc(g.getX(x), g.getY(y), isHighlight ? 8 : 6, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+    // Point Letter
+    g.drawMathText(labelPoint, g.getX(x) - 18, g.getY(y) - 18, 'center', color, isHighlight ? 'bold 24px Heebo' : 'bold 20px Heebo');
+
+    // Axis Labels
+    g.drawMathText(labelX, g.getX(x), g.getY(0) + 25, 'center', '#34495e');
+    g.drawMathText(labelY, g.getX(0) - 15, g.getY(y) + 6, 'right', '#34495e');
+  };
+
+  const shiftArrowDraw = (x1, y1, x2, y2, color='#2c3e50') => (ctx, g) => {
+    const px1 = g.getX(x1);
+    const py1 = g.getY(y1);
+    const px2 = g.getX(x2);
+    const py2 = g.getY(y2);
+    const headlen = 14;
+    const angle = Math.atan2(py2 - py1, px2 - px1);
+    
+    // Arrow line
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    ctx.setLineDash([6, 4]);
+    ctx.moveTo(px1, py1);
+    ctx.lineTo(px2, py2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Arrowhead
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.moveTo(px2, py2);
+    ctx.lineTo(px2 - headlen * Math.cos(angle - Math.PI / 6), py2 - headlen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(px2 - headlen * Math.cos(angle + Math.PI / 6), py2 - headlen * Math.sin(angle + Math.PI / 6));
+    ctx.fill();
+  };
+
+  const legendDraw = (items) => (ctx, g) => {
+    const pad = 12;
+    const boxW = 230;
+    const boxH = items.length * 28 + pad * 2;
+    
+    // Positioned safely below the Y axis label
+    const startX = g.pad.l + 15; 
+    const startY = g.pad.t + 45; 
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.fillRect(startX, startY, boxW, boxH);
+    ctx.strokeStyle = '#ccc';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(startX, startY, boxW, boxH);
+
+    ctx.font = 'bold 14px Heebo';
+    ctx.textAlign = 'right';
+    ctx.direction = 'rtl';
+
+    items.forEach((item, i) => {
+      const y = startY + pad + 15 + i * 28;
+      ctx.fillStyle = item.color;
+      ctx.fillRect(startX + boxW - 15 - pad, y - 12, 16, 16);
+      ctx.fillStyle = '#333';
+      ctx.fillText(item.text, startX + boxW - 30 - pad, y);
+    });
+    ctx.direction = 'ltr'; 
+  };
+
+  const horizontalBraceDraw = (xStart, xEnd, y, label, color) => (ctx, g) => {
+    const py = g.getY(y);
+    const px1 = g.getX(xStart);
+    const px2 = g.getX(xEnd);
+    
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
+    
+    // Draw horizontal line
+    ctx.moveTo(px1, py);
+    ctx.lineTo(px2, py);
+    
+    // Draw vertical ticks
+    ctx.moveTo(px1, py - 8); ctx.lineTo(px1, py + 8);
+    ctx.moveTo(px2, py - 8); ctx.lineTo(px2, py + 8);
+    ctx.stroke();
+
+    g.drawMathText(label, (px1+px2)/2, py - 12, 'center', color, 'bold 16px Heebo');
+  };
+
+
+  // ==========================================
+  // CHAPTER 1 LOGIC
+  // ==========================================
+  const graph1 = new ForexGraph('canvas-chap1');
+  
+  function runChap1Step(step) {
+    document.getElementById(`c1-btn${step}`).classList.add('completed');
+    document.getElementById(`c1-log${step}`).classList.add('visible');
+    
+    // Graph drawing for steps 1 and 2 is now handled by nextLogic callbacks!
+    if (step === 3) {
+      graph1.addElement(pointDraw(5, 5, 'Q*', 'e*', 'A'));
+      setTimeout(() => { document.getElementById('quiz-chap1').classList.add('visible'); }, 1000);
+    }
+  }
+
+  function resetChap1() {
+    graph1.resize();
+    graph1.clear();
+    [1,2,3].forEach(i => {
+      let b = document.getElementById(`c1-btn${i}`);
+      b.classList.remove('completed');
+      if(i>1) b.disabled = true;
+      document.getElementById(`c1-log${i}`).classList.remove('visible');
+    });
+    
+    resetLogicChain('chain-c1-1', 'btn-nxt-c1-1');
+    resetLogicChain('chain-c1-2', 'btn-nxt-c1-2');
+    document.getElementById('c1-note1').style.display = 'none';
+    document.getElementById('c1-note2').style.display = 'none';
+
+    document.getElementById('quiz-chap1').classList.remove('visible');
+    document.getElementById('q1-feed').style.display = 'none';
+    document.querySelectorAll('#q1-opts .quiz-opt').forEach(el => { el.className = 'quiz-opt'; });
+  }
+
+  function checkQ1(element, isCorrect) {
+    document.getElementById('q1-feed').style.display = 'block';
+    element.className = `quiz-opt ${isCorrect ? 'correct' : 'wrong'}`;
+  }
+
+
+  // ==========================================
+  // CHAPTER 2A LOGIC (GDP)
+  // ==========================================
+  const graph2a = new ForexGraph('canvas-chap2a');
+  
+  function initChap2A() {
+    graph2a.resize();
+    graph2a.clear();
+    graph2a.addElement(curveDraw(0,0, 10,10, '#d35400', 'S'));
+    graph2a.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D0', true));
+    graph2a.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+    graph2a.addElement(legendDraw([
+      {color: '#d35400', text: 'S: היצע'},
+      {color: '#2980b9', text: 'D0: ביקוש מקורי'}
+    ]));
+  }
+
+  function runChap2AStep(step) {
+    document.getElementById(`c2a-btn${step}`).classList.add('completed');
+    document.getElementById(`c2a-log${step}`).classList.add('visible');
+
+    if(step === 2) {
+      graph2a.addElement(pointDraw(6, 6, 'Q1', 'e1', 'B', '#27ae60', true));
+      document.getElementById('c2a-btn3').disabled = false;
+    }
+  }
+
+  function resetChap2A() {
+    initChap2A();
+    [1,2,3].forEach(i => {
+      let b = document.getElementById(`c2a-btn${i}`);
+      if(b) {
+        b.classList.remove('completed');
+        if(i>1) b.disabled = true;
+      }
+      let l = document.getElementById(`c2a-log${i}`);
+      if(l) l.classList.remove('visible');
+    });
+    
+    document.getElementById('btn-nxt-c2a-1').onclick = function() {
+      nextLogic('chain-c2a-1', this, () => {
+         graph2a.addElement(curveDraw(2,10, 10,2, '#27ae60', 'D1'));
+         graph2a.addElement(shiftArrowDraw(6, 4, 8, 4, '#27ae60')); 
+         graph2a.addElement(legendDraw([
+           {color: '#d35400', text: 'S: היצע'},
+           {color: '#2980b9', text: 'D0: ביקוש מקורי'},
+           {color: '#27ae60', text: 'D1: ביקוש חדש (עלה)'}
+         ]));
+         document.getElementById('c2a-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c2a-1', 'btn-nxt-c2a-1');
+  }
+
+
+  // ==========================================
+  // CHAPTER 2B LOGIC (BOI)
+  // ==========================================
+  const graph2b = new ForexGraph('canvas-chap2b');
+
+  function initChap2B() {
+    graph2b.resize();
+    graph2b.clear();
+    graph2b.addElement(curveDraw(0,0, 10,10, '#d35400', 'S'));
+    graph2b.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D_public', true));
+    graph2b.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+    graph2b.addElement(legendDraw([
+      {color: '#d35400', text: 'S: היצע (יצואנים)'},
+      {color: '#2980b9', text: 'D_public: ביקוש הציבור'}
+    ]));
+  }
+
+  function runChap2BStep(step) {
+    document.getElementById(`c2b-btn${step}`).classList.add('completed');
+    document.getElementById(`c2b-log${step}`).classList.add('visible');
+
+    if(step === 2) {
+      graph2b.addElement(pointDraw(6.5, 6.5, 'Q_total', 'e1', 'B', '#8e44ad', true));
+      document.getElementById('c2b-btn3').disabled = false;
+    }
+  }
+
+  function resetChap2B() {
+    initChap2B();
+    [1,2,3,4].forEach(i => {
+      let b = document.getElementById(`c2b-btn${i}`);
+      if(b) {
+        b.classList.remove('completed');
+        if(i>1) b.disabled = true;
+      }
+      let l = document.getElementById(`c2b-log${i}`);
+      if(l) l.classList.remove('visible');
+    });
+
+    document.getElementById('btn-nxt-c2b-1').onclick = function() {
+      nextLogic('chain-c2b-1', this, () => {
+         graph2b.addElement(curveDraw(3,10, 10,3, '#8e44ad', 'D_total'));
+         graph2b.addElement(shiftArrowDraw(6, 4, 9, 4, '#8e44ad'));
+         graph2b.addElement(legendDraw([
+           {color: '#d35400', text: 'S: היצע (יצואנים)'},
+           {color: '#2980b9', text: 'D_public: ביקוש הציבור'},
+           {color: '#8e44ad', text: 'D_total: הציבור + בנק ישראל'}
+         ]));
+         document.getElementById('c2b-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c2b-1', 'btn-nxt-c2b-1');
+
+    document.getElementById('btn-nxt-c2b-3').onclick = function() {
+      nextLogic('chain-c2b-3', this, () => {
+         graph2b.addElement(pointDraw(3.5, 6.5, 'Q_public', '', 'C', '#2980b9', true));
+         graph2b.addElement(horizontalBraceDraw(3.5, 6.5, 6.5, 'קניית בנק ישראל', '#c0392b'));
+         document.getElementById('c2b-btn4').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c2b-3', 'btn-nxt-c2b-3');
+  }
+
+
+  // ==========================================
+  // CHAPTER 3A LOGIC (Interest Rate UP)
+  // ==========================================
+  const graph3a = new ForexGraph('canvas-chap3a');
+
+  function initChap3A() {
+    graph3a.resize();
+    graph3a.clear();
+    graph3a.addElement(curveDraw(0,0, 10,10, '#d35400', 'S_export', true));
+    graph3a.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D'));
+    graph3a.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+    graph3a.addElement(legendDraw([
+      {color: '#2980b9', text: 'D: ביקוש'},
+      {color: '#d35400', text: 'S_export: ייצוא בלבד'}
+    ]));
+  }
+
+  function runChap3AStep(step) {
+    document.getElementById(`c3a-btn${step}`).classList.add('completed');
+    document.getElementById(`c3a-log${step}`).classList.add('visible');
+
+    if(step === 2) {
+      graph3a.addElement(pointDraw(6, 4, 'Q_total', 'e1', 'B', '#27ae60', true));
+      document.getElementById('c3a-btn3').disabled = false;
+    }
+  }
+
+  function resetChap3A() {
+    initChap3A();
+    [1,2,3,4].forEach(i => {
+      let b = document.getElementById(`c3a-btn${i}`);
+      if(b) {
+        b.classList.remove('completed');
+        if(i>1) b.disabled = true;
+      }
+      let l = document.getElementById(`c3a-log${i}`);
+      if(l) l.classList.remove('visible');
+    });
+
+    document.getElementById('btn-nxt-c3a-1').onclick = function() {
+      nextLogic('chain-c3a-1', this, () => {
+         graph3a.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S_total'));
+         graph3a.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+         graph3a.addElement(legendDraw([
+           {color: '#2980b9', text: 'D: ביקוש'},
+           {color: '#d35400', text: 'S_export: ייצוא בלבד'},
+           {color: '#27ae60', text: 'S_total: ייצוא + הון נכנס'}
+         ]));
+         document.getElementById('c3a-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c3a-1', 'btn-nxt-c3a-1');
+
+    document.getElementById('btn-nxt-c3a-3').onclick = function() {
+      nextLogic('chain-c3a-3', this, () => {
+         graph3a.addElement(pointDraw(4, 4, 'Q_export', '', 'C', '#d35400', true));
+         graph3a.addElement(horizontalBraceDraw(4, 6, 4, 'הון נכנס זר', '#8e44ad'));
+         document.getElementById('c3a-btn4').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c3a-3', 'btn-nxt-c3a-3');
+  }
+
+
+  // ==========================================
+  // CHAPTER 3B LOGIC (Interest Rate DOWN)
+  // ==========================================
+  const graph3b = new ForexGraph('canvas-chap3b');
+
+  function initChap3B() {
+    graph3b.resize();
+    graph3b.clear();
+    graph3b.addElement(curveDraw(0,0, 10,10, '#d35400', 'S_export', true));
+    graph3b.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D'));
+    graph3b.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+    graph3b.addElement(legendDraw([
+      {color: '#2980b9', text: 'D: ביקוש'},
+      {color: '#d35400', text: 'S_export: ייצוא בלבד'}
+    ]));
+  }
+
+  function runChap3BStep(step) {
+    document.getElementById(`c3b-btn${step}`).classList.add('completed');
+    document.getElementById(`c3b-log${step}`).classList.add('visible');
+
+    if(step === 2) {
+      graph3b.addElement(pointDraw(4, 6, 'Q_total', 'e1', 'B', '#c0392b', true));
+      document.getElementById('c3b-btn3').disabled = false;
+    }
+  }
+
+  function resetChap3B() {
+    initChap3B();
+    [1,2,3,4].forEach(i => {
+      let b = document.getElementById(`c3b-btn${i}`);
+      if(b) {
+        b.classList.remove('completed');
+        if(i>1) b.disabled = true;
+      }
+      let l = document.getElementById(`c3b-log${i}`);
+      if(l) l.classList.remove('visible');
+    });
+
+    document.getElementById('btn-nxt-c3b-1').onclick = function() {
+      nextLogic('chain-c3b-1', this, () => {
+         graph3b.addElement(curveDraw(0,2, 8,10, '#c0392b', 'S_total'));
+         graph3b.addElement(shiftArrowDraw(6, 6, 4, 6, '#c0392b'));
+         graph3b.addElement(legendDraw([
+           {color: '#2980b9', text: 'D: ביקוש'},
+           {color: '#d35400', text: 'S_export: ייצוא בלבד'},
+           {color: '#c0392b', text: 'S_total: בניכוי הון יוצא'}
+         ]));
+         document.getElementById('c3b-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c3b-1', 'btn-nxt-c3b-1');
+
+    document.getElementById('btn-nxt-c3b-3').onclick = function() {
+      nextLogic('chain-c3b-3', this, () => {
+         graph3b.addElement(pointDraw(6, 6, 'Q_export', '', 'C', '#d35400', true));
+         graph3b.addElement(horizontalBraceDraw(4, 6, 6, 'הון יוצא לחו"ל', '#8e44ad'));
+         document.getElementById('c3b-btn4').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c3b-3', 'btn-nxt-c3b-3');
+  }
+
+
+  // ==========================================
+  // SHARED LOGIC ANIMATION HELPERS
+  // ==========================================
+  function nextLogic(chainId, btn, onComplete) {
+    const chain = document.getElementById(chainId);
+    if(!chain) return;
+    
+    const hiddenSteps = chain.querySelectorAll('.logic-step-hidden');
+    
+    if (hiddenSteps.length > 0) {
+      // Reveal the next step
+      hiddenSteps[0].classList.remove('logic-step-hidden');
+      
+      // If it was the last one, change button style and text
+      if (hiddenSteps.length === 1) {
+        btn.innerHTML = 'הצג תוצאה בגרף 📊';
+        btn.style.background = 'var(--navy)';
+        btn.style.color = 'white';
+      }
+    } else {
+      // All steps revealed, execute the callback (draw graph, enable next phase)
+      btn.style.display = 'none';
+      if(onComplete) onComplete();
+    }
+  }
+
+  function resetLogicChain(chainId, btnId) {
+    const chain = document.getElementById(chainId);
+    if(chain) {
+      const steps = chain.querySelectorAll('.logic-step-anim');
+      steps.forEach(s => s.classList.add('logic-step-hidden'));
+    }
+    
+    const btn = document.getElementById(btnId);
+    if(btn) {
+      btn.style.display = 'flex';
+      btn.innerHTML = 'המשך לוגיקה ⬇';
+      btn.style.background = 'var(--gold)';
+      btn.style.color = 'var(--navy)';
+    }
+  }
+
+
+  // ==========================================
+  // INIT
+  // ==========================================
+  function switchTab(tabId) {
+    document.querySelectorAll('.chapter').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(`chap${tabId}`).classList.add('active');
+    document.querySelectorAll('.nav-btn')[tabId-1].classList.add('active');
+    
+    // re-init graphs for visible tabs to fix canvas scaling glitches
+    setTimeout(() => {
+      if(tabId === 1) resetChap1();
+      if(tabId === 2) { resetChap2A(); resetChap2B(); }
+      if(tabId === 3) { resetChap3A(); resetChap3B(); }
+    }, 50);
+  }
+
+  // Kickoff
+  setTimeout(() => switchTab(1), 100);
+
+</script>
+</body>
+</html>
