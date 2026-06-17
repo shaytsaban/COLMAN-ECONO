@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שוק מט״ח – תנועות הון למתקדמים (חלק ד׳)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+
+  :root {
+    --navy: #1a2744;
+    --navy-light: #243460;
+    --gold: #c9a84c;
+    --bg-color: #f4f7f9;
+    --white: #ffffff;
+    --gray: #555;
+    --gray-light: #e0e0e0;
+    --blue: #2980b9;
+    --orange: #d35400;
+    --green: #27ae60;
+    --red: #c0392b;
+    --purple: #8e44ad;
+    --magenta: #9b59b6;
+    --shadow: 0 10px 30px rgba(0,0,0,0.06);
+    --transition: all 0.3s ease;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--bg-color);
+    color: #333;
+    line-height: 1.7;
+  }
+
+  /* ─── HEADER & NAV ─── */
+  header {
+    background: linear-gradient(135deg, #16a085 0%, var(--navy) 100%);
+    color: var(--white);
+    padding: 3rem 2rem 4rem;
+    text-align: center;
+    border-bottom: 5px solid var(--gold);
+  }
+  header .badge {
+    display: inline-block; background: var(--gold); color: var(--navy);
+    padding: 5px 15px; border-radius: 20px; font-weight: 800; font-size: 0.95rem;
+    margin-bottom: 15px; letter-spacing: 1px;
+  }
+  header h1 { font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; }
+  header p { font-size: 1.3rem; opacity: 0.9; font-weight: 300; }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: -25px;
+    position: relative;
+    z-index: 20;
+    flex-wrap: wrap;
+  }
+  .nav-btn {
+    background: var(--white);
+    color: var(--navy);
+    border: 2px solid var(--gray-light);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: var(--transition);
+  }
+  .nav-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+  .nav-btn:hover:not(.active) { border-color: var(--navy); transform: translateY(-2px); }
+
+  main {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+
+  /* ─── SECTIONS ─── */
+  .chapter { display: none; animation: fadeIn 0.5s ease forwards; }
+  .chapter.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+  .intro-box {
+    background: #fff; border-right: 5px solid var(--gold); padding: 25px;
+    border-radius: 12px; box-shadow: var(--shadow); margin-bottom: 30px;
+  }
+  .intro-box h2 { color: var(--navy); margin-bottom: 15px; }
+  .intro-box p { font-size: 1.1rem; margin-bottom: 10px; }
+
+  /* ─── INTERACTIVE LAYOUT ─── */
+  .interactive-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr;
+    gap: 30px;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+  }
+  @media (max-width: 950px) { .interactive-grid { grid-template-columns: 1fr; } }
+
+  /* ─── LOGIC UI ─── */
+  .controls-col { display: flex; flex-direction: column; gap: 15px; }
+  .step-btn {
+    background: #f8f9fa; border: 2px solid #e9ecef; padding: 16px 20px;
+    border-radius: 12px; text-align: right; cursor: pointer;
+    font-size: 1.1rem; font-weight: 700; color: var(--navy);
+    transition: var(--transition);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .step-btn:hover:not(:disabled) { border-color: #16a085; background: #f0fbf8; }
+  .step-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .step-btn.completed { background: #16a085; color: var(--white); border-color: #16a085; }
+
+  .logic-panel {
+    background: #fdfdfe; border: 1px solid #e1e5eb; border-radius: 12px;
+    padding: 20px; margin-top: 5px; margin-bottom: 10px; display: none;
+    animation: slideDown 0.4s ease forwards;
+  }
+  .logic-panel.visible { display: block; }
+  
+  .logic-chain { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+  .logic-item { background: #fff; padding: 12px 15px; border-radius: 8px; border: 1px solid #eee; font-weight: 500; display: flex; align-items: center; gap: 10px;}
+  .logic-arrow-down { text-align: center; color: var(--gray); font-size: 1.5rem; margin: -5px 0; font-weight: bold; }
+
+  .logic-step-hidden { display: none !important; }
+  .logic-step-anim { animation: fadeInDown 0.4s ease forwards; }
+  @keyframes fadeInDown { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
+  
+  .btn-logic-next {
+    background: var(--gold); color: var(--navy); border: none; padding: 12px 16px; 
+    border-radius: 8px; cursor: pointer; font-weight: bold; margin-top: 15px; width: 100%; 
+    transition: 0.2s; font-size: 1.05rem; display: flex; justify-content: center; align-items: center; gap: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  .btn-logic-next:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  .summary-table-container { display: none; margin-top: 10px; margin-bottom: 15px; animation: fadeIn 0.6s ease forwards;}
+  .summary-table-container.visible { display: block; }
+  table.summary { width: 100%; border-collapse: collapse; text-align: right; background: #fff; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;}
+  table.summary th { background: var(--navy); color: white; padding: 12px; }
+  table.summary td { padding: 12px; border-bottom: 1px solid #eee; }
+  table.summary tr:last-child td { border-bottom: none; }
+  .dir-up { color: var(--green); font-weight: bold; }
+  .dir-down { color: var(--red); font-weight: bold; }
+
+  /* ─── GRAPH COL ─── */
+  .graph-col { position: relative; background: #fafafa; border-radius: 12px; border: 2px solid #eee; padding: 15px; display:flex; align-items:center; }
+  canvas { width: 100%; height: 450px; display: block; }
+
+  .btn-reset { margin-top: auto; padding: 12px; background: #eee; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1.05rem;}
+  .btn-reset:hover { background: #ddd; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">חלק ד׳ – שאלות קצה</div>
+  <h1>תנועות הון למתקדמים</h1>
+  <p>מסיכון ביטחוני ועד להתנגשויות חזיתיות על עקומת ההיצע</p>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="switchTab(1)">תרחיש 1: סיכון ביטחוני (בריחת הון)</button>
+  <button class="nav-btn" onclick="switchTab(2)">תרחיש 2: אתגר ההיצע הכפול</button>
+  <button class="nav-btn" style="background:#8e44ad; color:#fff; border:none;" onclick="switchTab(3)">תרחיש 3: הכל או כלום (שאלה ממכשילה)</button>
+</nav>
+
+<main>
+
+  <!-- ==========================================
+       CHAPTER 1: Security Risk (Capital Outflow)
+       ========================================== -->
+  <section id="chap1" class="chapter active">
+    <div class="intro-box">
+      <h2>🚨 תרחיש 1: עלייה ברמת הסיכון הביטחוני</h2>
+      <p>במדינת דרור חלה עליה ברמת הסיכון הנתפסת בהשקעות עקב המצב הביטחוני (שאלה מתוך מבחן). כיצד אירוע זה משפיע על שוק המט"ח, למרות שהריבית לא השתנתה?</p>
+    </div>
+
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <button class="step-btn" id="c1-btn1" onclick="runChap1Step(1)">1. מנגנון הפעולה <span>+</span></button>
+        <div class="logic-panel" id="c1-log1">
+          <div class="logic-chain" id="chain-c1-1">
+            <div class="logic-item">⚔️ מצב ביטחוני מחמיר $\leftarrow$ משקיעים זרים חוששים לכספם.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">✈️ הם מוכרים את הנכסים (השקליים) שלהם כדי להוציא את הכסף מחוץ למדינה.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💵 הם קונים דולרים עם השקלים שקיבלו ולוקחים אותם איתם.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#fdf0f0; border-color:var(--red);">📉 <strong>התוצאה: תנועת הון יוצאת!</strong> ההיצע הכולל של המט"ח בשוק המקומי מצטמצם (S_total זז שמאלה).</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c1-1" onclick="nextLogic('chain-c1-1', this, () => {
+             graph1.addElement(curveDraw(-1,1, 7,9, '#c0392b', 'S_total (בניכוי הון יוצא)'));
+             graph1.addElement(shiftArrowDraw(6, 6, 4, 6, '#c0392b'));
+             document.getElementById('c1-btn2').disabled = false;
+          })">המשך לוגיקה ⬇</button>
+        </div>
+
+        <button class="step-btn" id="c1-btn2" onclick="runChap1Step(2)" disabled>2. התוצאה: שער חליפין (B) מול ייצוא (C) <span>+</span></button>
+        <div class="logic-panel" id="c1-log2">
+          <div class="logic-chain" id="chain-c1-2">
+            <div class="logic-item">📈 שער החליפין (מחיר הדולר) זינק בגלל המחסור בדולרים. שיווי המשקל הכולל בשוק הוא כעת <strong>בנקודה B</strong>.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🏭 היצואנים חוגגים! הדולר כעת יקר, ולכן הם מגדילים את הייצוא שלהם לאורך העקומה המקורית עד <strong>לנקודה C</strong>.</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#eafaf1; border-color:var(--green);">💡 <strong>פער ההון היוצא:</strong> היצואנים הזרימו המון דולרים (נקודה C), אבל המשקיעים לקחו אותם לחו"ל. מה שנשאר בפועל לקונים בישראל הוא רק הכמות שבנקודה B.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c1-2" onclick="nextLogic('chain-c1-2', this, () => {
+             graph1.addElement(pointDraw(4, 6, 'Q_total', 'e_new', 'B', '#c0392b', true));
+             graph1.addElement(pointDraw(6, 6, 'Q_export', '', 'C', '#d35400', true));
+             graph1.addElement(horizontalBraceDraw(4, 6, 6, 'הון שברח מהארץ', '#8e44ad'));
+             document.getElementById('c1-tab2').classList.add('visible');
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <div class="summary-table-container" id="c1-tab2">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-up">↑ עולה (פיחות)</td>
+              <td>מחסור בדולרים (כי ברחו) מעלה את מחירם.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-up">↑ עולה</td>
+              <td>למרות המצב הביטחוני, הדולר היקר מעודד יצואנים למכור יותר לחו"ל (נקודה C).</td>
+            </tr>
+            <tr>
+              <td>ייבוא (IM)</td>
+              <td class="dir-down">↓ יורד</td>
+              <td>הדולר היקר מקטין את היכולת של אזרחים לייבא (נקודה B).</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap1()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap1"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       CHAPTER 2: Double Supply Challenge
+       ========================================== -->
+  <section id="chap2" class="chapter">
+    <div class="intro-box" style="border-color: var(--blue);">
+      <h2 style="color: var(--blue);">⚔️ תרחיש 2: אתגר ההיצע הכפול</h2>
+      <p>מה קורה כששני אירועים שונים מזיזים <strong>את אותה העקומה (עקומת ההיצע)</strong> לאותו כיוון, אך מסיבות שונות? <br>
+      התרחיש: התוצר העולמי גדל (Yw↑) ובמקביל הריבית המקומית בישראל עולה (r↑).</p>
+    </div>
+
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <button class="step-btn" id="c2-btn1" onclick="runChap2Step(1)">1. כוח ראשון: התוצר העולמי עולה <span>+</span></button>
+        <div class="logic-panel" id="c2-log1">
+          <div class="logic-chain" id="chain-c2-1">
+            <div class="logic-item">🌍 אזרחי העולם עשירים יותר וקונים יותר מישראל.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📦 היצואנים מוכרים יותר ודורשים שקלים בתמורה. עקומת <strong>הייצוא עצמה</strong> זזה ימינה.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2-1" onclick="nextLogic('chain-c2-1', this, () => {
+             graph2.addElement(curveDraw(2,0, 10,8, '#e67e22', 'S1_export (לאחר עליה בתוצר)'));
+             graph2.addElement(shiftArrowDraw(4, 4, 6, 4, '#e67e22'));
+             document.getElementById('c2-btn2').disabled = false;
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <button class="step-btn" id="c2-btn2" onclick="runChap2Step(2)" disabled>2. כוח שני: הריבית עולה <span>+</span></button>
+        <div class="logic-panel" id="c2-log2">
+          <div class="logic-chain" id="chain-c2-2">
+            <div class="logic-item">📈 הריבית בארץ עולה $\leftarrow$ משתלם להשקיע פה.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💵 משקיעים זרים מזרימים דולרים. עקומת <strong>ההיצע הכולל</strong> זזה <strong>עוד ימינה</strong> ביחס לעקומת הייצוא החדשה!</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📉 <strong>תוצאה:</strong> שער החליפין נחתך עמוק למטה. הדולר בצניחה חופשית (ייסוף חזק) בנקודה D.</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2-2" onclick="nextLogic('chain-c2-2', this, () => {
+             graph2.addElement(curveDraw(4,0, 10,6, '#8e44ad', 'S2_total (תוצר + הון נכנס)'));
+             graph2.addElement(shiftArrowDraw(6, 4, 7, 3, '#8e44ad'));
+             graph2.addElement(pointDraw(7, 3, 'Q_total', 'e_new', 'D', '#8e44ad', true)); // Final Eq
+             document.getElementById('c2-btn3').disabled = false;
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <button class="step-btn" id="c2-btn3" onclick="runChap2Step(3)" disabled>3. מה קרה לייצוא? (המכשול האמיתי) <span>✓</span></button>
+        <div class="logic-panel" id="c2-log3">
+          <div class="logic-chain" id="chain-c2-3">
+            <div class="logic-item">🤔 איפה הייצוא הסופי נמצא על הגרף?</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">🏭 הייצוא נקבע על ידי עקומת הייצוא המעודכנת (הכתומה הבהירה: S1_export) כשהיא פוגשת את המחיר הסופי שנקבע בשוק (e_new).</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#fdf0f0; border-color:var(--red);">🚨 <strong>כוחות מנוגדים על הייצוא:</strong> התוצר העולמי דחף את הייצוא למעלה, אבל הצניחה במחיר הדולר (בגלל המשקיעים) משכה אותו למטה! ולכן...</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item"><strong>לא ניתן לדעת בוודאות מה קרה לייצוא (EX)!</strong> הכל תלוי באילו מהכוחות חזק יותר. בדוגמה המתמטית שלנו כאן בגרף הוא נשאר במקרה בדיוק באותה כמות (נקודה C מעל A).</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c2-3" onclick="nextLogic('chain-c2-3', this, () => {
+             // Mark the export point on the S1_export curve at e=3 (y=3 -> x=5)
+             graph2.addElement(pointDraw(5, 3, 'Q_EX_final', '', 'C', '#e67e22', true));
+             graph2.addElement(horizontalBraceDraw(5, 7, 3, 'הון נכנס זר', '#8e44ad'));
+             document.getElementById('c2-tab3').classList.add('visible');
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <div class="summary-table-container" id="c2-tab3">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-down">↓ יורד (ייסוף)</td>
+              <td>שני הכוחות הגדילו היצע דולרים והורידו את מחירם בוודאות.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-down" style="color:#f39c12">? לא ידוע</td>
+              <td>תוצר עולמי עודד ייצוא, אך הדולר הזול דיכא אותו.</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap2()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap2"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       CHAPTER 3: ALL UNKNOWN (Exam Simulator)
+       ========================================== -->
+  <section id="chap3" class="chapter">
+    <div class="intro-box" style="border-color:#8e44ad;">
+      <h2 style="color:#8e44ad;">🎓 תרחיש 3: הכל או כלום - "שאלת הלא-ידוע"</h2>
+      <p>ישנן שאלות במבחן בהן ההשפעות מנטרלות זו את זו בכל החזיתות, ואי אפשר לדעת כלום בוודאות (למעט דברים ספציפיים על תנועות ההון). הנה הדוגמה המובהקת ביותר:</p>
+      <div style="background:#eafaf1; padding:15px; border-radius:8px; border:2px dashed var(--green); font-size:1.1rem; text-align:center;">
+        <strong>"בנק ישראל מוכר מט״ח ובמקביל הריבית המקומית יורדת."</strong>
+      </div>
+    </div>
+
+    <div class="interactive-grid">
+      <div class="controls-col">
+        <button class="step-btn" id="c3-btn1" onclick="runChap3Step(1)">1. כוח ראשון: בנק ישראל מוכר <span>+</span></button>
+        <div class="logic-panel" id="c3-log1">
+          <div class="logic-chain" id="chain-c3-1">
+            <div class="logic-item">🏦 בנק ישראל "שופך" דולרים לשוק.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📈 ההיצע הכולל של הדולרים גדל (S_total זז ימינה).</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💡 מוריד את מחיר הדולר (e יורד).</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c3-1" onclick="nextLogic('chain-c3-1', this, () => {
+             graph3.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S_temp (לאחר מכירת הבנק)'));
+             graph3.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+             document.getElementById('c3-btn2').disabled = false;
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <button class="step-btn" id="c3-btn2" onclick="runChap3Step(2)" disabled>2. כוח שני: הריבית יורדת <span>+</span></button>
+        <div class="logic-panel" id="c3-log2">
+          <div class="logic-chain" id="chain-c3-2">
+            <div class="logic-item">📉 ריבית יורדת $\leftarrow$ משקיעים מוציאים את הכסף מחוץ לישראל (הון יוצא).</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">📉 ההיצע הכולל של הדולרים קטן (S_final זז בחזרה שמאלה).</div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item">💡 מעלה את מחיר הדולר (e עולה).</div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c3-2" onclick="nextLogic('chain-c3-2', this, () => {
+             // Moves it back to exactly the same spot for visual drama, but explains it could be anywhere
+             graph3.addElement(curveDraw(0,0, 10,10, '#8e44ad', 'S_final (בניכוי הון יוצא)'));
+             graph3.addElement(shiftArrowDraw(6, 4, 4, 4, '#8e44ad'));
+             document.getElementById('c3-btn3').disabled = false;
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <button class="step-btn" id="c3-btn3" onclick="runChap3Step(3)" disabled>3. הבלבול המוחלט: מה אנחנו יודעים? <span>✓</span></button>
+        <div class="logic-panel" id="c3-log3">
+          <div class="logic-chain" id="chain-c3-3">
+            <div class="logic-item">🤔 בנק ישראל דחף את ההיצע ימינה, והמשקיעים (שהבריחו הון) דחפו אותו בחזרה שמאלה. מי ניצח? אנו לא יודעים. בגרף ציירנו שהם התאזנו בדיוק בנקודה A (שחזרה להיות B), אבל זה רק במקרה.</div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#fdf0f0; border-color:var(--red);">🚨 לכן, <strong>שער החליפין (e) אינו ידוע!</strong></div>
+            </div>
+            <div class="logic-step-anim logic-step-hidden">
+              <div class="logic-arrow-down">↓</div>
+              <div class="logic-item" style="background:#fdf0f0; border-color:var(--red);">🚨 ומכיוון שעקומות הייצוא והייבוא המקוריות לא זזו (לא היו שינויי תוצר), והמיקום עליהן נקבע רק לפי שער החליפין (שאינו ידוע)... אזי גם <strong>הייצוא והייבוא אינם ידועים!</strong></div>
+            </div>
+          </div>
+          <button class="btn-logic-next" id="btn-nxt-c3-3" onclick="nextLogic('chain-c3-3', this, () => {
+             graph3.addElement(pointDraw(5, 5, '?', 'e_final = ?', 'B', '#8e44ad', true));
+             document.getElementById('c3-tab3').classList.add('visible');
+          })">הצג בגרף 📊</button>
+        </div>
+
+        <div class="summary-table-container" id="c3-tab3">
+          <table class="summary">
+            <tr><th>משתנה</th><th>שינוי</th><th>הסבר (לומדים מהגרף)</th></tr>
+            <tr>
+              <td dir="ltr">e (שע״ח)</td>
+              <td class="dir-down" style="color:#f39c12">? לא ידוע</td>
+              <td>כוחות מנוגדים על עקומת ההיצע.</td>
+            </tr>
+            <tr>
+              <td>ייצוא (EX)</td>
+              <td class="dir-down" style="color:#f39c12">? לא ידוע</td>
+              <td>תלוי בלעדית בשע"ח שאינו ידוע.</td>
+            </tr>
+            <tr>
+              <td>ייבוא (IM)</td>
+              <td class="dir-down" style="color:#f39c12">? לא ידוע</td>
+              <td>תלוי בלעדית בשע"ח שאינו ידוע.</td>
+            </tr>
+          </table>
+        </div>
+
+        <button class="btn-reset" onclick="resetChap3()">🔄 אפס גרף</button>
+      </div>
+      
+      <div class="graph-col">
+        <canvas id="canvas-chap3"></canvas>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // ==========================================
+  // OOP GRAPHING ENGINE
+  // ==========================================
+  class ForexGraph {
+    constructor(canvasId) {
+      this.canvas = document.getElementById(canvasId);
+      if(!this.canvas) return;
+      this.ctx = this.canvas.getContext('2d');
+      this.pad = { t: 40, r: 40, b: 60, l: 60 };
+      this.elements = []; 
+      
+      this.resize();
+      window.addEventListener('resize', () => this.resize());
+    }
+
+    resize() {
+      if(!this.canvas || !this.canvas.parentElement) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = this.canvas.parentElement.getBoundingClientRect();
+      const fixedHeight = 450; // HARDCODED HEIGHT FIX TO PREVENT SQUISHING
+      
+      this.canvas.width = rect.width * dpr;
+      this.canvas.height = fixedHeight * dpr;
+      this.ctx.scale(dpr, dpr);
+      this.canvas.style.width = `${rect.width}px`;
+      this.canvas.style.height = `${fixedHeight}px`;
+      
+      this.W = rect.width;
+      this.H = fixedHeight;
+      this.chartW = this.W - this.pad.l - this.pad.r;
+      this.chartH = this.H - this.pad.t - this.pad.b;
+      
+      this.draw();
+    }
+
+    getX(val) { return this.pad.l + (val / 10) * this.chartW; }
+    getY(val) { return this.H - this.pad.b - (val / 10) * this.chartH; }
+
+    clear() { this.elements = []; this.draw(); }
+    addElement(drawFn) { this.elements.push(drawFn); this.draw(); }
+
+    draw() {
+      if(!this.ctx) return;
+      this.ctx.clearRect(0, 0, this.W, this.H);
+      this.drawAxes();
+      this.elements.forEach(fn => fn(this.ctx, this));
+    }
+
+    drawAxes() {
+      const ctx = this.ctx;
+      ctx.strokeStyle = '#2c3e50';
+      ctx.lineWidth = 2.5;
+      
+      ctx.beginPath();
+      ctx.moveTo(this.pad.l, this.pad.t);
+      ctx.lineTo(this.pad.l, this.H - this.pad.b);
+      ctx.lineTo(this.W - this.pad.r, this.H - this.pad.b);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(this.pad.l - 6, this.pad.t + 10); ctx.lineTo(this.pad.l, this.pad.t); ctx.lineTo(this.pad.l + 6, this.pad.t + 10);
+      ctx.moveTo(this.W - this.pad.r - 10, this.H - this.pad.b - 6); ctx.lineTo(this.W - this.pad.r, this.H - this.pad.b); ctx.lineTo(this.W - this.pad.r - 10, this.H - this.pad.b + 6);
+      ctx.stroke();
+
+      ctx.fillStyle = '#2c3e50';
+      ctx.font = 'bold 16px Heebo';
+      ctx.textAlign = 'center';
+      ctx.fillText('כמות הדולרים (Q)', this.W / 2, this.H - 15);
+      
+      ctx.textAlign = 'left';
+      ctx.fillText('מחיר הדולר', this.pad.l + 15, this.pad.t);
+      ctx.fillText('בשקלים (e)', this.pad.l + 15, this.pad.t + 22);
+    }
+
+    drawMathText(text, x, y, align = 'center', color = '#333', font = 'bold 18px Heebo') {
+      this.ctx.save();
+      this.ctx.fillStyle = color;
+      this.ctx.font = font;
+      this.ctx.textAlign = align;
+      this.ctx.direction = 'ltr'; 
+      this.ctx.fillText(text, x, y);
+      this.ctx.restore();
+    }
+  }
+
+  // Draw Functions
+  const curveDraw = (x1, y1, x2, y2, color, label, isDashed=false) => (ctx, g) => {
+    ctx.beginPath();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 4;
+    if(isDashed) ctx.setLineDash([8,6]);
+    const px1 = g.getX(x1), py1 = g.getY(y1), px2 = g.getX(x2), py2 = g.getY(y2);
+    ctx.moveTo(px1, py1); ctx.lineTo(px2, py2); ctx.stroke();
+    ctx.setLineDash([]);
+    if(label) {
+      const align = 'right';
+      const offsetX = -15;
+      const offsetY = (y2 > y1) ? 25 : -10; 
+      g.drawMathText(label, px2 + offsetX, py2 + offsetY, align, color, 'bold 18px Heebo');
+    }
+  };
+
+  const pointDraw = (x, y, labelX, labelY, labelPoint, color='#e74c3c', isHighlight=false) => (ctx, g) => {
+    ctx.beginPath(); ctx.setLineDash([5, 5]); ctx.strokeStyle = '#95a5a6'; ctx.lineWidth = 2;
+    ctx.moveTo(g.getX(x), g.getY(y)); ctx.lineTo(g.getX(x), g.getY(0));
+    ctx.moveTo(g.getX(x), g.getY(y)); ctx.lineTo(g.getX(0), g.getY(y));
+    ctx.stroke(); ctx.setLineDash([]);
+    if(isHighlight) {
+      ctx.beginPath(); ctx.arc(g.getX(x), g.getY(y), 15, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(241, 196, 15, 0.4)'; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(g.getX(x), g.getY(y), isHighlight ? 8 : 6, 0, Math.PI * 2);
+    ctx.fillStyle = color; ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+    g.drawMathText(labelPoint, g.getX(x) - 18, g.getY(y) - 18, 'center', color, isHighlight ? 'bold 24px Heebo' : 'bold 20px Heebo');
+    if(labelX) g.drawMathText(labelX, g.getX(x), g.getY(0) + 25, 'center', '#34495e');
+    if(labelY) g.drawMathText(labelY, g.getX(0) - 15, g.getY(y) + 6, 'right', '#34495e');
+  };
+
+  const shiftArrowDraw = (x1, y1, x2, y2, color='#2c3e50') => (ctx, g) => {
+    const px1 = g.getX(x1), py1 = g.getY(y1), px2 = g.getX(x2), py2 = g.getY(y2);
+    const headlen = 14; const angle = Math.atan2(py2 - py1, px2 - px1);
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.setLineDash([6, 4]);
+    ctx.moveTo(px1, py1); ctx.lineTo(px2, py2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.fillStyle = color;
+    ctx.moveTo(px2, py2);
+    ctx.lineTo(px2 - headlen * Math.cos(angle - Math.PI / 6), py2 - headlen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(px2 - headlen * Math.cos(angle + Math.PI / 6), py2 - headlen * Math.sin(angle + Math.PI / 6));
+    ctx.fill();
+  };
+
+  const horizontalBraceDraw = (xStart, xEnd, y, label, color) => (ctx, g) => {
+    const py = g.getY(y), px1 = g.getX(xStart), px2 = g.getX(xEnd);
+    ctx.beginPath(); ctx.strokeStyle = color; ctx.lineWidth = 3;
+    ctx.moveTo(px1, py); ctx.lineTo(px2, py);
+    ctx.moveTo(px1, py - 8); ctx.lineTo(px1, py + 8);
+    ctx.moveTo(px2, py - 8); ctx.lineTo(px2, py + 8);
+    ctx.stroke();
+    g.drawMathText(label, (px1+px2)/2, py - 12, 'center', color, 'bold 16px Heebo');
+  };
+
+  const legendDraw = (items) => (ctx, g) => {
+    const pad = 12; const boxW = 240; const boxH = items.length * 28 + pad * 2;
+    const startX = g.pad.l + 15; const startY = g.pad.t + 45; 
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)'; ctx.fillRect(startX, startY, boxW, boxH);
+    ctx.strokeStyle = '#ccc'; ctx.lineWidth = 1; ctx.strokeRect(startX, startY, boxW, boxH);
+    ctx.font = 'bold 14px Heebo'; ctx.textAlign = 'right'; ctx.direction = 'rtl';
+    items.forEach((item, i) => {
+      const y = startY + pad + 15 + i * 28;
+      ctx.fillStyle = item.color; ctx.fillRect(startX + boxW - 15 - pad, y - 12, 16, 16);
+      ctx.fillStyle = '#333'; ctx.fillText(item.text, startX + boxW - 30 - pad, y);
+    });
+    ctx.direction = 'ltr'; 
+  };
+
+
+  // Shared Logic Logic
+  function nextLogic(chainId, btn, onComplete) {
+    const chain = document.getElementById(chainId);
+    if(!chain) return;
+    const hiddenSteps = chain.querySelectorAll('.logic-step-hidden');
+    if (hiddenSteps.length > 0) {
+      hiddenSteps[0].classList.remove('logic-step-hidden');
+      if (hiddenSteps.length === 1) {
+        btn.innerHTML = 'הצג הוכחה בגרף 📊';
+        btn.style.background = 'var(--navy)'; btn.style.color = 'white';
+      }
+    } else {
+      btn.style.display = 'none';
+      if(onComplete) onComplete();
+    }
+  }
+
+  function resetLogicChain(chainId, btnId) {
+    const chain = document.getElementById(chainId);
+    if(chain) {
+      const steps = chain.querySelectorAll('.logic-step-anim');
+      steps.forEach(s => s.classList.add('logic-step-hidden'));
+    }
+    const btn = document.getElementById(btnId);
+    if(btn) {
+      btn.style.display = 'flex';
+      btn.innerHTML = 'המשך לוגיקה ⬇';
+      btn.style.background = 'var(--gold)'; btn.style.color = 'var(--navy)';
+    }
+  }
+
+  // ==========================================
+  // CHAPTER 1: Security Risk (Capital Outflow)
+  // ==========================================
+  const graph1 = new ForexGraph('canvas-chap1');
+  function initChap1() {
+    graph1.resize(); graph1.clear();
+    graph1.addElement(curveDraw(0,0, 10,10, '#d35400', 'S_export'));
+    graph1.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D'));
+    graph1.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+    graph1.addElement(legendDraw([{color: '#2980b9', text: 'D: ביקוש הציבור'},{color: '#d35400', text: 'S_export: ייצוא בלבד'}]));
+  }
+  function runChap1Step(step) {
+    document.getElementById(`c1-btn${step}`).classList.add('completed');
+    document.getElementById(`c1-log${step}`).classList.add('visible');
+  }
+  function resetChap1() {
+    initChap1();
+    [1,2].forEach(i => {
+      let b = document.getElementById(`c1-btn${i}`);
+      if(b) { b.classList.remove('completed'); if(i>1) b.disabled = true; }
+      let l = document.getElementById(`c1-log${i}`); if(l) l.classList.remove('visible');
+    });
+    let tab = document.getElementById('c1-tab2'); if(tab) tab.classList.remove('visible');
+    document.getElementById('btn-nxt-c1-1').onclick = function() {
+      nextLogic('chain-c1-1', this, () => {
+         graph1.addElement(curveDraw(-1,1, 7,9, '#c0392b', 'S_total'));
+         graph1.addElement(shiftArrowDraw(6, 6, 4, 6, '#c0392b'));
+         graph1.addElement(legendDraw([{color: '#2980b9', text: 'D: ביקוש הציבור'},{color: '#d35400', text: 'S_export: ייצוא בלבד'},{color: '#c0392b', text: 'S_total: בניכוי הון יוצא'}]));
+         document.getElementById('c1-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c1-1', 'btn-nxt-c1-1');
+
+    document.getElementById('btn-nxt-c1-2').onclick = function() {
+      nextLogic('chain-c1-2', this, () => {
+         graph1.addElement(pointDraw(4, 6, 'Q_total', 'e_new', 'B', '#c0392b', true));
+         graph1.addElement(pointDraw(6, 6, 'Q_export', '', 'C', '#d35400', true));
+         graph1.addElement(horizontalBraceDraw(4, 6, 6, 'הון שברח מהארץ', '#8e44ad'));
+         document.getElementById('c1-tab2').classList.add('visible');
+      });
+    };
+    resetLogicChain('chain-c1-2', 'btn-nxt-c1-2');
+  }
+
+  // ==========================================
+  // CHAPTER 2: Double Supply Shift (World GDP UP, Local Interest UP)
+  // ==========================================
+  const graph2 = new ForexGraph('canvas-chap2');
+  function initChap2() {
+    graph2.resize(); graph2.clear();
+    graph2.addElement(curveDraw(0,0, 10,10, '#d35400', 'S0'));
+    graph2.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D'));
+    graph2.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+    graph2.addElement(legendDraw([{color: '#2980b9', text: 'D: ביקוש הציבור'},{color: '#d35400', text: 'S0: ייצוא מקורי'}]));
+  }
+  function runChap2Step(step) {
+    document.getElementById(`c2-btn${step}`).classList.add('completed');
+    document.getElementById(`c2-log${step}`).classList.add('visible');
+  }
+  function resetChap2() {
+    initChap2();
+    [1,2,3].forEach(i => {
+      let b = document.getElementById(`c2-btn${i}`);
+      if(b) { b.classList.remove('completed'); if(i>1) b.disabled = true; }
+      let l = document.getElementById(`c2-log${i}`); if(l) l.classList.remove('visible');
+    });
+    let tab = document.getElementById('c2-tab3'); if(tab) tab.classList.remove('visible');
+
+    document.getElementById('btn-nxt-c2-1').onclick = function() {
+      nextLogic('chain-c2-1', this, () => {
+         graph2.addElement(curveDraw(2,0, 10,8, '#e67e22', 'S1_export'));
+         graph2.addElement(shiftArrowDraw(4, 4, 6, 4, '#e67e22'));
+         graph2.addElement(legendDraw([{color: '#2980b9', text: 'D: ביקוש הציבור'},{color: '#d35400', text: 'S0: ייצוא מקורי'},{color: '#e67e22', text: 'S1_export: ייצוא עלה'}]));
+         document.getElementById('c2-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c2-1', 'btn-nxt-c2-1');
+
+    document.getElementById('btn-nxt-c2-2').onclick = function() {
+      nextLogic('chain-c2-2', this, () => {
+         graph2.addElement(curveDraw(4,0, 10,6, '#8e44ad', 'S2_total'));
+         graph2.addElement(shiftArrowDraw(6, 4, 7, 3, '#8e44ad'));
+         graph2.addElement(pointDraw(7, 3, 'Q_total', 'e_new', 'D', '#8e44ad', true));
+         graph2.addElement(legendDraw([{color: '#2980b9', text: 'D: ביקוש'},{color: '#e67e22', text: 'S1_export: ייצוא עלה'},{color: '#8e44ad', text: 'S2_total: ייצוא + משקיעים'}]));
+         document.getElementById('c2-btn3').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c2-2', 'btn-nxt-c2-2');
+
+    document.getElementById('btn-nxt-c2-3').onclick = function() {
+      nextLogic('chain-c2-3', this, () => {
+         graph2.addElement(pointDraw(5, 3, 'Q_EX_final', '', 'C', '#e67e22', true));
+         graph2.addElement(horizontalBraceDraw(5, 7, 3, 'הון נכנס זר', '#8e44ad'));
+         document.getElementById('c2-tab3').classList.add('visible');
+      });
+    };
+    resetLogicChain('chain-c2-3', 'btn-nxt-c2-3');
+  }
+
+  // ==========================================
+  // CHAPTER 3: BOI Sells + Interest Drops (Unknowns)
+  // ==========================================
+  const graph3 = new ForexGraph('canvas-chap3');
+  function initChap3() {
+    graph3.resize(); graph3.clear();
+    graph3.addElement(curveDraw(0,0, 10,10, '#d35400', 'S0_export'));
+    graph3.addElement(curveDraw(0,10, 10,0, '#2980b9', 'D'));
+    graph3.addElement(pointDraw(5, 5, 'Q0', 'e0', 'A', '#7f8c8d'));
+    graph3.addElement(legendDraw([{color: '#2980b9', text: 'D: ביקוש'},{color: '#d35400', text: 'S0_export: ייצוא בלבד'}]));
+  }
+  function runChap3Step(step) {
+    document.getElementById(`c3-btn${step}`).classList.add('completed');
+    document.getElementById(`c3-log${step}`).classList.add('visible');
+  }
+  function resetChap3() {
+    initChap3();
+    [1,2,3].forEach(i => {
+      let b = document.getElementById(`c3-btn${i}`);
+      if(b) { b.classList.remove('completed'); if(i>1) b.disabled = true; }
+      let l = document.getElementById(`c3-log${i}`); if(l) l.classList.remove('visible');
+    });
+    let tab = document.getElementById('c3-tab3'); if(tab) tab.classList.remove('visible');
+
+    document.getElementById('btn-nxt-c3-1').onclick = function() {
+      nextLogic('chain-c3-1', this, () => {
+         graph3.addElement(curveDraw(2,0, 10,8, '#27ae60', 'S_temp'));
+         graph3.addElement(shiftArrowDraw(4, 4, 6, 4, '#27ae60'));
+         graph3.addElement(legendDraw([{color: '#d35400', text: 'S0_export: ייצוא בלבד'},{color: '#27ae60', text: 'S_temp: + בנק ישראל מוכר'}]));
+         document.getElementById('c3-btn2').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c3-1', 'btn-nxt-c3-1');
+
+    document.getElementById('btn-nxt-c3-2').onclick = function() {
+      nextLogic('chain-c3-2', this, () => {
+         // Bring it back exactly for dramatic effect, but mathematically it's "anywhere"
+         graph3.addElement(curveDraw(0,0, 10,10, '#8e44ad', 'S_final'));
+         graph3.addElement(shiftArrowDraw(6, 4, 4, 4, '#8e44ad'));
+         graph3.addElement(legendDraw([{color: '#27ae60', text: 'S_temp: בנק ישראל מכר'},{color: '#8e44ad', text: 'S_final: - משקיעים ברחו'}]));
+         document.getElementById('c3-btn3').disabled = false;
+      });
+    };
+    resetLogicChain('chain-c3-2', 'btn-nxt-c3-2');
+
+    document.getElementById('btn-nxt-c3-3').onclick = function() {
+      nextLogic('chain-c3-3', this, () => {
+         graph3.addElement(pointDraw(5, 5, '?', 'e_final = ?', 'B', '#8e44ad', true));
+         document.getElementById('c3-tab3').classList.add('visible');
+      });
+    };
+    resetLogicChain('chain-c3-3', 'btn-nxt-c3-3');
+  }
+
+  // ==========================================
+  // NAVIGATION
+  // ==========================================
+  function switchTab(tabId) {
+    document.querySelectorAll('.chapter').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById(`chap${tabId}`).classList.add('active');
+    document.querySelectorAll('.nav-btn')[tabId-1].classList.add('active');
+    
+    setTimeout(() => {
+      if(tabId === 1) resetChap1();
+      if(tabId === 2) resetChap2();
+      if(tabId === 3) resetChap3();
+    }, 50);
+  }
+
+  // Kickoff
+  setTimeout(() => switchTab(1), 100);
+
+</script>
+</body>
+</html>
